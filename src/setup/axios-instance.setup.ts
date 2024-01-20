@@ -2,7 +2,7 @@ import Axios, { AxiosInstance, AxiosError } from 'axios';
 
 import { uuid } from 'utils';
 
-import { HttpStatus, NonFatalErrorCode } from 'enums';
+import { HttpStatus, ErrorCode } from 'enums';
 
 const axiosInstance: AxiosInstance = Axios.create({
   baseURL: process.env.REACT_APP_API_HOSTNAME,
@@ -50,7 +50,7 @@ axiosInstance.interceptors.response.use(
     } catch (error) {
       return Promise.reject({
         status: HttpStatus.Error,
-        code: NonFatalErrorCode.GeneralError,
+        code: ErrorCode.GeneralError,
         message: 'Gangguan sistem. Ulangi beberapa saat lagi.',
       });
     }

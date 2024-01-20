@@ -1,6 +1,4 @@
-export enum NonFatalErrorCode {
+export enum ErrorCode {
   GatewayTimeout = '901',
   GeneralError = '999',
 }
-
-export enum FatalErrorCode {}
