@@ -1,5 +1,4 @@
 import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
 import AppRouter from './App.router';
 import './App.scss';
 import { QueryClient, QueryClientProvider } from 'react-query';

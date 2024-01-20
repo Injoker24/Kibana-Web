@@ -2,7 +2,7 @@ import Axios, { AxiosInstance, AxiosError } from 'axios';
 
 import { uuid } from 'utils';
 
-import { FatalErrorCode, HttpStatus, NonFatalErrorCode } from 'enums';
+import { HttpStatus, NonFatalErrorCode } from 'enums';
 
 const axiosInstance: AxiosInstance = Axios.create({
   baseURL: process.env.REACT_APP_API_HOSTNAME,
@@ -14,7 +14,7 @@ const axiosInstance: AxiosInstance = Axios.create({
 });
 
 axiosInstance.interceptors.request.use((request) => {
-  request.headers['X-OID'] = uuid();
+  // request.headers['X-OID'] = uuid();
   return request;
 });
 
@@ -27,7 +27,6 @@ axiosInstance.interceptors.response.use(
       return Promise.reject({
         status: HttpStatus.Timeout,
         code: String(HttpStatus.Timeout),
-        shouldExit: false,
         message: 'Gangguan sistem. Ulangi beberapa saat lagi.',
       });
     }
@@ -46,19 +45,16 @@ axiosInstance.interceptors.response.use(
       return Promise.reject({
         status,
         code: String(error_code),
-        message: error_message['indonesian'],
-        shouldExit: Object.values(FatalErrorCode).includes(error_code),
+        message: error_message,
       });
     } catch (error) {
       return Promise.reject({
         status: HttpStatus.Error,
         code: NonFatalErrorCode.GeneralError,
         message: 'Gangguan sistem. Ulangi beberapa saat lagi.',
-        shouldExit: false,
       });
     }
   },
 );
-//#endregion
 
 export default axiosInstance;

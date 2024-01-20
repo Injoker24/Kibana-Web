@@ -6,19 +6,14 @@
   box-shadow: $shadow-lg;
 }
 
-.header-background-primary {
-  box-shadow: $shadow-lg;
-  background-color: $primary;
-  color: $light;
+.service-category-list-container {
+  flex-wrap: nowrap;
+  overflow-x: scroll;
 }
 
-.header-background-secondary {
-  box-shadow: $shadow-lg;
-  background-color: $secondary-dark;
-  color: $light;
-}
-
-.hero-background {
-  background-color: $primary;
-  color: $light;
+.service-category-image {
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  width: 10rem;
+  height: 10rem;
 }

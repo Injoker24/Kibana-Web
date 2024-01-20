@@ -5,7 +5,7 @@ import { Image } from 'react-bootstrap';
 
 const Header: React.FC = () => {
     return (
-       <div className="py-4 px-3 px-md-5 d-flex justify-content-between header-background-primary">
+       <div className="py-4 px-3 px-md-5 d-flex justify-content-between bg-primary text-light">
           <div className="d-md-none d-flex flex-centered"><IconBurgerMenu /></div>
           <Image className="flex-centered" src={logoLight} alt="logo" />
           <div className="d-flex align-items-center">

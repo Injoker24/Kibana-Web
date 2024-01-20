@@ -1,3 +1,3 @@
-import AccountActivationV2Service from './account-activation-v2.service';
+import DashboardService from './dashboard.service';
 
-export {};
+export { DashboardService };

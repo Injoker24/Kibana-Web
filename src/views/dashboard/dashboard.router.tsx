@@ -24,7 +24,7 @@ const DashboardRouter = () => {
         render={() => <>Test 2</>}
       />
 
-      <Route render={() => <Redirect to={`/not-found`} />} />
+      <Route render={() => <Redirect to={`/dashboard`} />} />
     </Switch>
   );
 };

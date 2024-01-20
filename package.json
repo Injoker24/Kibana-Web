@@ -55,6 +55,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-transform-unicode-sets-regex": "^7.23.3",
     "axios-mock-adapter": "^1.20.0"
   }
 }

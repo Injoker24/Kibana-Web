@@ -1,6 +1,5 @@
-export interface ErrorWrapperV2 {
+export interface ErrorWrapper {
   status: number;
   code: string;
   message: string;
-  shouldExit: boolean;
 }

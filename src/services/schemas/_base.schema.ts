@@ -1,10 +1,7 @@
-export interface ApiResponseV2<T> {
+export interface ApiResponse<T> {
   output_schema: T;
   error_schema: {
     error_code: string;
-    error_message: {
-      english: string;
-      indonesian: string;
-    };
+    error_message: string;
   };
 }
