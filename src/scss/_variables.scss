@@ -1,0 +1,14 @@
+@import "./variables/colors";
+
+$btn-font-size: 1rem !default;
+$btn-padding-x: 1.6rem !default;
+$btn-padding-y: 0.8rem !default;
+
+$custom-control-indicator-checked-bg:               $info !default;
+$custom-control-indicator-checked-border-color:     $info !default;
+$custom-control-indicator-focus-box-shadow:         0 0 0 .2rem rgba($info, .25) !default;
+
+$modal-content-border-radius:   0.5rem !default;
+
+$font-family-base :'Open Sans', Calibri, Arial, sans-serif;
+$font-weight-semibold: 600;

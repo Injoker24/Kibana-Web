@@ -1,0 +1,27 @@
+@baseUrl = http://localhost:8080/api
+@channel = eyJhbGciOiJSUzUxMiJ9.eyJ3c2lkIjoiQThBQjM4MTQ0NzQ1MjJBRkUwNTQwMDE0NEZGQkQzMTkiLCJpc3MiOiJPTU5JX0NIQU5ORUwiLCJjaW4iOiJTYWt1Q28iLCJlbiI6ImRldiIsImNuIjoiU2FrdWt1Q29icmFuZCIsImV4cCI6MTc1MTg2MDIwNCwianRpIjoiODllMDQ5MTUtZGVhMS00MDNkLTk1MTMtOWE5ZjU1NTRkZTcyIiwiaWgiOiJvayJ9.fK4LoW8zh4I6nd4MRDj3HmfuQPYNuXWRkoTaTA1I-DVCQDrP6ygetcw1GTAXLgy73v65a-hWXBfUKTubhkI9vBD_JfHCb7ztH2H3FvWTNRweRE1Z7UuoSYZcq-EjXTYPV7B53GuMsH3pGwdqZnnkOhOdo4blpysGKeiwgCjFvdpxTtg5rRZsG5uWPA0yURW6eBXRbmLNKXQxO4erePxQ6wvJyZ01iQ4am_NJAC8a6klbmVwUo0GGBgZU4sKOhL82S7kpNOh_E4588zJDtGE7bSGXZcpF_RDCkkrx8KeBRkYLQ8SVYH8UNqhM8UUsKW_HshyFH6rKsJYRF_OVq6p3Jw
+@lang = id
+
+### Generate Payment Id
+POST {{baseUrl}}/partner/sakuku-cobrand/payment
+Accept: application/json
+Accept-Language: {{lang}}
+Content-Type: application/json
+X-OID: {{$guid}}
+X-Channel: {{channel}}
+
+{
+    "amount": "100",
+    "customer_id": "CST202007301323",
+    "merchant_id": "44130",
+    "phone_number": "081802866694",
+    "transaction_id": "202009080907"
+}
+
+### Inquiry
+GET {{baseUrl}}/sakuku-cobrand/payment/AD9C9827D6AF2CC2E05400144FFBD319
+Accept: application/json
+Accept-Language: {{lang}}
+Content-Type: application/json
+X-OID: {{$guid}}
+X-Channel: {{channel}}

@@ -1,0 +1,43 @@
+@import "./variables/colors";
+
+.otp-single-input {
+    width: 2.5rem;
+    height: 2.5rem;
+    // line-height: 2.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 0;
+    margin-left: .25rem;
+    margin-right: .25rem;
+    text-align: center;
+    // background: rgba($dark, .05);
+
+    &:first-child {
+        margin-left: 0;
+    }
+
+    &:last-child {
+        margin-right: 0;
+    }
+
+    // password-type ini dibuang karena behavior hp yang ada delay pada saat nutup ke 'disc' terasa lamban
+    // &[type=password] {
+    //     font-size: 2rem;
+    // }
+
+    &.underlined {
+        border: none;
+        border-bottom: 1px solid $gray-400;
+        border-radius: 0;
+        background: none;
+
+        &:focus {
+            box-shadow: none;
+            border-color: $primary;
+        }
+    }
+
+    &.secure-input {
+        color: $primary;
+    }
+}

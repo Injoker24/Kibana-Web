@@ -1,0 +1,332 @@
+import React from 'react';
+
+import {
+    Redirect,
+    useParams,
+    useHistory
+} from 'react-router-dom';
+
+import {
+    Modal,
+    Button
+} from 'react-bootstrap';
+
+import {
+    currentLanguage
+} from 'storages';
+
+import {
+    QRISType, QRISTipType, PaymentStatus
+} from 'enums';
+
+import {
+    QRISPaymentTransaction
+} from 'models';
+
+import {
+    QRISPaymentService
+} from 'services';
+
+import {
+    PageWrapper,
+    PageHeader,
+    Loader
+} from 'shared/components';
+
+import {
+    Payment,
+    Confirmation,
+    Verification
+} from './components';
+
+import {
+    QRISPaymentError
+} from '.';
+
+
+enum QRISPaymentSteps {
+    Payment,
+    Confirmation,
+    Verification,
+    Success
+};
+
+enum QRISPaymentSteps_Dynamic_WithoutTip {
+    Confirmation,
+    Verification,
+    Success
+};
+
+type ErrorState = {
+    isFatalError: boolean;
+    content: string;
+}
+
+const QRISPayment: React.FC<any> =
+    () => {
+        const history = useHistory();
+        const { paymentId } = useParams();
+
+        const [isLoading, setIsLoading] = React.useState(false);
+        const [transactionData, setTransactionData] = React.useState<QRISPaymentTransaction>();
+        const [error, setError] = React.useState<ErrorState>();
+
+        const requestCountdownTimerRef = React.useRef(0);
+        const [currentStep, setCurrentStep] = React.useState(0);
+        const [errorModal, setErrorModal] = React.useState<{ children: React.ReactElement | string, onClose: () => void } | null>();
+
+        const [stepFlow, setStepFlow] = React.useState<any>(QRISPaymentSteps);
+
+        //#region Exit
+        const handleExitApplication = () => {
+            // new tab
+            if (window.opener) {
+                window.opener.postMessage('Failed', '*');
+                return;
+            }
+
+            // iframe
+            try {
+                console.log(window.parent.location.href);
+            } catch (error) {
+                window.parent.postMessage('Failed', '*');
+                return;
+            }
+
+            // webview
+            window.location.href = `/${currentLanguage.get()}/qris-payment/failed`;
+        };
+        //#endregion
+
+        //#region Wizard Stepper
+        const toNextStep = () => {
+            if (currentStep + 1 === QRISPaymentSteps.Success) {
+                clearInterval(requestCountdownTimerRef.current);
+            }
+            setCurrentStep(step => step + 1);
+        };
+
+        const toPreviousStep = () => {
+            if (currentStep === 0) {
+                handleExitApplication();
+            }
+            setCurrentStep(step => step - 1);
+        };
+        //#endregion
+
+        //#region Error Modal
+        // populate error content
+        const handleErrorModal = React.useCallback(({
+            isFatalError = false,
+            content,
+            onClose
+        }: {
+            isFatalError: boolean,
+            content: string,
+            onClose?: Function
+        }) => {
+            if (isFatalError === true) {
+                clearInterval(requestCountdownTimerRef.current);
+
+                setError({
+                    isFatalError,
+                    content
+                });
+
+                return;
+            }
+
+            setErrorModal({
+                children: content,
+                onClose: () => {
+                    setErrorModal(null);
+
+                    if (onClose) {
+                        onClose();
+                    }
+                }
+            });
+        }, []);
+        //#endregion
+
+        //#region Get Detail
+        React.useEffect(() => {
+            const getTransactionDetail = async (paymentId: string) => {
+                try {
+                    setIsLoading(true);
+
+                    const { output_schema } = await QRISPaymentService.getPaymentDetail(paymentId);
+
+                    setIsLoading(false);
+
+                    setTransactionData(output_schema);
+
+                    //#Status Checking
+                    if (output_schema.status === PaymentStatus.Pending) {
+                        // goto pending?
+                        return;
+                    }
+
+                    if (output_schema.status === PaymentStatus.Success) {
+                        // goto success?
+                        return;
+                    }
+
+                    if (output_schema.status === PaymentStatus.Failed) {
+                        // goto error?
+                        return;
+                    }
+                    //#endregion
+
+                    //#region Tip options
+                    const { qr_type, tip } = output_schema;
+                    if (qr_type === QRISType.Dynamic) {
+                        if (!tip || tip.type === QRISTipType.Mandatory) {
+                            setStepFlow(QRISPaymentSteps_Dynamic_WithoutTip);
+                        }
+                    }
+                    //#endregion
+
+                    //#region Start the countdown timer
+                    let timeLeft = output_schema.remaining_time;
+
+                    requestCountdownTimerRef.current = window.setInterval(() => {
+                        timeLeft--;
+
+                        // console.log(`Request will expired in: ${timeLeft}s`);
+
+                        if (timeLeft === 0) {
+                            setError({
+                                isFatalError: true,
+                                content: 'Waktu telah habis. Silakan ulangi kembali.'
+                            });
+                        }
+                    }, 1000);
+                    //#endregion
+                } catch (error) {
+                    setIsLoading(false);
+
+                    const {
+                        data: { error_schema }
+                    } = error;
+
+                    setError({
+                        isFatalError: error_schema.fatal_error_flag === true,
+                        content: error_schema.message
+                    });
+                }
+            };
+
+            getTransactionDetail(paymentId);
+        }, [paymentId]);
+        //#endregion
+
+        const handleSubmitPayment = (data: QRISPaymentTransaction) => {
+            setTransactionData(data);
+            toNextStep();
+        };
+
+        const handleSubmitVerification = () => {
+            toNextStep();
+        }
+
+        const handleExecuteTimeout = () => {
+            clearInterval(requestCountdownTimerRef.current);
+
+            history.replace(`/${currentLanguage.get()}/qris-payment/pending`, transactionData);
+        };
+
+        if (error) {
+            if (error.isFatalError === true) {
+                clearInterval(requestCountdownTimerRef.current);
+
+                return <Redirect to={{
+                    pathname: `/${currentLanguage.get()}/qris-payment/error`,
+                    state: {
+                        merchantName: transactionData?.merchant_name,
+                        isFatal: true,
+                        content: error.content
+                    }
+                }} />
+            }
+
+            return (
+                <QRISPaymentError
+                    merchantName={transactionData?.merchant_name}
+                    isFatal={error.isFatalError}
+                    content={error.content}
+                />
+            );
+        }
+
+        return (<>
+            {errorModal &&
+                <Modal show={true}
+                    centered={true}>
+                    <Modal.Body className="text-center">
+                        {errorModal.children}
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button
+                            type="button"
+                            block={true}
+                            onClick={errorModal?.onClose}>
+                            OK
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            }
+
+            {isLoading && <Loader type="absolute" />}
+
+            <PageWrapper className="text-center">
+                <PageHeader />
+
+                {transactionData && <>
+                    {currentStep === stepFlow.Payment && <>
+                        <Payment
+                            paymentData={transactionData}
+                            onSubmit={handleSubmitPayment}
+                            onCancel={toPreviousStep}
+                        />
+                    </>}
+
+                    {currentStep === stepFlow.Confirmation && <>
+                        <Confirmation
+                            paymentData={transactionData}
+                            onNext={toNextStep}
+                            onCancel={toPreviousStep}
+                        />
+                    </>}
+
+                    {currentStep === stepFlow.Verification && <>
+                        <Verification
+                            paymentId={paymentId}
+                            transactionData={transactionData}
+                            onSubmit={handleSubmitVerification}
+                            onCancel={toPreviousStep}
+                            onError={handleErrorModal}
+                            onExecuteTimeout={handleExecuteTimeout}
+                        />
+                    </>}
+
+                    {currentStep === stepFlow.Success && <>
+                        <Redirect to={{
+                            pathname: `/${currentLanguage.get()}/qris-payment/success`,
+                            state: {
+                                merchantName: transactionData.merchant_name,
+                                transactionId: transactionData.transaction_id,
+                                transactionDate: transactionData.transaction_date,
+                                amount: transactionData.amount,
+                                tip: transactionData.tip
+                            }
+                        }} />
+                    </>}
+                </>}
+            </PageWrapper>
+
+            {/* <pre>{JSON.stringify(requestData, null, 2)}</pre> */}
+        </>);
+    };
+
+export default QRISPayment;

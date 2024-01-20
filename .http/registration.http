@@ -1,0 +1,138 @@
+@baseUrl = http://localhost:8080/api
+@requestId = D77EA55383811038E05400144FFA3B5D
+@lang = id
+@channel = eyJhbGciOiJSUzUxMiJ9.eyJ3c2lkIjoiQThBQjM4MTQ0NzQ1MjJBRkUwNTQwMDE0NEZGQkQzMTkiLCJpc3MiOiJPTU5JX0NIQU5ORUwiLCJjaW4iOiJTYWt1Q28iLCJlbiI6ImRldiIsImNuIjoiU2FrdWt1Q29icmFuZCIsImV4cCI6MTc1MTg2MDIwNCwianRpIjoiODllMDQ5MTUtZGVhMS00MDNkLTk1MTMtOWE5ZjU1NTRkZTcyIiwiaWgiOiJvayJ9.fK4LoW8zh4I6nd4MRDj3HmfuQPYNuXWRkoTaTA1I-DVCQDrP6ygetcw1GTAXLgy73v65a-hWXBfUKTubhkI9vBD_JfHCb7ztH2H3FvWTNRweRE1Z7UuoSYZcq-EjXTYPV7B53GuMsH3pGwdqZnnkOhOdo4blpysGKeiwgCjFvdpxTtg5rRZsG5uWPA0yURW6eBXRbmLNKXQxO4erePxQ6wvJyZ01iQ4am_NJAC8a6klbmVwUo0GGBgZU4sKOhL82S7kpNOh_E4588zJDtGE7bSGXZcpF_RDCkkrx8KeBRkYLQ8SVYH8UNqhM8UUsKW_HshyFH6rKsJYRF_OVq6p3Jw
+@merchantId = 72000
+@phoneNumber = 089668277490
+@birthDate = 1991-05-11
+
+### Generate Request Id
+POST {{baseUrl}}/partner/sakuku-cobrand/registration
+Accept: application/json
+Accept-Language: {{lang}}
+Content-Type: application/json
+X-OID: {{$guid}}
+X-Channel: {{channel}}
+
+{
+    "merchant_id": "{{merchantId}}",
+    "customer_id": "CUS002",
+    "phone_number": "{{phoneNumber}}",
+    "merchant_name": "The Grateful Bread",
+    "customer_name": "Dwogroic Rubyfeet",
+    "email": "d.rubyfeet@mail.com"
+}
+
+### Inquiry
+GET {{baseUrl}}/sakuku-cobrand/registration/{{requestId}}
+Accept: application/json
+Accept-Language: {{lang}}
+Content-Type: application/json
+X-OID: {{$guid}}
+X-Channel: {{channel}}
+
+### Generate OTP
+POST {{baseUrl}}/sakuku-cobrand/registration/{{requestId}}/otp/generate
+Accept: application/json
+Accept-Language: {{lang}}
+Content-Type: application/json
+X-OID: {{$guid}}
+X-Channel: {{channel}}
+
+{
+    "merchant_id": "{{merchantId}}",
+    "phone_number": "{{phoneNumber}}"
+}
+
+### Verify OTP
+POST {{baseUrl}}/sakuku-cobrand/registration/{{requestId}}/otp/verify
+Accept: application/json
+Accept-Language: {{lang}}
+Content-Type: application/json
+X-OID: {{$guid}}
+X-Channel: {{channel}}
+
+{
+    "merchant_id": "{{merchantId}}",
+    "phone_number": "{{phoneNumber}}",
+    "birth_date": "{{birthDate}}",
+    "otp_code": "123456"
+}
+
+### Create new user
+POST {{baseUrl}}/sakuku-cobrand/registration/{{requestId}}/user/new
+Accept: application/json
+Accept-Language: {{lang}}
+Content-Type: application/json
+X-OID: {{$guid}}
+X-Channel: {{channel}}
+
+{
+    "birth_date": "{{birthDate}}",
+    "customer_name": "XCID2005111534",
+    "email": "d.rubyfeet@mail.com",
+    "epin": "123",
+    "encoding": "123",
+    "session_id": "BBBBBBBBBBBBBVVCCCCCCCCCCCCCCCCC"
+}
+
+### Activate existing user
+POST {{baseUrl}}/sakuku-cobrand/registration/{{requestId}}/user/existing
+Accept: application/json
+Accept-Language: {{lang}}
+Content-Type: application/json
+X-OID: {{$guid}}
+X-Channel: {{channel}}
+
+{
+    "birth_date": "{{birthDate}}",
+    "epin": "1234",
+    "encoding": "1234",
+    "session_id": "BBBBBBBBBBBBBVVCCCCCCCCCCCCCCCCC"
+}
+
+### Prepare for encryption
+POST {{baseUrl}}/sakuku-cobrand/secure/{{requestId}}
+Accept: application/json
+Accept-Language: {{lang}}
+Content-Type: application/json
+X-OID: {{$guid}}
+X-Channel: {{channel}}
+
+{
+    "phone_number": "{{phoneNumber}}"
+}
+
+### Submit Tnc Agreement
+POST {{baseUrl}}/sakuku-cobrand/registration/tnc
+Accept: application/json
+Accept-Language: {{lang}}
+Content-Type: application/json
+X-OID: {{$guid}}
+X-Channel: {{channel}}
+
+{
+    "phone_number": "{{phoneNumber}}",
+    "company_code": "{{merchantId}}"
+}
+
+### FIREBASE
+POST https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=AIzaSyChO7FpxbKKIFP0vSvsTR2yU3nVeNZ9BD0
+
+{   
+    "dynamicLinkInfo": {
+        "domainUriPrefix": "https://testcobrand.page.link",
+        "link": "https://www.bca.co.id/Sakuku?partner=MTIX",
+        "androidInfo": {
+            "androidPackageName": "com.bca.sakuku",
+            "androidMinPackageVersionCode":"176"
+        },
+        "iosInfo": {
+            "iosBundleId": "com.bca.sakuku",
+            "iosAppStoreId":"965131157"
+        },
+        "navigationInfo": {
+            "enableForcedRedirect": true
+        }
+    }
+}

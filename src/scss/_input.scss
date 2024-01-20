@@ -1,0 +1,60 @@
+input {
+    &[inputmode="numeric"]::placeholder {
+        // font-size: smaller;
+        // color: $gray-500;
+    }
+
+    &.secure-input {
+        &::placeholder {
+            font-family: $font-family-base;
+            letter-spacing: normal;
+        }
+
+        &::-webkit-input-placeholder {
+            font-family: $font-family-base;
+            letter-spacing: normal;
+        }
+
+        &::-moz-placeholder {
+            font-family: $font-family-base;
+            letter-spacing: normal;
+        }
+
+        &::-ms-input-placeholder {
+            font-family: $font-family-base;
+            letter-spacing: normal;
+        }
+
+        // edge. tapi ga support ganti font-family. kan anyeng
+        &:-ms-input-placeholder {
+            font-family: $font-family-base;
+            letter-spacing: normal;
+        }
+
+        font-family: text-security-disc;
+
+        // /* Chrome, Safari, Edge */
+        // -webkit-text-security: disc;
+    }
+}
+
+.invalid-feedback {
+    display: block;
+}
+
+select {
+    &.form-control {
+        @include appearance(none);
+        $size: 1rem;
+
+        // Biru
+        // background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABmJLR0QA/wD/AP+gvaeTAAABIklEQVRIie3RQU7CQBQG4P8BG68CbNyT6AFIjG1JY0IiS3oHGRvYeAMG14AxUdiwdCMXQA0JO+9hAn1uWjKWKZ0aWNF/0/RNZ755r0CePKcXu/NYOeSegq7oiL4PBJ92RzZNEUcMGkDwYQv5oFsv6hBmug8vcVW+qH+v5rOvNISZxwBKAGrly/rZ6n32pn5D6su1368WNrQIN0RZM6E56bafdYglpEuMYXxPUOTzqe8to8Kf0U19b8mMGwBrpVwixkg3RkcMGhpkQ8QtFdnpaHvLO+kQ4Sl+AIDWa689jBBlXCpy+9L1RvEztVAaRkQ/WZC9EJA8//Bp/B9TISCxMzV7OzGGUjAjxBhKwIyRTFAMoyzIv2IJ6VpCukcD8uQ5WH4BhAyH5ZXgy4QAAAAASUVORK5CYII=);
+
+        background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABmJLR0QA/wD/AP+gvaeTAAABOElEQVRIie2RzU6DUBBGv4FufA8bNejCvXtBYyjGFpo0kTfRpQ9irazQRcPGd/AnoG1CfA+TtuNCai44Ipi6krMhd7gz5+YboKHh/7F/1DdW2aNJxYOOd67pi0ez0xtUlZiO29X0xYPl9C6k/7okYfAZAI1A9vqm8ZpOkqefJMS4AtACaK+9Zaylk+ROvUPq4dBxtxeM+4+GT2ZgGkS314EksWzPBfFlsUcj7I7DIF4WctGNwyAGUx/ATCm3QDyUYjQdtytI5iD4qgQQokun8XN7Y+cFhGPlIV9izMeVk5xGYTAszqViYYlleycgHhUHMdgH0VsdSakok4n5Z9/KewSE6FTSaZxIMSK/2zkIfnQTjMpmlYoymbQzVfJtXLVEJbLKksoiQcZ1JL/Csj3Xsj33zwQNDSvjHYqOiJR/W0K3AAAAAElFTkSuQmCC);
+
+        background-repeat: no-repeat;
+        background-position: calc(100% - $input-padding-y) center;
+        background-size: $size;
+        padding-right: ($input-padding-y * 2) + $size;
+    }
+}

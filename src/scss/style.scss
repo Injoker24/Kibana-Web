@@ -1,0 +1,53 @@
+// Override Bootstrap variables
+@import 'variables';
+
+// Import Bootstrap to be overridden
+@import '~bootstrap/scss/bootstrap.scss';
+@import '~text-security/text-security-disc.css';
+
+// Import Custom Mixins
+@import 'mixins/all';
+
+@import './animate';
+@import './button';
+@import './input';
+@import './layout';
+@import './loaders';
+@import './modal';
+@import './otp-input';
+@import './type';
+
+/**
+ * Remove the motion
+ * Source: https://developers.google.com/web/updates/2019/03/prefers-reduced-motion
+ */
+// @media (prefers-reduced-motion: reduce) {
+
+//     *,
+//     *::before,
+//     *::after {
+//         animation-duration: 1s !important;
+//         transition-duration: 1s !important;
+//     }
+// }
+
+// @font-face {
+//     font-family: text-security-disc;
+//     src: url('~text-security/text-security-disc-compat.eot');
+//     src: url('~text-security/text-security-disc-compat.eot?#iefix') format('embedded-opentype'),
+//         url('~text-security/text-security-disc-compat.woff2') format('woff2'), // Safari lawas ga bisa baca optimized woff2, maka pake versi yang "compatible" yang mana cons nya adalah size nya jadi lebih besar (~2kB ke ~6kB)
+//         url('~text-security/text-security-disc-compat.ttf') format('truetype');
+// }
+
+.list-dashed {
+  list-style-type: none;
+  position: relative;
+
+  li {
+    &:before {
+      content: '-';
+      position: absolute;
+      margin-left: -20px;
+    }
+  }
+}
