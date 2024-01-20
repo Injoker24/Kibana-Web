@@ -1,6 +1,6 @@
 {
-  "short_name": "Sakuku",
-  "name": "Sakuku Web App",
+  "short_name": "Kibana",
+  "name": "Kibana Web App",
   "icons": [
     {
       "src": "favicon.ico",

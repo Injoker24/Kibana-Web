@@ -4,10 +4,6 @@ import AppRouter from './App.router';
 import './App.scss';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-if (process.env.REACT_APP_IS_MOCKED === '1') {
-  import('setup').then((setup) => setup.setupAxiosMockV2(setup.axiosInstanceV2));
-}
-
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -29,7 +25,8 @@ const App: React.FC<any> = () => {
             lg={6}
             className="h-100"
           >
-            <AppRouter />
+            <AppRouter /> 
+            <h1></h1>
           </Col>
         </Row>
       </Container>
