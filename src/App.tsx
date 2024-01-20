@@ -26,7 +26,6 @@ const App: React.FC<any> = () => {
             className="h-100"
           >
             <AppRouter /> 
-            <h1></h1>
           </Col>
         </Row>
       </Container>

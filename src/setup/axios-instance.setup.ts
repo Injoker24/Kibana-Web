@@ -2,7 +2,7 @@ import Axios, { AxiosInstance, AxiosError } from 'axios';
 
 import { uuid } from 'utils';
 
-import { FatalErrorCodeV2, HttpStatus, NonFatalErrorCodeV2 } from 'enums';
+import { FatalErrorCode, HttpStatus, NonFatalErrorCode } from 'enums';
 
 const axiosInstance: AxiosInstance = Axios.create({
   baseURL: process.env.REACT_APP_API_HOSTNAME,
@@ -47,12 +47,12 @@ axiosInstance.interceptors.response.use(
         status,
         code: String(error_code),
         message: error_message['indonesian'],
-        shouldExit: Object.values(FatalErrorCodeV2).includes(error_code),
+        shouldExit: Object.values(FatalErrorCode).includes(error_code),
       });
     } catch (error) {
       return Promise.reject({
         status: HttpStatus.Error,
-        code: NonFatalErrorCodeV2.GeneralError,
+        code: NonFatalErrorCode.GeneralError,
         message: 'Gangguan sistem. Ulangi beberapa saat lagi.',
         shouldExit: false,
       });
