@@ -1,17 +1,9 @@
 import React from 'react';
 
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
-
 import { currentLanguage } from './storages';
-
 import { AccountActivationV2Router } from './views/account-activation-v2';
-
-import { PaymentRouter } from './views/payment';
-
-import { QRISPaymentRouter } from './views/qris-payment';
-
 import { Page404 } from 'views/pages';
-import { AccountActivationRouter } from 'views/account-activation';
 
 const AppRouter: React.FC<any> = () => {
   return (
@@ -31,27 +23,6 @@ const AppRouter: React.FC<any> = () => {
                     path={`*/account-activation/v2/*`}
                   >
                     <AccountActivationV2Router />
-                  </Route>
-
-                  <Route
-                    exact
-                    path={`*/account-activation/*`}
-                  >
-                    <AccountActivationRouter />
-                  </Route>
-
-                  <Route
-                    exact
-                    path={`*/payment/*`}
-                  >
-                    <PaymentRouter />
-                  </Route>
-
-                  <Route
-                    exact
-                    path={`*/qris-payment/*`}
-                  >
-                    <QRISPaymentRouter />
                   </Route>
 
                   <Route render={() => <Redirect to={'not-found'} />} />

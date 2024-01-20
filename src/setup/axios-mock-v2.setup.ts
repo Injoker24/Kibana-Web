@@ -17,7 +17,7 @@ import {
   Mock_AccountActivation_VerifyOTP_V2_1_Registered,
   Mock_AccountActivation_ActivateExistingUser_V2_ECB_2_201,
   Mock_AccountActivation_VerifyOTP_V2_ECB_3_999,
-} from './mocks/v2';
+} from './mocks';
 
 const setupAxiosMockV2 = (axios: AxiosInstance) => {
   const mock = new MockAdapter(axios, {

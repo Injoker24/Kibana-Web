@@ -1,6 +1,6 @@
 {
-  "name": "sakuku-cobrand-web",
-  "version": "0.2.6",
+  "name": "kibana-web",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
@@ -36,10 +36,6 @@
   },
   "scripts": {
     "start": "env-cmd -f ./.env.development react-scripts start",
-    "build": "env-cmd -f ./.env.production react-scripts build",
-    "deploy:sit": "env-cmd -f ./.env.sit react-scripts build && XCOPY Staticfile build && cf push -f manifest-dev.yml",
-    "build:uat": "env-cmd -f ./.env.uat react-scripts build && cp -p Staticfile build",
-    "build:production": "env-cmd -f ./.env.production react-scripts build && cp -p Staticfile build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

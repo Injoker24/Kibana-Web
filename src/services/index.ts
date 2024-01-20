@@ -1,2 +1,3 @@
-export * from './v1';
-export * from './v2';
+import AccountActivationV2Service from './account-activation-v2.service';
+
+export { AccountActivationV2Service };
