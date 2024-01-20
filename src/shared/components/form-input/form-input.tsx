@@ -7,9 +7,6 @@ import {
     Form
 } from "react-bootstrap";
 
-import {
-    FormInputLoader
-} from '..';
 
 type FormInputProps = {
     label: string,
@@ -24,7 +21,7 @@ const FormInput: React.FC<PropsWithChildren<FormInputProps>> =
         return (
             <Form.Group>
                 <Form.Label htmlFor={labelFor}>
-                    {label}{isLoading && <FormInputLoader />}
+                    {label}
                 </Form.Label>
                 {children}
                 {errorMessage &&

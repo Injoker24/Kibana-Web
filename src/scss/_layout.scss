@@ -1,5 +1,3 @@
-@import './variables/colors';
-
 html,
 body {
   width: 100%;
@@ -7,7 +5,7 @@ body {
 }
 
 html {
-  font-size: 14px;
+  font-size: 16px;
   max-width: 100vw;
   overflow-x: hidden;
 }
@@ -17,46 +15,6 @@ body {
   font-family: $font-family-base;
 }
 
-// BRAND LOGO
-.logo {
-  height: 2.5rem;
-}
-
-.absolute-bottom-center {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-
-  text-align: center;
-}
-
-.page-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  height: 100%;
-
-  .page-header {
-    flex-grow: 0;
-    padding: 1rem 1rem 0.5rem 1rem;
-  }
-
-  .page-body {
-    flex: 1 1 auto;
-    padding: 0.5rem 1rem 2.5rem 1rem;
-    position: relative;
-  }
-
-  .page-actions {
-    flex-grow: 0;
-    padding: 0 0 1rem 0;
-  }
-
-  form {
-    display: flex;
-    flex-direction: column;
-    -ms-flex-positive: 1 !important;
-    flex-grow: 1 !important;
-  }
+.flex-centered {
+  @include flex-centered();
 }

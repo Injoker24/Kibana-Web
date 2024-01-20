@@ -5,23 +5,11 @@
 @import '~bootstrap/scss/bootstrap.scss';
 @import '~text-security/text-security-disc.css';
 
+@import 'mixins/all';
+
 @import './animate';
 @import './button';
-@import './input';
 @import './layout';
-@import './loaders';
-@import './modal';
-@import './type';
-
-.list-dashed {
-  list-style-type: none;
-  position: relative;
-
-  li {
-    &:before {
-      content: '-';
-      position: absolute;
-      margin-left: -20px;
-    }
-  }
-}
+@import './typography';
+@import './freeman';
+@import './chips';

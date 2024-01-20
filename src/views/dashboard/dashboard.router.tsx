@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Switch, Route, Redirect } from 'react-router-dom';
+import Dashboard from './dashboard';
 
 const DashboardRouter = () => {
   return (
@@ -8,7 +9,7 @@ const DashboardRouter = () => {
       <Route
         exact
         path={'/dashboard'}
-        render={() => <>Dashboard</>}
+        component={Dashboard}
       />
 
       <Route

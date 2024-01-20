@@ -1,0 +1,18 @@
+.chip {
+  border-radius: 10rem;
+  border: none !important;
+  padding: 0.25rem 0.75rem;
+  font-size: 12px;
+  width: fit-content;
+  @include flex-centered();
+}
+
+.chip-primary {
+  background-color: $primary-light;
+  color: $primary-dark;
+}
+
+.chip-secondary {
+  background-color: $secondary-light;
+  color: $secondary-dark;
+}

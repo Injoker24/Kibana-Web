@@ -1,3 +1,4 @@
 import DashboardRouter from './dashboard.router';
+import Dashboard from './dashboard';
 
-export { DashboardRouter };
+export { DashboardRouter, Dashboard };
