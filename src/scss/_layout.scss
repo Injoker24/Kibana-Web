@@ -19,3 +19,7 @@ body {
 .flex-centered {
   @include flex-centered();
 }
+
+.min-layout-height {
+  min-height: calc(100vh - 506px);
+}

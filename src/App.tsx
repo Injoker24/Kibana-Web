@@ -2,7 +2,6 @@ import React from 'react';
 import AppRouter from './App.router';
 import './App.scss';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { Footer, Header } from 'shared/components';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -16,9 +15,7 @@ const queryClient = new QueryClient({
 const App: React.FC<any> = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <Header />
       <AppRouter /> 
-      <Footer />
     </QueryClientProvider>
   );
 };

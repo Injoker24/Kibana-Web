@@ -2,6 +2,7 @@ import React from 'react';
 
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { DashboardRouter } from 'views/dashboard';
+import { LoginRouter } from 'views/login';
 
 const AppRouter: React.FC<any> = () => {
   return (
@@ -11,6 +12,12 @@ const AppRouter: React.FC<any> = () => {
           path={'/dashboard'}
         >
           <DashboardRouter />
+        </Route>
+
+        <Route
+          path={'/login'}
+        >
+          <LoginRouter />
         </Route>
 
         <Route
