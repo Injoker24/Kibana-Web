@@ -17,8 +17,15 @@ import IconNotificationBell from './icons/icon-notification-bell';
 import IconSearch from './icons/icon-search';
 import IconStar from './icons/icon-star';
 
-import logoLight from './logo-light.svg';
-import logoDark from './logo-dark.svg';
+import logoLight from './logo/logo-light.svg';
+import logoDark from './logo/logo-dark.svg';
+import logoFacebook from './logo/logo-facebook.svg';
+import logoGoogle from './logo/logo-google.svg';
+import logoInstagram from './logo/logo-instagram.svg';
+import logoLinkedIn from './logo/logo-linked-in.svg';
+import logoWhatsapp from './logo/logo-whatsapp.svg';
+import logoYoutube from './logo/logo-youtube.svg';
+
 import heroIllustration from './hero-illustration.svg';
 
 export {
@@ -42,5 +49,11 @@ export {
   IconStar,
   logoLight,
   logoDark,
+  logoFacebook,
+  logoGoogle,
+  logoInstagram,
+  logoLinkedIn,
+  logoWhatsapp,
+  logoYoutube,
   heroIllustration,
 };
