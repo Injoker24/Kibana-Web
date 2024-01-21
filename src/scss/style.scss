@@ -4,6 +4,7 @@
 // Import Bootstrap to be overridden
 @import '~bootstrap/scss/bootstrap.scss';
 @import '~text-security/text-security-disc.css';
+@import '~reactjs-popup/dist/index.css';
 
 @import 'mixins/all';
 
@@ -15,3 +16,5 @@
 @import './chip';
 @import './card';
 @import './shadow';
+@import './loader';
+@import './modal';

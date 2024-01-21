@@ -10,13 +10,8 @@ const Loader: React.FC<PropsWithChildren<LoaderProps>> =
     return (
       <div className={['loader-wrapper', type].join(' ')}>
         <div className="loader">
-          <button type="button"
-            autoFocus
-            className="btn btn-link shadow-none">
-            <Spinner animation="grow"
-              className="text-primary" />
-          </button>
-
+          <Spinner animation="grow"
+            className="text-primary" />
           <p className="text-muted">
             {children}
           </p>

@@ -1,0 +1,16 @@
+.sidebar-content {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  height: 100vh !important;
+  background-color: $primary;
+  border: 0;
+  width: 17.5rem;
+}
+
+.header-tooltip {
+  background-color: $light;
+  box-shadow: $shadow-sm;
+  padding: 1rem;
+  border-radius: 1rem;
+}

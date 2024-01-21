@@ -46,7 +46,7 @@ const Service: React.FC<Props> = ({
         <div className="d-flex flex-row flex-wrap mb-2">
           {tags && tags.map((tag) => {
               return (
-                <div className="chip chip-primary mr-2 mb-3">{tag}</div>
+                <div key={tag} className="chip chip-primary mr-2 mb-3">{tag}</div>
               )
           })}
         </div>

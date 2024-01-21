@@ -3,6 +3,7 @@ h1 {
   font-size: 36px;
   font-weight: bold;
   line-height: 1.5;
+  cursor: default;
 }
 
 h2 {
@@ -10,6 +11,7 @@ h2 {
   font-size: 28px;
   font-weight: bold;
   line-height: 1.5;
+  cursor: default;
 }
 
 h3 {
@@ -17,6 +19,7 @@ h3 {
   font-size: 24px;
   font-weight: 600;
   line-height: 1.5;
+  cursor: default;
 }
 
 h4 {
@@ -24,6 +27,7 @@ h4 {
   font-size: 18px;
   font-weight: normal;
   line-height: 1.5;
+  cursor: default;
 }
 
 p {
@@ -31,18 +35,35 @@ p {
   font-size: 16px;
   font-weight: normal;
   margin-bottom: 0;
+  cursor: default;
 }
 
 small {
   font-family: 'Inter', sans-serif;
   font-size: 12px;
   font-weight: normal;
+  cursor: default;
 }
 
+a:focus-visible {
+  outline: none !important;
+}
+
+a.text-light:focus {
+  color: $light !important;
+}
+
+hr {
+  border-top: 1px solid $light;
+}
 .font-weight-semibold {
   font-weight: $font-weight-semibold !important;
 }
 
 .font-weight-light {
   font-weight: $font-weight-light !important;
+}
+
+.cursor-pointer {
+  cursor: pointer !important;
 }

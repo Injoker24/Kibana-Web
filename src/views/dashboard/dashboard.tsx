@@ -5,7 +5,7 @@ import React from 'react';
 import { Image, Row } from 'react-bootstrap';
 import { useQuery } from 'react-query';
 import { DashboardService } from 'services';
-import { Service, Task } from 'shared/components';
+import { Service, Task, Loader } from 'shared/components';
 
 const Dashboard: React.FC = () => {
   const { data: serviceCategoryList, isLoading: isLoadingServiceCategoryList } = useQuery<DashboardInquiryServiceCategoryListOutput, ErrorWrapper>(
@@ -43,9 +43,10 @@ const Dashboard: React.FC = () => {
         <div className="col-10">
           <h3 className="mb-3">Cari layanan berdasarkan kategori</h3>
           <Row className="service-category-list-container">
+            {isLoadingServiceCategoryList && <Loader type="inline" />}
             {serviceCategoryList && serviceCategoryList.categories.map((item) => {
               return (
-                <div className="card-sm d-flex flex-row p-0 m-3" style={{ minWidth: "20rem" }}>
+                <div key={item.id} className="card-sm d-flex flex-row p-0 m-3" style={{ minWidth: "20rem" }}>
                   <div className="p-3 align-self-end w-100">
                     <p className="font-weight-semibold text-right">{item.name}</p>
                     <p className="text-right"><small>{item.serviceAmount} layanan</small></p>
@@ -103,18 +104,19 @@ const Dashboard: React.FC = () => {
             <a href="" className="text-primary text-align-center">Lihat Semua</a>
           </div>
           <Row>
+            {isLoadingNewTask && <Loader type="inline" />}
             {newTask && newTask.tasks.map((item) => {
               return (
-                <div className="col-lg-6 col-12 py-3">
-                <Task 
-                  name={item.name} 
-                  description={item.description} 
-                  tags={item.tags} 
-                  dueDate={item.dueDate} 
-                  difficulty={item.difficulty} 
-                  price={item.price}
-                />
-              </div>
+                <div key={item.id} className="col-lg-6 col-12 py-3">
+                  <Task 
+                    name={item.name} 
+                    description={item.description} 
+                    tags={item.tags} 
+                    dueDate={item.dueDate} 
+                    difficulty={item.difficulty} 
+                    price={item.price}
+                  />
+                </div>
               );
             })}
           </Row>
@@ -129,9 +131,10 @@ const Dashboard: React.FC = () => {
             <a href="" className="text-primary text-align-center">Lihat Semua</a>
           </div>
           <Row>
+            {isLoadingNewService && <Loader type="inline" />}
             {newService && newService.services.map((item) => {
               return (
-                <div className="col-xl-3 col-md-6 col-12 py-3">
+                <div key={item.id} className="col-xl-3 col-md-6 col-12 py-3">
                   <Service 
                     imageUrl={item.imageUrl}
                     name={item.name} 
