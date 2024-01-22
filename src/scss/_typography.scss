@@ -67,3 +67,15 @@ hr {
 .cursor-pointer {
   cursor: pointer !important;
 }
+
+.text-line-clamp {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+
+  @for $i from 1 through 10 {
+    &.line-#{$i} {
+      -webkit-line-clamp: $i;
+    }
+  }
+}

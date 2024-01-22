@@ -2,17 +2,11 @@ import { IconArrowDown, IconBurgerMenu, IconClose, logoLight } from 'images';
 import React, { useState } from 'react';
 
 import { Image } from 'react-bootstrap';
-import { NavLink, useHistory, withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 
 const Header: React.FC = () => {
   const [openSidebar, setOpenSidebar] = useState(false);
-  const closeSidebar = () => setOpenSidebar(false);
-  const history = useHistory();
- 
-  const navigateToLogin = () => {
-    history.push('/login')
-  }
 
   return (
     <div className="py-4 px-3 px-md-5 d-flex justify-content-between bg-primary text-light">
@@ -39,7 +33,7 @@ const Header: React.FC = () => {
             <a className="text-light mb-3" href="">Cari Layanan</a>
             <a className="text-light mb-3" href="">Kategori Layanan</a>
           </div>
-          <button className="btn btn-outline-white w-100">Masuk</button>
+          <Link to="/login" className="btn btn-outline-white w-100">Masuk</Link>
         </div>
       </Popup>
 
@@ -77,7 +71,7 @@ const Header: React.FC = () => {
             <a href="/service/category" className="text-dark">Kategori Layanan</a>
           </div>
         </Popup>
-        <button className="btn btn-outline-white mr-3 d-md-block d-none" onClick={navigateToLogin}>Masuk</button>
+        <Link to="/login" className="btn btn-outline-white mr-3 d-md-block d-none">Masuk</Link>
         <button className="btn btn-secondary">Daftar</button>
       </div>
     </div>

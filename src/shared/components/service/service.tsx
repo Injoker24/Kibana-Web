@@ -31,7 +31,7 @@ const Service: React.FC<Props> = ({
     <div className="card-sm p-0">
       <Image className="service-list-image mb-3" src={imageUrl} alt={name} />
       <div className="px-4 pb-4">
-        <p className="font-weight-semibold mb-3">{name}</p>
+        <p className="font-weight-semibold mb-3 text-line-clamp line-2" style={{height: "3em"}}>{name}</p>
         <div className="d-flex flex-row align-items-center justify-content-between mb-4">
           <div className="d-flex flex-row align-items-center">
             <Image className="freelancer-profile-image mr-2" src={freelancer.profileImageUrl} alt={freelancer.name} />

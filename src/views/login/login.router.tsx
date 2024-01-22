@@ -9,7 +9,7 @@ const LoginRouter = () => {
       <Route
         exact
         path={'/login'}
-        component={Login}
+        render={(props) => <Login {...props} key={Date.now()}/>}
       />
 
       <Route render={() => <Redirect to={`/dashboard`} />} />

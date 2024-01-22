@@ -9,7 +9,7 @@ const DashboardRouter = () => {
       <Route
         exact
         path={'/dashboard'}
-        component={Dashboard}
+        render={(props) => <Dashboard {...props} key={Date.now()}/>}
       />
 
       <Route

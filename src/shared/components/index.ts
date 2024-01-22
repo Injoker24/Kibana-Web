@@ -3,5 +3,6 @@ import Header from './header';
 import Task from './task';
 import Service from './service';
 import Footer from './footer';
+import FormInput from './form-input';
 
-export { Loader, Header, Task, Service, Footer };
+export { Loader, Header, Task, Service, Footer, FormInput };

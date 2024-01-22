@@ -20,8 +20,8 @@ const Task: React.FC<Props> = ({
  }) => {
    return (
       <div className="card-sm">
-      <p className="font-weight-semibold mb-3">{name}</p>
-      <p className="mb-3 text-grey">{description}</p>
+      <p className="font-weight-semibold mb-3 text-line-clamp line-2" style={{height: "3em"}}>{name}</p>
+      <p className="mb-3 text-grey text-line-clamp line-4" style={{height: "6em"}}>{description}</p>
       <div className="d-flex flex-row flex-wrap">
          {tags && tags.map((tag) => {
             return (

@@ -1,0 +1,35 @@
+.invalid-feedback {
+  display: block;
+}
+
+.is-invalid {
+  background-image: none !important;
+}
+
+.form-control {
+  height: inherit !important;
+}
+
+input[type='text'] {
+  width: 100%;
+  padding: 0.75rem 1rem !important;
+  border-radius: 0.5rem;
+  border: 1px solid $primary-dark;
+  color: $primary-dark;
+
+  &:focus-visible {
+    outline: 1.5px solid $primary-dark !important;
+  }
+}
+
+input[type='password'] {
+  width: 100%;
+  padding: 0.75rem 1rem !important;
+  border-radius: 0.5rem;
+  border: 1px solid $primary-dark;
+  color: $primary-dark;
+
+  &:focus-visible {
+    outline: 1.5px solid $primary-dark !important;
+  }
+}
