@@ -97,8 +97,8 @@ const Header: React.FC = () => {
         { !status && 
           (
             <>
-              <Link to="/login" className="btn btn-outline-white mr-3 d-md-block d-none">Masuk</Link>
-              <button className="btn btn-secondary">Daftar</button>
+              <Link to="/auth/login" className="btn btn-outline-white mr-3 d-md-block d-none">Masuk</Link>
+              <Link to="/auth/register" className="btn btn-secondary">Daftar</Link>
             </>
           )
         }

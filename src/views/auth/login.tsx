@@ -115,7 +115,7 @@ const Login: React.FC = () => {
                 <button disabled={!isValid} type="submit" className="btn btn-primary w-100">Masuk</button>
               </div>
             </form>
-            <p className="mr-2 d-inline">Belum punya akun?</p><a className="text-primary" href="">Daftar disini!</a>
+            <p className="mr-2 d-inline">Belum punya akun?</p><a className="text-primary" href="/auth/register">Daftar disini!</a>
           </div>
         </div>
       </div>
