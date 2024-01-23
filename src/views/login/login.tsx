@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { AuthService } from 'services';
 import { Footer, FormInput, Header, Loader } from 'shared/components';
+import { setLocalStorage } from 'utils';
 
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -26,7 +27,14 @@ const Login: React.FC = () => {
     }),
     {
       onSuccess: (result) => {
-        console.log(result);
+        setLocalStorage("isFreelancer", result.isFreelancer.toString());
+        setLocalStorage("isConnectedBank", result.isConnectedBank.toString());
+        setLocalStorage("profileImageUrl", result.profileImageUrl);
+        setLocalStorage("username", result.username);
+        setLocalStorage("name", result.name);
+        setLocalStorage("token", result.token);
+        setLocalStorage("status", "client");
+        window.location.href="/dashboard";
       }
     }
   );
