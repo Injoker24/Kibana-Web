@@ -4,5 +4,6 @@ import Task from './task';
 import Service from './service';
 import Footer from './footer';
 import FormInput from './form-input';
+import InlineRetryError from './inline-retry-error';
 
-export { Loader, Header, Task, Service, Footer, FormInput };
+export { Loader, Header, Task, Service, Footer, FormInput, InlineRetryError };

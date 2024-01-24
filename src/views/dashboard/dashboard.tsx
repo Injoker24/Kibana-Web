@@ -10,26 +10,38 @@ import React from 'react';
 import { Image, Row } from 'react-bootstrap';
 import { useQuery } from 'react-query';
 import { DashboardService } from 'services';
-import { Service, Task, Loader, Header, Footer } from 'shared/components';
+import { Service, Task, Loader, Header, Footer, InlineRetryError } from 'shared/components';
 
 const Dashboard: React.FC = () => {
-  const { data: serviceCategoryList, isLoading: isLoadingServiceCategoryList } = useQuery<
-    DashboardInquiryServiceCategoryListOutput,
-    ErrorWrapper
-  >(
+  const {
+    data: serviceCategoryList,
+    isLoading: isLoadingServiceCategoryList,
+    refetch: refetchCategoryList,
+    error: errorCategoryList,
+  } = useQuery<DashboardInquiryServiceCategoryListOutput, ErrorWrapper>(
     ['inquiry-service-category-list'],
     async () => await DashboardService.inquiryServiceCategoryList(),
   );
 
-  const { data: newTask, isLoading: isLoadingNewTask } = useQuery<
-    DashboardInquiryNewTaskOutput,
-    ErrorWrapper
-  >(['inquiry-new-task'], async () => await DashboardService.inquiryNewTask());
+  const {
+    data: newTask,
+    isLoading: isLoadingNewTask,
+    refetch: refetchNewTask,
+    error: errorNewTask,
+  } = useQuery<DashboardInquiryNewTaskOutput, ErrorWrapper>(
+    ['inquiry-new-task'],
+    async () => await DashboardService.inquiryNewTask(),
+  );
 
-  const { data: newService, isLoading: isLoadingNewService } = useQuery<
-    DashboardInquiryNewServiceOutput,
-    ErrorWrapper
-  >(['inquiry-new-service'], async () => await DashboardService.inquiryNewService());
+  const {
+    data: newService,
+    isLoading: isLoadingNewService,
+    refetch: refetchNewService,
+    error: errorNewService,
+  } = useQuery<DashboardInquiryNewServiceOutput, ErrorWrapper>(
+    ['inquiry-new-service'],
+    async () => await DashboardService.inquiryNewService(),
+  );
 
   return (
     <>
@@ -65,6 +77,14 @@ const Dashboard: React.FC = () => {
         <Row className="justify-content-center mb-5">
           <div className="col-10">
             <h3 className="mb-3">Cari layanan berdasarkan kategori</h3>
+            {errorCategoryList && (
+              <div className="flex-centered">
+                <InlineRetryError
+                  message={errorCategoryList.message}
+                  onClick={refetchCategoryList}
+                />
+              </div>
+            )}
             <Row className="service-category-list-container">
               {isLoadingServiceCategoryList && <Loader type="inline" />}
               {serviceCategoryList &&
@@ -166,6 +186,14 @@ const Dashboard: React.FC = () => {
                 Lihat Semua
               </a>
             </div>
+            {errorNewTask && (
+              <div className="flex-centered">
+                <InlineRetryError
+                  message={errorNewTask.message}
+                  onClick={refetchNewTask}
+                />
+              </div>
+            )}
             <Row>
               {isLoadingNewTask && <Loader type="inline" />}
               {newTask &&
@@ -202,6 +230,14 @@ const Dashboard: React.FC = () => {
                 Lihat Semua
               </a>
             </div>
+            {errorNewService && (
+              <div className="flex-centered">
+                <InlineRetryError
+                  message={errorNewService.message}
+                  onClick={refetchNewService}
+                />
+              </div>
+            )}
             <Row>
               {isLoadingNewService && <Loader type="inline" />}
               {newService &&
