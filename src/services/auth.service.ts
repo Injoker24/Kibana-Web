@@ -1,11 +1,15 @@
 import {
   AuthLoginInput,
   AuthLoginOutput,
+  AuthRegisterInput,
+  AuthRegisterOutput,
   transformToAuthLoginOutput,
   transformToAuthLoginRequest,
+  transformToAuthRegisterOutput,
+  transformToAuthRegisterRequest,
 } from 'models';
 
-import { ApiResponse, AuthLoginResponse } from 'services/schemas';
+import { ApiResponse, AuthLoginResponse, AuthRegisterResponse } from 'services/schemas';
 
 import { axiosInstance } from 'setup';
 
@@ -18,6 +22,16 @@ const AuthService = {
     );
 
     return transformToAuthLoginOutput(response.data.output_schema);
+  },
+
+  register: async (data: AuthRegisterInput): Promise<AuthRegisterOutput> => {
+    const requestData = transformToAuthRegisterRequest(data);
+    const response = await axiosInstance.post<ApiResponse<AuthRegisterResponse>>(
+      `/register`,
+      requestData,
+    );
+
+    return transformToAuthRegisterOutput(response.data.output_schema);
   },
 };
 

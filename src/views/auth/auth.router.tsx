@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import Login from './login';
 import { getLocalStorage } from 'utils';
+import Register from './register';
 
 const AuthRouter = () => {
   const [token, setToken] = useState();
@@ -30,7 +31,7 @@ const AuthRouter = () => {
           exact
           path={'/auth/register'}
           render={(props) => (
-            <Login
+            <Register
               {...props}
               key={Date.now()}
             />

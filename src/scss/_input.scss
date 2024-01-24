@@ -33,3 +33,29 @@ input[type='password'] {
     outline: 1.5px solid $primary-dark !important;
   }
 }
+
+input[type='number'] {
+  width: 100%;
+  padding: 0.75rem 1rem !important;
+  border-radius: 0.5rem;
+  border: 1px solid $primary-dark;
+  color: $primary-dark;
+
+  &:focus-visible {
+    outline: 1.5px solid $primary-dark !important;
+  }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input-prefix {
+  width: 6rem;
+  padding: 0.75rem 1rem !important;
+  border-radius: 0.5rem;
+  border: 1px solid $primary-dark;
+  color: $primary-dark;
+}

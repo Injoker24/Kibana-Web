@@ -1,4 +1,9 @@
-import { AuthLoginRequest, AuthLoginResponse } from 'services/schemas';
+import {
+  AuthLoginRequest,
+  AuthLoginResponse,
+  AuthRegisterRequest,
+  AuthRegisterResponse,
+} from 'services/schemas';
 
 export interface AuthLoginOutput {
   isFreelancer: boolean;
@@ -30,6 +35,48 @@ export function transformToAuthLoginOutput(response: AuthLoginResponse): AuthLog
 export function transformToAuthLoginRequest(input: AuthLoginInput): AuthLoginRequest {
   const result: AuthLoginRequest = {
     email_username: input.emailUsername,
+    password: input.password,
+  };
+
+  return result;
+}
+
+export interface AuthRegisterOutput {
+  isFreelancer: boolean;
+  isConnectedBank: boolean;
+  profileImageUrl: string;
+  username: string;
+  name: string;
+  token: string;
+}
+
+export interface AuthRegisterInput {
+  email: string;
+  username: string;
+  name: string;
+  phoneNumber: string;
+  password: string;
+}
+
+export function transformToAuthRegisterOutput(response: AuthRegisterResponse): AuthRegisterOutput {
+  const result: AuthRegisterOutput = {
+    isFreelancer: response.is_freelancer,
+    isConnectedBank: response.is_connected_bank,
+    profileImageUrl: response.profile_image_url || '',
+    username: response.username,
+    name: response.name,
+    token: response.token,
+  };
+
+  return result;
+}
+
+export function transformToAuthRegisterRequest(input: AuthRegisterInput): AuthRegisterRequest {
+  const result: AuthRegisterRequest = {
+    email: input.email,
+    username: input.username,
+    name: input.name,
+    phone_number: input.phoneNumber,
     password: input.password,
   };
 
