@@ -6,7 +6,7 @@ import { Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { AuthService } from 'services';
-import { Footer, FormInput, Header, Loader } from 'shared/components';
+import { Footer, FormInput, Header, Loader, PopUpError } from 'shared/components';
 import { setLocalStorage } from 'utils';
 
 const Login: React.FC = () => {
@@ -25,10 +25,11 @@ const Login: React.FC = () => {
     mode: 'onChange',
   });
 
-  const { isLoading: isLoadingLogin, mutate: mutateLogin } = useMutation<
-    AuthLoginOutput,
-    ErrorWrapper
-  >(
+  const {
+    isLoading: isLoadingLogin,
+    mutate: mutateLogin,
+    error: errorLogin,
+  } = useMutation<AuthLoginOutput, ErrorWrapper>(
     ['login', formData],
     async () =>
       await AuthService.login({
@@ -56,6 +57,7 @@ const Login: React.FC = () => {
 
   return (
     <>
+      {errorLogin && <PopUpError message={errorLogin.message} />}
       {isLoadingLogin && <Loader type="fixed" />}
       <Header />
       <div className="min-layout-height d-flex flex-row flex-wrap">

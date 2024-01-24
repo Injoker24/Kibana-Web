@@ -284,15 +284,13 @@ const Header: React.FC = () => {
           </>
         )}
         {isFreelancer && status === 'client' && (
-          <button className="btn btn-outline-white mr-4 d-md-block d-none">Jadi Freelancer</button>
+          <div className="btn btn-outline-white mr-4 d-md-block d-none">Jadi Freelancer</div>
         )}
         {!isFreelancer && status === 'client' && (
-          <button className="btn btn-outline-white mr-4 d-md-block d-none">
-            Daftar Freelancer
-          </button>
+          <div className="btn btn-outline-white mr-4 d-md-block d-none">Daftar Freelancer</div>
         )}
         {status === 'freelancer' && (
-          <button className="btn btn-outline-white mr-4 d-md-block d-none">Jadi Klien</button>
+          <div className="btn btn-outline-white mr-4 d-md-block d-none">Jadi Klien</div>
         )}
         {status && (
           <div

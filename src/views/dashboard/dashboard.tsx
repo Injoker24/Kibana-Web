@@ -81,7 +81,7 @@ const Dashboard: React.FC = () => {
               <div className="flex-centered">
                 <InlineRetryError
                   message={errorCategoryList.message}
-                  onClick={refetchCategoryList}
+                  onRetry={refetchCategoryList}
                 />
               </div>
             )}
@@ -190,7 +190,7 @@ const Dashboard: React.FC = () => {
               <div className="flex-centered">
                 <InlineRetryError
                   message={errorNewTask.message}
-                  onClick={refetchNewTask}
+                  onRetry={refetchNewTask}
                 />
               </div>
             )}
@@ -234,7 +234,7 @@ const Dashboard: React.FC = () => {
               <div className="flex-centered">
                 <InlineRetryError
                   message={errorNewService.message}
-                  onClick={refetchNewService}
+                  onRetry={refetchNewService}
                 />
               </div>
             )}

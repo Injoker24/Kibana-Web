@@ -6,7 +6,7 @@ import { Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { AuthService } from 'services';
-import { Footer, FormInput, Header, Loader } from 'shared/components';
+import { Footer, FormInput, Header, Loader, PopUpError } from 'shared/components';
 import { setLocalStorage } from 'utils';
 
 const Register: React.FC = () => {
@@ -36,10 +36,11 @@ const Register: React.FC = () => {
     triggerValidation('passwordRepeat');
   }, [password, triggerValidation]);
 
-  const { isLoading: isLoadingRegister, mutate: mutateRegister } = useMutation<
-    AuthRegisterOutput,
-    ErrorWrapper
-  >(
+  const {
+    isLoading: isLoadingRegister,
+    mutate: mutateRegister,
+    error: errorRegister,
+  } = useMutation<AuthRegisterOutput, ErrorWrapper>(
     ['register', formData],
     async () =>
       await AuthService.register({
@@ -70,6 +71,7 @@ const Register: React.FC = () => {
 
   return (
     <>
+      {errorRegister && <PopUpError message={errorRegister.message} />}
       {isLoadingRegister && <Loader type="fixed" />}
       <Header />
       <div className="min-layout-height d-flex flex-row flex-wrap">

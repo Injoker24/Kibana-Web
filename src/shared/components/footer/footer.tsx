@@ -32,7 +32,7 @@ const Footer: React.FC = () => {
                     />
                     <a
                       className="text-light"
-                      href=""
+                      href="/"
                     >
                       Facebook
                     </a>
@@ -45,7 +45,7 @@ const Footer: React.FC = () => {
                     />
                     <a
                       className="text-light"
-                      href=""
+                      href="/"
                     >
                       Instagram
                     </a>
@@ -58,7 +58,7 @@ const Footer: React.FC = () => {
                     />
                     <a
                       className="text-light"
-                      href=""
+                      href="/"
                     >
                       LinkedIn
                     </a>
@@ -71,7 +71,7 @@ const Footer: React.FC = () => {
                     />
                     <a
                       className="text-light"
-                      href=""
+                      href="/"
                     >
                       Whatsapp
                     </a>
@@ -85,25 +85,25 @@ const Footer: React.FC = () => {
                   </p>
                   <a
                     className="mb-3 text-light"
-                    href=""
+                    href="/"
                   >
                     Kerjasama
                   </a>
                   <a
                     className="mb-3 text-light"
-                    href=""
+                    href="/"
                   >
                     Syarat Layanan
                   </a>
                   <a
                     className="mb-3 text-light"
-                    href=""
+                    href="/"
                   >
                     Kebijakan Privasi
                   </a>
                   <a
                     className="mb-3 text-light"
-                    href=""
+                    href="/"
                   >
                     Perusahaan Kami
                   </a>
@@ -116,37 +116,37 @@ const Footer: React.FC = () => {
                   </p>
                   <a
                     className="mb-3 text-light"
-                    href=""
+                    href="/"
                   >
                     Cara Kerja
                   </a>
                   <a
                     className="mb-3 text-light"
-                    href=""
+                    href="/"
                   >
                     Cara Menjadi Freelancer
                   </a>
                   <a
                     className="mb-3 text-light"
-                    href=""
+                    href="/"
                   >
                     Cara Menjadi Penugas
                   </a>
                   <a
                     className="mb-3 text-light"
-                    href=""
+                    href="/"
                   >
                     Aturan Main
                   </a>
                   <a
                     className="mb-3 text-light"
-                    href=""
+                    href="/"
                   >
                     Pembayaran
                   </a>
                   <a
                     className="mb-3 text-light"
-                    href=""
+                    href="/"
                   >
                     Pencairan Uang
                   </a>
