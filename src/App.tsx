@@ -15,7 +15,7 @@ const queryClient = new QueryClient({
 const App: React.FC<any> = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <AppRouter /> 
+      <AppRouter />
     </QueryClientProvider>
   );
 };

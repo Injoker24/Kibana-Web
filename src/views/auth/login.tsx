@@ -13,42 +13,52 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState<AuthLoginInput>({
     emailUsername: '',
-    password: ''
+    password: '',
   });
-  const { register, errors, formState, handleSubmit, formState: { isValid } } = useForm({
+  const {
+    register,
+    errors,
+    formState,
+    handleSubmit,
+    formState: { isValid },
+  } = useForm({
     mode: 'onChange',
   });
 
-  const { isLoading: isLoadingLogin, mutate: mutateLogin } = useMutation<AuthLoginOutput, ErrorWrapper>(
+  const { isLoading: isLoadingLogin, mutate: mutateLogin } = useMutation<
+    AuthLoginOutput,
+    ErrorWrapper
+  >(
     ['login', formData],
-    async () => await AuthService.login({
-      emailUsername: formData.emailUsername,
-      password: formData.password
-    }),
+    async () =>
+      await AuthService.login({
+        emailUsername: formData.emailUsername,
+        password: formData.password,
+      }),
     {
       onSuccess: (result) => {
-        setLocalStorage("isFreelancer", result.isFreelancer.toString());
-        setLocalStorage("isConnectedBank", result.isConnectedBank.toString());
-        setLocalStorage("profileImageUrl", result.profileImageUrl);
-        setLocalStorage("username", result.username);
-        setLocalStorage("name", result.name);
-        setLocalStorage("token", result.token);
-        setLocalStorage("status", "client");
-        window.location.href="/dashboard";
-      }
-    }
+        setLocalStorage('isFreelancer', result.isFreelancer.toString());
+        setLocalStorage('isConnectedBank', result.isConnectedBank.toString());
+        setLocalStorage('profileImageUrl', result.profileImageUrl);
+        setLocalStorage('username', result.username);
+        setLocalStorage('name', result.name);
+        setLocalStorage('token', result.token);
+        setLocalStorage('status', 'client');
+        window.location.href = '/dashboard';
+      },
+    },
   );
 
   const submitForm = (formData: any) => {
-    setFormData(formData)
+    setFormData(formData);
     mutateLogin();
   };
 
   return (
     <>
-      { isLoadingLogin && <Loader type="fixed" />}
+      {isLoadingLogin && <Loader type="fixed" />}
       <Header />
-      <div className='min-layout-height d-flex flex-row flex-wrap'>
+      <div className="min-layout-height d-flex flex-row flex-wrap">
         <div className="bg-primary text-light col-12 col-md-6 flex-centered">
           <div className="p-4 m-md-auto p-md-5">
             <h3 className="mb-3">Pekerjaanmu terlalu sulit? Kita Bantu Anda!</h3>
@@ -68,9 +78,9 @@ const Login: React.FC = () => {
                   labelFor="emailUsername"
                   errorMessage={errors?.emailUsername?.message}
                 >
-                  <Form.Control 
-                    type="text" 
-                    id="emailUsername" 
+                  <Form.Control
+                    type="text"
+                    id="emailUsername"
                     name="emailUsername"
                     isInvalid={formState.touched.emailUsername === true && !!errors.emailUsername}
                     ref={
@@ -78,7 +88,7 @@ const Login: React.FC = () => {
                         required: {
                           value: true,
                           message: 'E-mail atau Username harus diisi.',
-                        }
+                        },
                       }) as string & ((ref: Element | null) => void)
                     }
                   />
@@ -90,10 +100,10 @@ const Login: React.FC = () => {
                   labelFor="password"
                   errorMessage={errors?.password?.message}
                 >
-                  <div className='position-relative'>
-                    <Form.Control 
-                      type={showPassword ? "text" : "password"} 
-                      id="password" 
+                  <div className="position-relative">
+                    <Form.Control
+                      type={showPassword ? 'text' : 'password'}
+                      id="password"
                       name="password"
                       isInvalid={formState.touched.password === true && !!errors.password}
                       ref={
@@ -101,21 +111,37 @@ const Login: React.FC = () => {
                           required: {
                             value: true,
                             message: 'Password harus diisi.',
-                          }
+                          },
                         }) as string & ((ref: Element | null) => void)
                       }
                     />
-                    <div className="text-primary cursor-pointer" onClick={() => setShowPassword(x => !x)} style={{ position: "absolute", right: "1rem", bottom: "0.75rem" }}>
-                      { showPassword ? <IconEyeOpen /> : <IconEyeSlash />}
+                    <div
+                      className="text-primary cursor-pointer"
+                      onClick={() => setShowPassword((x) => !x)}
+                      style={{ position: 'absolute', right: '1rem', bottom: '0.75rem' }}
+                    >
+                      {showPassword ? <IconEyeOpen /> : <IconEyeSlash />}
                     </div>
                   </div>
                 </FormInput>
               </div>
               <div className="mb-4 mb-md-5">
-                <button disabled={!isValid} type="submit" className="btn btn-primary w-100">Masuk</button>
+                <button
+                  disabled={!isValid}
+                  type="submit"
+                  className="btn btn-primary w-100"
+                >
+                  Masuk
+                </button>
               </div>
             </form>
-            <p className="mr-2 d-inline">Belum punya akun?</p><a className="text-primary" href="/auth/register">Daftar disini!</a>
+            <p className="mr-2 d-inline">Belum punya akun?</p>
+            <a
+              className="text-primary"
+              href="/auth/register"
+            >
+              Daftar disini!
+            </a>
           </div>
         </div>
       </div>

@@ -8,27 +8,35 @@ const AuthRouter = () => {
   const [token, setToken] = useState();
 
   useEffect(() => {
-    setToken(getLocalStorage("token"));
+    setToken(getLocalStorage('token'));
   }, []);
 
   return (
     <Switch>
-      { !token && (
-          <Route
-            exact
-            path={'/auth/login'}
-            render={(props) => <Login {...props} key={Date.now()}/>}
-          />
-        )
-      }
-      { !token && (
-          <Route
-            exact
-            path={'/auth/register'}
-            render={(props) => <Login {...props} key={Date.now()}/>}
-          />
-        )
-      }
+      {!token && (
+        <Route
+          exact
+          path={'/auth/login'}
+          render={(props) => (
+            <Login
+              {...props}
+              key={Date.now()}
+            />
+          )}
+        />
+      )}
+      {!token && (
+        <Route
+          exact
+          path={'/auth/register'}
+          render={(props) => (
+            <Login
+              {...props}
+              key={Date.now()}
+            />
+          )}
+        />
+      )}
       <Route render={() => <Redirect to={`/dashboard`} />} />
     </Switch>
   );

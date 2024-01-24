@@ -8,15 +8,11 @@ const AppRouter: React.FC<any> = () => {
   return (
     <Router>
       <Switch>
-        <Route
-          path={'/dashboard'}
-        >
+        <Route path={'/dashboard'}>
           <DashboardRouter />
         </Route>
 
-        <Route
-          path={'/auth'}
-        >
+        <Route path={'/auth'}>
           <AuthRouter />
         </Route>
 
