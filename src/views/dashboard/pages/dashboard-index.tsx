@@ -2,25 +2,25 @@ import { heroIllustration } from 'images';
 import {
   DashboardInquiryNewServiceOutput,
   DashboardInquiryNewTaskOutput,
-  DashboardInquiryServiceCategoryListOutput,
   ErrorWrapper,
+  ServiceInquiryCategoryOutput,
 } from 'models';
 import React from 'react';
 
 import { Image, Row } from 'react-bootstrap';
 import { useQuery } from 'react-query';
-import { DashboardService } from 'services';
+import { DashboardService, ServiceService } from 'services';
 import { Service, Task, Loader, Header, Footer, InlineRetryError } from 'shared/components';
 
 const DashboardIndex: React.FC = () => {
   const {
-    data: serviceCategoryList,
-    isLoading: isLoadingServiceCategoryList,
-    refetch: refetchCategoryList,
-    error: errorCategoryList,
-  } = useQuery<DashboardInquiryServiceCategoryListOutput, ErrorWrapper>(
-    ['inquiry-service-category-list'],
-    async () => await DashboardService.inquiryServiceCategoryList(),
+    data: serviceCategory,
+    isLoading: isLoadingServiceCategory,
+    refetch: refetchServiceCategory,
+    error: errorServiceCategory,
+  } = useQuery<ServiceInquiryCategoryOutput, ErrorWrapper>(
+    ['inquiry-service-category'],
+    async () => await ServiceService.inquiryCategory(),
   );
 
   const {
@@ -77,18 +77,18 @@ const DashboardIndex: React.FC = () => {
         <Row className="justify-content-center mb-5">
           <div className="col-10">
             <h3 className="mb-3">Cari layanan berdasarkan kategori</h3>
-            {errorCategoryList && (
+            {errorServiceCategory && (
               <div className="flex-centered">
                 <InlineRetryError
-                  message={errorCategoryList.message}
-                  onRetry={refetchCategoryList}
+                  message={errorServiceCategory.message}
+                  onRetry={refetchServiceCategory}
                 />
               </div>
             )}
             <Row className="service-category-list-container">
-              {isLoadingServiceCategoryList && <Loader type="inline" />}
-              {serviceCategoryList &&
-                serviceCategoryList.categories.map((item) => {
+              {isLoadingServiceCategory && <Loader type="inline" />}
+              {serviceCategory &&
+                serviceCategory.categories.map((item) => {
                   return (
                     <div
                       key={item.id}

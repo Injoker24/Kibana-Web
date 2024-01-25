@@ -1,35 +1,8 @@
 import {
   DashboardInquiryNewServiceResponse,
   DashboardInquiryNewTaskResponse,
-  DashboardInquiryServiceCategoryListResponse,
 } from 'services/schemas';
 import { formatCurrency } from 'utils';
-
-export interface DashboardInquiryServiceCategoryListOutput {
-  categories: {
-    id: string;
-    name: string;
-    serviceAmount: number;
-    imageUrl: string;
-  }[];
-}
-
-export function transformToDashboardInquiryServiceCategoryListOutput(
-  response: DashboardInquiryServiceCategoryListResponse,
-): DashboardInquiryServiceCategoryListOutput {
-  const result: DashboardInquiryServiceCategoryListOutput = {
-    categories: response.categories.map((t) => {
-      return {
-        id: t.id,
-        name: t.name,
-        serviceAmount: t.service_amount,
-        imageUrl: t.image_url,
-      };
-    }),
-  };
-
-  return result;
-}
 
 export interface DashboardInquiryNewTaskOutput {
   tasks: {

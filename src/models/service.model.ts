@@ -5,6 +5,7 @@ export interface ServiceInquiryCategoryOutput {
     id: string;
     name: string;
     imageUrl: string;
+    serviceAmount: Number;
     subCategories: {
       id: string;
       name: string;
@@ -21,6 +22,7 @@ export function transformToServiceInquiryCategoryOutput(
         id: t.id,
         name: t.name,
         imageUrl: t.image_url,
+        serviceAmount: t.service_amount,
         subCategories: t.sub_categories.map((m) => {
           return {
             id: m.id,

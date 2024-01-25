@@ -14,7 +14,7 @@ const ServiceCategoryList: React.FC = () => {
     refetch: refetchCategory,
     error: errorCategory,
   } = useQuery<ServiceInquiryCategoryOutput, ErrorWrapper>(
-    ['inquiry-category'],
+    ['inquiry-service-category'],
     async () => await ServiceService.inquiryCategory(),
   );
 
