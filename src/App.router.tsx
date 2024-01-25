@@ -3,6 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { DashboardRouter } from 'views/dashboard';
 import { AuthRouter } from 'views/auth';
+import { ServiceRouter } from 'views/service';
 
 const AppRouter: React.FC<any> = () => {
   return (
@@ -14,6 +15,10 @@ const AppRouter: React.FC<any> = () => {
 
         <Route path={'/auth'}>
           <AuthRouter />
+        </Route>
+
+        <Route path={'/service'}>
+          <ServiceRouter />
         </Route>
 
         <Route

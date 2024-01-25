@@ -12,7 +12,7 @@ import { useQuery } from 'react-query';
 import { DashboardService } from 'services';
 import { Service, Task, Loader, Header, Footer, InlineRetryError } from 'shared/components';
 
-const Dashboard: React.FC = () => {
+const DashboardIndex: React.FC = () => {
   const {
     data: serviceCategoryList,
     isLoading: isLoadingServiceCategoryList,
@@ -269,4 +269,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardIndex;

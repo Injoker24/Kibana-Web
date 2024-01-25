@@ -49,13 +49,13 @@ const Header: React.FC = () => {
             <h4 className="mb-3 font-weight-bold">Tugas</h4>
             <a
               className="text-light mb-3"
-              href=""
+              href="/task"
             >
               Cari Tugas
             </a>
             <a
               className="text-light mb-3"
-              href=""
+              href="/task/category"
             >
               Kategori Tugas
             </a>
@@ -89,13 +89,13 @@ const Header: React.FC = () => {
             <h4 className="mb-3 font-weight-bold">Layanan</h4>
             <a
               className="text-light mb-3"
-              href=""
+              href="/service"
             >
               Cari Layanan
             </a>
             <a
               className="text-light mb-3"
-              href=""
+              href="/service/category"
             >
               Kategori Layanan
             </a>

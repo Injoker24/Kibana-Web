@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Switch, Route, Redirect } from 'react-router-dom';
-import Dashboard from './dashboard';
+import { DashboardIndex } from './pages';
 
 const DashboardRouter = () => {
   return (
@@ -10,7 +10,7 @@ const DashboardRouter = () => {
         exact
         path={'/dashboard'}
         render={(props) => (
-          <Dashboard
+          <DashboardIndex
             {...props}
             key={Date.now()}
           />

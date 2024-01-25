@@ -6,5 +6,16 @@ import Footer from './footer';
 import FormInput from './form-input';
 import InlineRetryError from './inline-retry-error';
 import PopUpError from './pop-up-error';
+import TitleBanner from './title-banner';
 
-export { Loader, Header, Task, Service, Footer, FormInput, InlineRetryError, PopUpError };
+export {
+  Loader,
+  Header,
+  Task,
+  Service,
+  Footer,
+  FormInput,
+  InlineRetryError,
+  PopUpError,
+  TitleBanner,
+};

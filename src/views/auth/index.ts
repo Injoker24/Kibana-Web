@@ -1,5 +1,4 @@
 import AuthRouter from './auth.router';
-import Login from './login';
-import Register from './register';
+import { AuthLogin, AuthRegister } from './pages';
 
-export { AuthRouter, Login, Register };
+export { AuthRouter, AuthLogin, AuthRegister };

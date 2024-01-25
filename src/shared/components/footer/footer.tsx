@@ -1,11 +1,22 @@
 import { logoFacebook, logoInstagram, logoLight, logoLinkedIn, logoWhatsapp } from 'images';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Image } from 'react-bootstrap';
+import { getLocalStorage } from 'utils';
 
 const Footer: React.FC = () => {
+  const [status, setStatus] = useState();
+
+  useEffect(() => {
+    setStatus(getLocalStorage('status'));
+  }, []);
+
   return (
-    <div className="pt-5 pb-3 bg-primary text-light">
+    <div
+      className={
+        'pt-5 pb-3 text-light ' + (status === 'freelancer' ? 'bg-secondary-dark' : 'bg-primary')
+      }
+    >
       <div className="d-flex flex-row flex-centered">
         <div className="col-10 p-0">
           <div className="d-flex flex-row mb-5 flex-wrap">

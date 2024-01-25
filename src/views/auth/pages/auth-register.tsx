@@ -9,7 +9,7 @@ import { AuthService } from 'services';
 import { Footer, FormInput, Header, Loader, PopUpError } from 'shared/components';
 import { setLocalStorage } from 'utils';
 
-const Register: React.FC = () => {
+const AuthRegister: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const [formData, setFormData] = useState<AuthRegisterInput>({
@@ -270,4 +270,4 @@ const Register: React.FC = () => {
   );
 };
 
-export default Register;
+export default AuthRegister;

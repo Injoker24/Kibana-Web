@@ -9,7 +9,7 @@ import { AuthService } from 'services';
 import { Footer, FormInput, Header, Loader, PopUpError } from 'shared/components';
 import { setLocalStorage } from 'utils';
 
-const Login: React.FC = () => {
+const AuthLogin: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState<AuthLoginInput>({
     emailUsername: '',
@@ -44,7 +44,7 @@ const Login: React.FC = () => {
         setLocalStorage('username', result.username);
         setLocalStorage('name', result.name);
         setLocalStorage('token', result.token);
-        setLocalStorage('status', 'client');
+        setLocalStorage('status', 'freelancer');
         window.location.href = '/dashboard';
       },
     },
@@ -152,4 +152,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default AuthLogin;

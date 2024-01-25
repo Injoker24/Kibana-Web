@@ -1,4 +1,4 @@
 import DashboardRouter from './dashboard.router';
-import Dashboard from './dashboard';
+import { DashboardIndex } from './pages';
 
-export { DashboardRouter, Dashboard };
+export { DashboardRouter, DashboardIndex };
