@@ -3,7 +3,7 @@ import {
   ServiceInquiryDetailSubCategoryOutput,
   ServiceInquiryNewServiceOutput,
 } from 'models';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { ServiceService } from 'services';
 import { Image, Row } from 'react-bootstrap';
@@ -32,22 +32,24 @@ const ServiceCategoryDetail = ({ title, id, onBack }: any) => {
     async () => await ServiceService.inquiryDetailSubCategory(id),
   );
 
+  useEffect(() => {
+    document.body.scrollTo(0, 0);
+  }, []);
+
   return (
     <>
       <Header />
       <div className="min-layout-height">
         <TitleBanner message={title} />
         <Row className="justify-content-center mb-4">
-          <div className="col-10 text-primary-dark flex-centered justify-content-start cursor-pointer">
+          <div
+            className="col-10 text-primary-dark flex-centered justify-content-start cursor-pointer"
+            onClick={onBack}
+          >
             <div className="mr-3">
               <IconChevronLeft />
             </div>
-            <p
-              className="cursor-pointer"
-              onClick={onBack}
-            >
-              Kembali
-            </p>
+            <p className="cursor-pointer">Kembali</p>
           </div>
         </Row>
         <Row className="justify-content-center mb-5">

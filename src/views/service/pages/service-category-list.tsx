@@ -1,5 +1,5 @@
 import { ErrorWrapper, ServiceInquiryCategoryOutput } from 'models';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { ServiceService } from 'services';
 import { Image, Row } from 'react-bootstrap';
@@ -9,7 +9,7 @@ import { IconChevronRight } from 'images';
 import { Redirect } from 'react-router-dom';
 import ServiceCategoryDetail from '../components/service-category-detail';
 
-const ServiceCategoryList: React.FC = () => {
+const ServiceCategoryList: React.FC = ({ stateId, stateName }: any) => {
   const {
     data: category,
     isLoading: isLoadingCategory,
@@ -20,28 +20,36 @@ const ServiceCategoryList: React.FC = () => {
     async () => await ServiceService.inquiryCategory(),
   );
 
-  const [serviceId, setServiceId] = useState('');
-  const [serviceName, setServiceName] = useState('');
+  const [categoryId, setCategoryId] = useState('');
+  const [categoryName, setCategoryName] = useState('');
+  const [hasRedirected, setHasRedirected] = useState(false);
   const [step, setStep] = useState(0);
 
   const openDetailCategory = (id: string, name: string) => {
-    setServiceId(id);
-    setServiceName(name);
+    setCategoryId(id);
+    setCategoryName(name);
     setStep(1);
+    document.body.scrollTo(0, 0);
   };
 
   const back = () => {
     setStep(0);
+    document.body.scrollTo(0, 0);
   };
 
   if (step === 1) {
     return (
       <ServiceCategoryDetail
-        title={serviceName}
-        id={serviceId}
+        title={categoryName}
+        id={categoryId}
         onBack={back}
       />
     );
+  }
+
+  if (stateId && stateName && !hasRedirected) {
+    setHasRedirected(true);
+    openDetailCategory(stateId, stateName);
   }
 
   return (

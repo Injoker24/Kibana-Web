@@ -5,10 +5,11 @@ import {
   ServiceInquiryNewServiceOutput,
   TaskInquiryNewTaskOutput,
 } from 'models';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Image, Row } from 'react-bootstrap';
 import { useQuery } from 'react-query';
+import { Redirect } from 'react-router-dom';
 import { ServiceService, TaskService } from 'services';
 import { Service, Task, Loader, Header, Footer, InlineRetryError } from 'shared/components';
 
@@ -42,6 +43,28 @@ const DashboardIndex: React.FC = () => {
     ['inquiry-new-service'],
     async () => await ServiceService.inquiryNewService(),
   );
+
+  const [categoryId, setCategoryId] = useState('');
+  const [categoryName, setCategoryName] = useState('');
+
+  const openDetailCategory = (id: string, name: string) => {
+    setCategoryId(id);
+    setCategoryName(name);
+  };
+
+  if (categoryId && categoryName) {
+    return (
+      <Redirect
+        to={{
+          pathname: `/service/category`,
+          state: {
+            stateId: categoryId,
+            stateName: categoryName,
+          },
+        }}
+      />
+    );
+  }
 
   return (
     <>
@@ -92,12 +115,15 @@ const DashboardIndex: React.FC = () => {
                   return (
                     <div
                       key={item.id}
-                      className="card-sm d-flex flex-row p-0 m-3"
+                      className="card-sm d-flex flex-row p-0 m-3 cursor-pointer"
                       style={{ minWidth: '20rem' }}
+                      onClick={() => openDetailCategory(item.id, item.name)}
                     >
                       <div className="p-3 align-self-end w-100">
-                        <p className="font-weight-semibold text-right">{item.name}</p>
-                        <p className="text-right">
+                        <p className="font-weight-semibold text-right cursor-pointer">
+                          {item.name}
+                        </p>
+                        <p className="text-right cursor-pointer">
                           <small>{item.serviceAmount} layanan</small>
                         </p>
                       </div>

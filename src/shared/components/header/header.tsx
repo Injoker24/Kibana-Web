@@ -36,14 +36,13 @@ const Header: React.FC = () => {
         className={'sidebar ' + (status === 'freelancer' ? 'bg-secondary-dark' : 'bg-primary')}
       >
         <div className="text-light p-3">
-          <div className="flex-centered justify-content-between mb-4">
+          <div className="flex-centered justify-content-end mb-4">
             <div
               className="cursor-pointer"
               onClick={() => setOpenSidebar(false)}
             >
               <IconClose />
             </div>
-            <h4 className="mb-0 font-weight-bold">Menu</h4>
           </div>
           <div className="d-flex flex-column">
             <h4 className="mb-3 font-weight-bold">Tugas</h4>

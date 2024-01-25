@@ -4,8 +4,9 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { getLocalStorage } from 'utils';
 import { ServiceCategoryList } from './pages';
 
-interface categoryDetailStateWrapper {
-  title: string;
+interface categoryListStateWrapper {
+  stateName: string;
+  stateId: string;
 }
 
 const ServiceRouter = () => {
@@ -20,9 +21,9 @@ const ServiceRouter = () => {
       <Route
         exact
         path={'/service/category'}
-        render={(props) => (
+        render={({ location: { state } }) => (
           <ServiceCategoryList
-            {...props}
+            {...(state as categoryListStateWrapper)}
             key={Date.now()}
           />
         )}
