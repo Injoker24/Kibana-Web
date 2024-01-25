@@ -10,3 +10,29 @@ export interface ServiceInquiryCategoryResponse {
     }[];
   }[];
 }
+
+export interface ServiceInquiryNewServiceResponse {
+  services: {
+    id: string;
+    image_url: string;
+    name: string;
+    freelancer: {
+      profile_image_url: string;
+      name: string;
+    };
+    average_rating: number;
+    rating_amount: number;
+    tags: string[];
+    price: number;
+    working_time: number;
+  }[];
+}
+
+export interface ServiceInquiryDetailSubCategoryResponse {
+  sub_categories: {
+    id: string;
+    name: string;
+    desc: string;
+    image_url: string;
+  }[];
+}

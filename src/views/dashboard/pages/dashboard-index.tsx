@@ -1,15 +1,15 @@
 import { heroIllustration } from 'images';
 import {
-  DashboardInquiryNewServiceOutput,
-  DashboardInquiryNewTaskOutput,
   ErrorWrapper,
   ServiceInquiryCategoryOutput,
+  ServiceInquiryNewServiceOutput,
+  TaskInquiryNewTaskOutput,
 } from 'models';
 import React from 'react';
 
 import { Image, Row } from 'react-bootstrap';
 import { useQuery } from 'react-query';
-import { DashboardService, ServiceService } from 'services';
+import { ServiceService, TaskService } from 'services';
 import { Service, Task, Loader, Header, Footer, InlineRetryError } from 'shared/components';
 
 const DashboardIndex: React.FC = () => {
@@ -28,9 +28,9 @@ const DashboardIndex: React.FC = () => {
     isLoading: isLoadingNewTask,
     refetch: refetchNewTask,
     error: errorNewTask,
-  } = useQuery<DashboardInquiryNewTaskOutput, ErrorWrapper>(
+  } = useQuery<TaskInquiryNewTaskOutput, ErrorWrapper>(
     ['inquiry-new-task'],
-    async () => await DashboardService.inquiryNewTask(),
+    async () => await TaskService.inquiryNewTask(),
   );
 
   const {
@@ -38,9 +38,9 @@ const DashboardIndex: React.FC = () => {
     isLoading: isLoadingNewService,
     refetch: refetchNewService,
     error: errorNewService,
-  } = useQuery<DashboardInquiryNewServiceOutput, ErrorWrapper>(
+  } = useQuery<ServiceInquiryNewServiceOutput, ErrorWrapper>(
     ['inquiry-new-service'],
-    async () => await DashboardService.inquiryNewService(),
+    async () => await ServiceService.inquiryNewService(),
   );
 
   return (

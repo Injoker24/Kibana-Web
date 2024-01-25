@@ -1,5 +1,5 @@
-import DashboardService from './dashboard.service';
 import AuthService from './auth.service';
 import ServiceService from './service.service';
+import TaskService from './task.service';
 
-export { DashboardService, AuthService, ServiceService };
+export { AuthService, ServiceService, TaskService };

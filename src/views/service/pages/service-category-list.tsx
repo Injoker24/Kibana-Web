@@ -6,6 +6,8 @@ import { Image, Row } from 'react-bootstrap';
 
 import { Footer, Header, InlineRetryError, Loader, TitleBanner } from 'shared/components';
 import { IconChevronRight } from 'images';
+import { Redirect } from 'react-router-dom';
+import ServiceCategoryDetail from '../components/service-category-detail';
 
 const ServiceCategoryList: React.FC = () => {
   const {
@@ -14,9 +16,33 @@ const ServiceCategoryList: React.FC = () => {
     refetch: refetchCategory,
     error: errorCategory,
   } = useQuery<ServiceInquiryCategoryOutput, ErrorWrapper>(
-    ['inquiry-service-category'],
+    ['inquiry-category'],
     async () => await ServiceService.inquiryCategory(),
   );
+
+  const [serviceId, setServiceId] = useState('');
+  const [serviceName, setServiceName] = useState('');
+  const [step, setStep] = useState(0);
+
+  const openDetailCategory = (id: string, name: string) => {
+    setServiceId(id);
+    setServiceName(name);
+    setStep(1);
+  };
+
+  const back = () => {
+    setStep(0);
+  };
+
+  if (step === 1) {
+    return (
+      <ServiceCategoryDetail
+        title={serviceName}
+        id={serviceId}
+        onBack={back}
+      />
+    );
+  }
 
   return (
     <>
@@ -33,25 +59,26 @@ const ServiceCategoryList: React.FC = () => {
                 />
               </div>
             )}
-            <div className="d-flex flex-row flex-wrap">
+            <Row>
               {isLoadingCategory && <Loader type="inline" />}
               {category &&
                 category.categories.map((category) => {
                   return (
-                    <div className="col-12 col-md-6 col-lg-4 d-flex flex-column mb-5 px-md-3 px-lg-5">
+                    <div
+                      key={category.id}
+                      className="col-12 col-md-6 col-lg-4 d-flex flex-column mb-5 px-md-3 px-lg-5"
+                    >
                       <Image
                         className="mb-3 cursor-pointer"
                         style={{ borderRadius: '1.5rem' }}
                         src={category.imageUrl}
-                        onClick={() => (window.location.href = '/service/category/' + category.id)}
+                        onClick={() => openDetailCategory(category.id, category.name)}
                       />
                       <div className="flex-centered justify-content-between mb-2">
                         <h3 className="mb-0">{category.name}</h3>
                         <div
                           className="text-primary-dark cursor-pointer"
-                          onClick={() =>
-                            (window.location.href = '/service/category/' + category.id)
-                          }
+                          onClick={() => openDetailCategory(category.id, category.name)}
                         >
                           <IconChevronRight />
                         </div>
@@ -59,6 +86,7 @@ const ServiceCategoryList: React.FC = () => {
                       {category.subCategories.map((subCategory) => {
                         return (
                           <a
+                            key={subCategory.id}
                             href=""
                             className="text-primary-dark mb-2"
                           >
@@ -69,7 +97,7 @@ const ServiceCategoryList: React.FC = () => {
                     </div>
                   );
                 })}
-            </div>
+            </Row>
           </div>
         </Row>
       </div>
