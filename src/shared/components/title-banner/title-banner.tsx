@@ -18,7 +18,7 @@ const TitleBanner: React.FC<Props> = ({ message }: Props) => {
       <div className="col-10">
         <div
           className={
-            'flex-centered text-light p-4 py-5 title-banner text-center ' +
+            'flex-centered text-light p-4 py-5 rounded text-center ' +
             (status === 'freelancer' ? 'bg-secondary-dark' : 'bg-primary-dark')
           }
         >

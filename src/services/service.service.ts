@@ -2,15 +2,20 @@ import {
   ServiceInquiryCategoryOutput,
   ServiceInquiryDetailSubCategoryOutput,
   ServiceInquiryNewServiceOutput,
+  ServiceInquiryServiceListInput,
+  ServiceInquiryServiceListOutput,
   transformToServiceInquiryCategoryOutput,
   transformToServiceInquiryDetailSubCategoryOutput,
   transformToServiceInquiryNewServiceOutput,
+  transformToServiceInquiryServiceListOutput,
 } from 'models';
 import {
   ApiResponse,
   ServiceInquiryCategoryResponse,
   ServiceInquiryDetailSubCategoryResponse,
   ServiceInquiryNewServiceResponse,
+  ServiceInquiryServiceListResponse,
+  transformToServiceInquiryServiceListRequest,
 } from 'services/schemas';
 
 import { axiosInstance } from 'setup';
@@ -45,6 +50,18 @@ const ServiceService = {
     );
 
     return transformToServiceInquiryDetailSubCategoryOutput(response.data.output_schema);
+  },
+
+  inquiryServiceList: async (
+    input: ServiceInquiryServiceListInput,
+  ): Promise<ServiceInquiryServiceListOutput> => {
+    const request = transformToServiceInquiryServiceListRequest(input);
+    const response = await axiosInstance.post<ApiResponse<ServiceInquiryServiceListResponse>>(
+      `/service/list`,
+      request,
+    );
+
+    return transformToServiceInquiryServiceListOutput(response.data.output_schema);
   },
 };
 

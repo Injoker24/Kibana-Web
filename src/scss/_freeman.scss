@@ -28,10 +28,21 @@
   border-radius: 10rem;
 }
 
-.title-banner {
-  border-radius: 1.5rem;
+.search-illustration-container {
+  top: 0.5rem;
+  left: 3rem;
+
+  @media only screen and (max-width: 992px) {
+    & {
+      display: flex;
+      width: 100%;
+      top: 1.5rem;
+      left: 0;
+      justify-content: center;
+    }
+  }
 }
 
-.service-sub-category-image {
-  border-radius: 1.5rem;
+.rotate-icon-down {
+  transform: rotate(90deg);
 }

@@ -48,7 +48,7 @@ const Header: React.FC = () => {
             <h4 className="mb-3 font-weight-bold">Tugas</h4>
             <a
               className="text-light mb-3"
-              href="/task"
+              href="/task/search"
             >
               Cari Tugas
             </a>
@@ -88,7 +88,7 @@ const Header: React.FC = () => {
             <h4 className="mb-3 font-weight-bold">Layanan</h4>
             <a
               className="text-light mb-3"
-              href="/service"
+              href="/service/search"
             >
               Cari Layanan
             </a>
@@ -125,7 +125,7 @@ const Header: React.FC = () => {
           </div>
           {!status && (
             <Link
-              to="/login"
+              to="/auth/login"
               className="btn btn-outline-white w-100"
             >
               Masuk
@@ -176,10 +176,11 @@ const Header: React.FC = () => {
           position="bottom center"
           on="hover"
           closeOnDocumentClick
+          className="header-tooltip"
         >
-          <div className="header-tooltip d-flex flex-column">
+          <div className="d-flex flex-column">
             <a
-              href="/task"
+              href="/task/search"
               className="my-3 text-dark"
             >
               Cari Tugas
@@ -226,10 +227,11 @@ const Header: React.FC = () => {
           position="bottom center"
           on="hover"
           closeOnDocumentClick
+          className="header-tooltip"
         >
-          <div className="header-tooltip d-flex flex-column">
+          <div className="d-flex flex-column">
             <a
-              href="/service"
+              href="/service/search"
               className="my-3 text-dark"
             >
               Cari Layanan

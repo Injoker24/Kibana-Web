@@ -28,6 +28,7 @@ import logoWhatsapp from './logo/logo-whatsapp.svg';
 import logoYoutube from './logo/logo-youtube.svg';
 
 import heroIllustration from './hero-illustration.svg';
+import searchIllustration from './search-illustration.svg';
 
 export {
   IconAddCircle,
@@ -58,4 +59,5 @@ export {
   logoWhatsapp,
   logoYoutube,
   heroIllustration,
+  searchIllustration,
 };

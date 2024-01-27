@@ -12,7 +12,7 @@
 
 input[type='text'] {
   width: 100%;
-  padding: 0.75rem 1rem !important;
+  padding: 0.75rem 1rem;
   border-radius: 0.5rem;
   border: 1px solid $primary-dark;
   color: $primary-dark;
@@ -24,7 +24,7 @@ input[type='text'] {
 
 input[type='password'] {
   width: 100%;
-  padding: 0.75rem 1rem !important;
+  padding: 0.75rem 1rem;
   border-radius: 0.5rem;
   border: 1px solid $primary-dark;
   color: $primary-dark;
@@ -36,7 +36,7 @@ input[type='password'] {
 
 input[type='number'] {
   width: 100%;
-  padding: 0.75rem 1rem !important;
+  padding: 0.75rem 1rem;
   border-radius: 0.5rem;
   border: 1px solid $primary-dark;
   color: $primary-dark;
@@ -58,4 +58,22 @@ input::-webkit-inner-spin-button {
   border-radius: 0.5rem;
   border: 1px solid $primary-dark;
   color: $primary-dark;
+}
+
+.dropdown {
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid $primary-dark;
+  color: $primary-dark;
+}
+
+.form-check-input {
+  margin-top: 0.4rem;
+  color: $primary-dark;
+}
+
+input[type='checkbox'] {
+  &:focus-visible {
+    outline: none;
+  }
 }

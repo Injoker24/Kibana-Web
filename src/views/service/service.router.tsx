@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react';
 
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { getLocalStorage } from 'utils';
-import { ServiceCategoryList } from './pages';
+import { ServiceCategoryList, ServiceSearch } from './pages';
 
 interface categoryListStateWrapper {
   stateName: string;
   stateId: string;
+}
+
+interface searchStateWrapper {
+  stateCategories: string[];
 }
 
 const ServiceRouter = () => {
@@ -24,6 +28,17 @@ const ServiceRouter = () => {
         render={({ location: { state } }) => (
           <ServiceCategoryList
             {...(state as categoryListStateWrapper)}
+            key={Date.now()}
+          />
+        )}
+      />
+
+      <Route
+        exact
+        path={'/service/search'}
+        render={({ location: { state } }) => (
+          <ServiceSearch
+            {...(state as searchStateWrapper)}
             key={Date.now()}
           />
         )}

@@ -1,12 +1,11 @@
 import { ErrorWrapper, ServiceInquiryCategoryOutput } from 'models';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { ServiceService } from 'services';
 import { Image, Row } from 'react-bootstrap';
 
 import { Footer, Header, InlineRetryError, Loader, TitleBanner } from 'shared/components';
 import { IconChevronRight } from 'images';
-import { Redirect } from 'react-router-dom';
 import ServiceCategoryDetail from '../components/service-category-detail';
 
 const ServiceCategoryList: React.FC = ({ stateId, stateName }: any) => {

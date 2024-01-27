@@ -23,3 +23,7 @@ body {
 .min-layout-height {
   min-height: calc(100vh - 514px);
 }
+
+.rounded {
+  border-radius: 1.5rem !important;
+}

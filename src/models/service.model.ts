@@ -2,6 +2,7 @@ import {
   ServiceInquiryCategoryResponse,
   ServiceInquiryDetailSubCategoryResponse,
   ServiceInquiryNewServiceResponse,
+  ServiceInquiryServiceListResponse,
 } from 'services/schemas/service.schema';
 import { formatCurrency } from 'utils';
 
@@ -104,6 +105,68 @@ export function transformToServiceInquiryDetailSubCategoryOutput(
         imageUrl: t.image_url,
       };
     }),
+  };
+
+  return result;
+}
+
+export interface ServiceInquiryServiceListInput {
+  searchText?: string;
+  subCategory?: string[];
+  budget?: {
+    budgetStart: number;
+    budgetEnd?: number;
+  }[];
+  workingTime?: {
+    workingTimeStart: number;
+    workingTimeEnd?: number;
+  }[];
+  lastId?: string;
+}
+
+export interface ServiceInquiryServiceListOutput {
+  services: {
+    id: string;
+    imageUrl: string;
+    name: string;
+    freelancer: {
+      profileImageUrl: string;
+      name: string;
+    };
+    averageRating: number;
+    ratingAmount: number;
+    tags: string[];
+    price: string;
+    workingTime: number;
+  }[];
+  totalAmount: number;
+  hasNextPage: boolean;
+  lastId: string;
+}
+
+export function transformToServiceInquiryServiceListOutput(
+  response: ServiceInquiryServiceListResponse,
+): ServiceInquiryServiceListOutput {
+  const result: ServiceInquiryServiceListOutput = {
+    services: response.services.map((t) => {
+      return {
+        id: t.id,
+        imageUrl: t.image_url,
+        name: t.name,
+        freelancer: {
+          profileImageUrl: t.freelancer.profile_image_url,
+          name: t.freelancer.name,
+        },
+        averageRating: t.average_rating,
+        ratingAmount: t.rating_amount,
+        tags: t.tags,
+        price: formatCurrency(t.price),
+        workingTime: t.working_time,
+      };
+    }),
+    totalAmount: response.total_amount,
+    hasNextPage: response.has_next_page,
+    lastId: response.last_id,
   };
 
   return result;

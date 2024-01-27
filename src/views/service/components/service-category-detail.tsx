@@ -18,7 +18,7 @@ const ServiceCategoryDetail = ({ title, id, onBack }: any) => {
     refetch: refetchNewService,
     error: errorNewService,
   } = useQuery<ServiceInquiryNewServiceOutput, ErrorWrapper>(
-    ['inquiry-new-service-category'],
+    ['inquiry-new-service-category', id],
     async () => await ServiceService.inquiryNewService(id),
   );
 
@@ -28,7 +28,7 @@ const ServiceCategoryDetail = ({ title, id, onBack }: any) => {
     refetch: refetchSubCategoryDetail,
     error: errorSubCategoryDetail,
   } = useQuery<ServiceInquiryDetailSubCategoryOutput, ErrorWrapper>(
-    ['inquiry-service-sub-category-detail'],
+    ['inquiry-service-sub-category-detail', id],
     async () => await ServiceService.inquiryDetailSubCategory(id),
   );
 
@@ -118,7 +118,7 @@ const ServiceCategoryDetail = ({ title, id, onBack }: any) => {
                     >
                       <div className="cursor-pointer card-sm d-flex flex-row flex-wrap align-items-center p-2 mb-3">
                         <Image
-                          className="service-sub-category-image col-12 col-md-4 py-3"
+                          className="rounded col-12 col-md-4 py-3"
                           src={item.imageUrl}
                         />
                         <div className="d-flex flex-column col-12 col-md-6 py-0 py-md-4 mb-3 mb-md-0">

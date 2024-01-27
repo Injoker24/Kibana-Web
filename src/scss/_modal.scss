@@ -4,7 +4,7 @@
   left: 0 !important;
   height: 100vh !important;
   border: 0;
-  width: 17.5rem;
+  width: 17.5rem !important;
 }
 
 .bg-secondary-dark-content {
@@ -15,11 +15,12 @@
   background-color: $primary;
 }
 
-.header-tooltip {
+.header-tooltip-content {
   background-color: $light;
   box-shadow: $shadow-sm;
-  padding: 0 1rem;
+  padding: 0.5rem 2rem;
   border-radius: 1rem;
+  border: none;
 }
 
 .popup-error-content {
@@ -30,11 +31,21 @@
   border-radius: 2rem;
   padding: 3rem;
   border: 0;
-  width: 30rem;
+  width: 30rem !important;
 
   @media only screen and (max-width: 768px) {
     & {
       width: 90vw;
     }
   }
+}
+
+.filter-tooltip-content {
+  width: auto !important;
+  max-width: 83%;
+  background-color: white;
+  border-radius: 1rem !important;
+  box-shadow: $shadow-sm !important;
+  padding: 1rem 2rem;
+  border: none;
 }
