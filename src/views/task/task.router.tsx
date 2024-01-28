@@ -14,11 +14,11 @@ interface searchStateWrapper {
 }
 
 const TaskRouter = () => {
-  // const [token, setToken] = useState();
+  const [token, setToken] = useState();
 
-  // useEffect(() => {
-  //   setToken(getLocalStorage('token'));
-  // }, []);
+  useEffect(() => {
+    setToken(getLocalStorage('token'));
+  }, []);
 
   return (
     <Switch>
