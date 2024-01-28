@@ -7,6 +7,7 @@ import { Image, Row } from 'react-bootstrap';
 import { Footer, Header, InlineRetryError, Loader, TitleBanner } from 'shared/components';
 import { IconChevronRight } from 'images';
 import ServiceCategoryDetail from '../components/service-category-detail';
+import { Redirect } from 'react-router-dom';
 
 const ServiceCategoryList: React.FC = ({ stateId, stateName }: any) => {
   const {
@@ -23,6 +24,7 @@ const ServiceCategoryList: React.FC = ({ stateId, stateName }: any) => {
   const [categoryName, setCategoryName] = useState('');
   const [hasRedirected, setHasRedirected] = useState(false);
   const [step, setStep] = useState(0);
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>();
 
   const openDetailCategory = (id: string, name: string) => {
     setCategoryId(id);
@@ -49,6 +51,28 @@ const ServiceCategoryList: React.FC = ({ stateId, stateName }: any) => {
   if (stateId && stateName && !hasRedirected) {
     setHasRedirected(true);
     openDetailCategory(stateId, stateName);
+  }
+
+  const openServiceListDetail = (id: string, name: string) => {
+    setCategories([
+      {
+        id: id,
+        name: name,
+      },
+    ]);
+  };
+
+  if (categories) {
+    return (
+      <Redirect
+        to={{
+          pathname: `/service/search`,
+          state: {
+            stateCategories: categories,
+          },
+        }}
+      />
+    );
   }
 
   return (
@@ -92,13 +116,13 @@ const ServiceCategoryList: React.FC = ({ stateId, stateName }: any) => {
                       </div>
                       {category.subCategories.map((subCategory) => {
                         return (
-                          <a
+                          <div
                             key={subCategory.id}
-                            href=""
+                            onClick={() => openServiceListDetail(subCategory.id, subCategory.name)}
                             className="text-primary-dark mb-2"
                           >
                             {subCategory.name}
-                          </a>
+                          </div>
                         );
                       })}
                     </div>

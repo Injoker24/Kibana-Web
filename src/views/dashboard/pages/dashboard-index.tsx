@@ -250,7 +250,7 @@ const DashboardIndex: React.FC = () => {
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h3 className="mb-0">Layanan baru</h3>
               <a
-                href=""
+                href="/service/search"
                 className="text-primary text-align-center"
               >
                 Lihat Semua

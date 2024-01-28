@@ -3,14 +3,14 @@ import {
   ServiceInquiryCategoryOutput,
   ServiceInquiryServiceListOutput,
 } from 'models';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useInfiniteQuery, useMutation, useQuery } from 'react-query';
 import { ServiceService } from 'services';
 import { Form, Image, Row } from 'react-bootstrap';
 
 import { Footer, FormInput, Header, InlineRetryError, Loader, Service } from 'shared/components';
 import { useForm } from 'react-hook-form';
-import { IconChevronRight, IconSearch, searchIllustration } from 'images';
+import { IconChevronRight, IconClose, IconSearch, searchIllustration } from 'images';
 import Popup from 'reactjs-popup';
 
 interface SubCategoryWrapper {
@@ -37,6 +37,7 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
   const [subCategory, setSubCategory] = useState<SubCategoryWrapper[]>();
   const [budget, setBudget] = useState<BudgetWrapper[]>();
   const [workingTime, setWorkingTime] = useState<WorkingTimeWrapper[]>();
+  const [openFilter, setOpenFilter] = useState(false);
 
   const {
     data: serviceCategory,
@@ -47,6 +48,7 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
     ['inquiry-service-category'],
     async () => await ServiceService.inquiryCategory(),
   );
+
   const {
     data: serviceList,
     isLoading: isLoadingServiceList,
@@ -114,7 +116,6 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
       };
     });
     setSubCategory(subCategoryArray);
-    refetchServiceList();
   };
 
   const submitBudgetFilter = (formData: any) => {
@@ -160,7 +161,6 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
       }
     });
     setBudget(budgetArray);
-    refetchServiceList();
   };
 
   const submitWorkingTimeFilter = (formData: any) => {
@@ -206,8 +206,14 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
       }
     });
     setWorkingTime(workingTimeArray);
-    refetchServiceList();
   };
+
+  useEffect(() => {
+    if (stateCategories) {
+      setSubCategory(stateCategories);
+    }
+    document.body.scrollTo(0, 0);
+  }, []);
 
   return (
     <>
@@ -261,7 +267,7 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
 
             {serviceList && (
               <>
-                <div className="d-flex flex-row mb-4">
+                <div className="d-none d-lg-flex flex-row mb-4">
                   <Popup
                     trigger={
                       <div className="d-flex mr-3 cursor-pointer dropdown">
@@ -499,6 +505,60 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
                         </div>
                       </form>
                     </div>
+                  </Popup>
+                </div>
+
+                <div className="d-block d-lg-none px-3 py-4 filter-floating-button shadow-lg">
+                  <div
+                    className="btn btn-outline-primary"
+                    onClick={() => setOpenFilter((x) => !x)}
+                  >
+                    Filter
+                  </div>
+                  <Popup
+                    open={openFilter}
+                    closeOnDocumentClick={false}
+                    className={'filter-bottom-sheet'}
+                  >
+                    <div className="d-flex justify-content-between mb-4">
+                      <h4 className="font-weight-semibold text-primary-dark">Filter</h4>
+                      <div
+                        className="cursor-pointer text-dark"
+                        onClick={() => setOpenFilter(false)}
+                      >
+                        <IconClose />
+                      </div>
+                    </div>
+                    <div
+                      style={{ height: '80%' }}
+                      className="mb-4"
+                    >
+                      <div className="mb-4">
+                        <div className="d-flex cursor-pointer dropdown justify-content-between">
+                          <p className="mr-4 cursor-pointer">Kategori / Sub Kategori</p>
+                          <div className="rotate-icon-down">
+                            <IconChevronRight />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mb-4">
+                        <div className="d-flex cursor-pointer dropdown justify-content-between">
+                          <p className="mr-4 cursor-pointer">Budget</p>
+                          <div className="rotate-icon-down">
+                            <IconChevronRight />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mb-4">
+                        <div className="d-flex cursor-pointer dropdown justify-content-between">
+                          <p className="mr-4 cursor-pointer">Waktu Pengerjaan</p>
+                          <div className="rotate-icon-down">
+                            <IconChevronRight />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="btn btn-primary">Terapkan Filter</div>
                   </Popup>
                 </div>
 

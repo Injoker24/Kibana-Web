@@ -32,7 +32,7 @@ const Header: React.FC = () => {
       </div>
       <Popup
         open={openSidebar}
-        closeOnDocumentClick={true}
+        closeOnDocumentClick={false}
         className={'sidebar ' + (status === 'freelancer' ? 'bg-secondary-dark' : 'bg-primary')}
       >
         <div className="text-light p-3">

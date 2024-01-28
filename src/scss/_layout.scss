@@ -28,3 +28,12 @@ body {
 .rounded {
   border-radius: 1.5rem !important;
 }
+
+.filter-floating-button {
+  position: fixed;
+  z-index: 100;
+  width: 100vw;
+  bottom: 0;
+  left: 0;
+  background-color: $light;
+}

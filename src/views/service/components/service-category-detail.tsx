@@ -3,13 +3,14 @@ import {
   ServiceInquiryDetailSubCategoryOutput,
   ServiceInquiryNewServiceOutput,
 } from 'models';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { ServiceService } from 'services';
 import { Image, Row } from 'react-bootstrap';
 
 import { Footer, Header, InlineRetryError, Loader, Service, TitleBanner } from 'shared/components';
 import { IconChevronLeft, IconNextCircle } from 'images';
+import { Redirect } from 'react-router-dom';
 
 const ServiceCategoryDetail = ({ title, id, onBack }: any) => {
   const {
@@ -36,6 +37,40 @@ const ServiceCategoryDetail = ({ title, id, onBack }: any) => {
     document.body.scrollTo(0, 0);
   }, []);
 
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>();
+
+  const openServiceList = () => {
+    const idArray = subCategoryDetail?.subCategories.map((item) => {
+      return {
+        id: item.id,
+        name: item.name,
+      };
+    });
+    setCategories(idArray);
+  };
+
+  const openServiceListDetail = (id: string, name: string) => {
+    setCategories([
+      {
+        id: id,
+        name: name,
+      },
+    ]);
+  };
+
+  if (categories) {
+    return (
+      <Redirect
+        to={{
+          pathname: `/service/search`,
+          state: {
+            stateCategories: categories,
+          },
+        }}
+      />
+    );
+  }
+
   return (
     <>
       <Header />
@@ -56,12 +91,12 @@ const ServiceCategoryDetail = ({ title, id, onBack }: any) => {
           <div className="col-10">
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h3 className="mb-0">Layanan {title.toLowerCase()} baru</h3>
-              <a
-                href=""
-                className="text-primary text-align-center text-nowrap"
+              <div
+                onClick={() => openServiceList()}
+                className="text-primary-dark text-align-center text-nowrap cursor-pointer"
               >
                 Lihat Semua
-              </a>
+              </div>
             </div>
             {errorNewService && (
               <div className="flex-centered">
@@ -116,7 +151,10 @@ const ServiceCategoryDetail = ({ title, id, onBack }: any) => {
                       key={item.id}
                       className="col-12"
                     >
-                      <div className="cursor-pointer card-sm d-flex flex-row flex-wrap align-items-center p-2 mb-3">
+                      <div
+                        className="cursor-pointer card-sm d-flex flex-row flex-wrap align-items-center p-2 mb-3"
+                        onClick={() => openServiceListDetail(item.id, item.name)}
+                      >
                         <Image
                           className="rounded col-12 col-md-4 py-3"
                           src={item.imageUrl}
