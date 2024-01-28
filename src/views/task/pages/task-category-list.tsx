@@ -1,12 +1,12 @@
-import { ErrorWrapper, ServiceInquiryCategoryOutput } from 'models';
+import { ErrorWrapper, TaskInquiryCategoryOutput } from 'models';
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
-import { ServiceService } from 'services';
+import { TaskService } from 'services';
 import { Image, Row } from 'react-bootstrap';
 
 import { Footer, Header, InlineRetryError, Loader, TitleBanner } from 'shared/components';
 import { IconChevronRight } from 'images';
-import ServiceCategoryDetail from '../components/service-category-detail';
+import TaskCategoryDetail from '../components/task-category-detail';
 
 const ServiceCategoryList: React.FC = ({ stateId, stateName }: any) => {
   const {
@@ -14,9 +14,9 @@ const ServiceCategoryList: React.FC = ({ stateId, stateName }: any) => {
     isLoading: isLoadingCategory,
     refetch: refetchCategory,
     error: errorCategory,
-  } = useQuery<ServiceInquiryCategoryOutput, ErrorWrapper>(
-    ['inquiry-service-category'],
-    async () => await ServiceService.inquiryCategory(),
+  } = useQuery<TaskInquiryCategoryOutput, ErrorWrapper>(
+    ['inquiry-task-category'],
+    async () => await TaskService.inquiryCategory(),
   );
 
   const [categoryId, setCategoryId] = useState('');
@@ -38,7 +38,7 @@ const ServiceCategoryList: React.FC = ({ stateId, stateName }: any) => {
 
   if (step === 1) {
     return (
-      <ServiceCategoryDetail
+      <TaskCategoryDetail
         title={categoryName}
         id={categoryId}
         onBack={back}
@@ -55,7 +55,7 @@ const ServiceCategoryList: React.FC = ({ stateId, stateName }: any) => {
     <>
       <Header />
       <div className="min-layout-height">
-        <TitleBanner message={'Kategori Layanan'} />
+        <TitleBanner message={'Kategori Tugas'} />
         <Row className="justify-content-center">
           <div className="col-10">
             {errorCategory && (
