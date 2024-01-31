@@ -2,6 +2,7 @@ import {
   TaskInquiryCategoryResponse,
   TaskInquiryDetailSubCategoryResponse,
   TaskInquiryNewTaskResponse,
+  TaskInquiryTaskListResponse,
 } from 'services/schemas';
 import { formatCurrency } from 'utils';
 
@@ -94,6 +95,55 @@ export function transformToTaskInquiryDetailSubCategoryOutput(
         imageUrl: t.image_url,
       };
     }),
+  };
+
+  return result;
+}
+
+export interface TaskInquiryTaskListInput {
+  searchText?: string;
+  subCategory?: string[];
+  budget?: {
+    budgetStart: number;
+    budgetEnd?: number;
+  }[];
+  difficulty?: string[];
+  lastId?: string;
+}
+
+export interface TaskInquiryTaskListOutput {
+  tasks: {
+    id: string;
+    name: string;
+    description: string;
+    tags: string[];
+    dueDate: string;
+    difficulty: string;
+    price: string;
+  }[];
+  totalAmount: number;
+  hasNextPage: boolean;
+  lastId: string;
+}
+
+export function transformToTaskInquiryTaskListOutput(
+  response: TaskInquiryTaskListResponse,
+): TaskInquiryTaskListOutput {
+  const result: TaskInquiryTaskListOutput = {
+    tasks: response.tasks.map((t) => {
+      return {
+        id: t.id,
+        name: t.name,
+        description: t.description,
+        tags: t.tags,
+        dueDate: t.due_date,
+        difficulty: t.difficulty,
+        price: formatCurrency(t.price),
+      };
+    }),
+    totalAmount: response.total_amount,
+    hasNextPage: response.has_next_page,
+    lastId: response.last_id,
   };
 
   return result;

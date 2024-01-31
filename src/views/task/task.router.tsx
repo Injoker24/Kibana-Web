@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { getLocalStorage } from 'utils';
 import { TaskCategoryList } from './pages';
+import TaskSearch from './pages/task-search';
 
 interface categoryListStateWrapper {
   stateName: string;
@@ -28,6 +29,17 @@ const TaskRouter = () => {
         render={({ location: { state } }) => (
           <TaskCategoryList
             {...(state as categoryListStateWrapper)}
+            key={Date.now()}
+          />
+        )}
+      />
+
+      <Route
+        exact
+        path={'/task/search'}
+        render={({ location: { state } }) => (
+          <TaskSearch
+            {...(state as searchStateWrapper)}
             key={Date.now()}
           />
         )}

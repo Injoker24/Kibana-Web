@@ -44,22 +44,22 @@ const DashboardIndex: React.FC = () => {
     async () => await ServiceService.inquiryNewService(),
   );
 
-  const [categoryId, setCategoryId] = useState('');
-  const [categoryName, setCategoryName] = useState('');
+  const [categoryServiceId, setCategoryServiceId] = useState('');
+  const [categoryServiceName, setCategoryServiceName] = useState('');
 
-  const openDetailCategory = (id: string, name: string) => {
-    setCategoryId(id);
-    setCategoryName(name);
+  const openDetailServiceCategory = (id: string, name: string) => {
+    setCategoryServiceId(id);
+    setCategoryServiceName(name);
   };
 
-  if (categoryId && categoryName) {
+  if (categoryServiceId && categoryServiceName) {
     return (
       <Redirect
         to={{
           pathname: `/service/category`,
           state: {
-            stateId: categoryId,
-            stateName: categoryName,
+            stateId: categoryServiceId,
+            stateName: categoryServiceName,
           },
         }}
       />
@@ -117,7 +117,7 @@ const DashboardIndex: React.FC = () => {
                       key={item.id}
                       className="card-sm d-flex flex-row p-0 m-3 cursor-pointer"
                       style={{ minWidth: '20rem' }}
-                      onClick={() => openDetailCategory(item.id, item.name)}
+                      onClick={() => openDetailServiceCategory(item.id, item.name)}
                     >
                       <div className="p-3 align-self-end w-100">
                         <p className="font-weight-semibold text-right cursor-pointer">
@@ -206,7 +206,7 @@ const DashboardIndex: React.FC = () => {
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h3 className="mb-0">Tugas baru</h3>
               <a
-                href=""
+                href="/task/search"
                 className="text-primary text-align-center"
               >
                 Lihat Semua

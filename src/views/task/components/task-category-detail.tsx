@@ -1,11 +1,12 @@
 import { ErrorWrapper, TaskInquiryDetailSubCategoryOutput, TaskInquiryNewTaskOutput } from 'models';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { TaskService } from 'services';
 import { Image, Row } from 'react-bootstrap';
 
 import { Footer, Header, InlineRetryError, Loader, Task, TitleBanner } from 'shared/components';
 import { IconChevronLeft, IconNextCircle } from 'images';
+import { Redirect } from 'react-router-dom';
 
 const TaskCategoryDetail = ({ title, id, onBack }: any) => {
   const {
@@ -32,6 +33,40 @@ const TaskCategoryDetail = ({ title, id, onBack }: any) => {
     document.body.scrollTo(0, 0);
   }, []);
 
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>();
+
+  const openTaskList = () => {
+    const idArray = subCategoryDetail?.subCategories.map((item) => {
+      return {
+        id: item.id,
+        name: item.name,
+      };
+    });
+    setCategories(idArray);
+  };
+
+  const openTaskListDetail = (id: string, name: string) => {
+    setCategories([
+      {
+        id: id,
+        name: name,
+      },
+    ]);
+  };
+
+  if (categories) {
+    return (
+      <Redirect
+        to={{
+          pathname: `/task/search`,
+          state: {
+            stateCategories: categories,
+          },
+        }}
+      />
+    );
+  }
+
   return (
     <>
       <Header />
@@ -52,12 +87,12 @@ const TaskCategoryDetail = ({ title, id, onBack }: any) => {
           <div className="col-10">
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h3 className="mb-0">Tugas {title.toLowerCase()} baru</h3>
-              <a
-                href=""
-                className="text-primary text-align-center text-nowrap"
+              <div
+                onClick={() => openTaskList()}
+                className="text-primary-dark text-align-center text-nowrap cursor-pointer"
               >
                 Lihat Semua
-              </a>
+              </div>
             </div>
             {errorNewTask && (
               <div className="flex-centered">
@@ -110,7 +145,10 @@ const TaskCategoryDetail = ({ title, id, onBack }: any) => {
                       key={item.id}
                       className="col-12"
                     >
-                      <div className="cursor-pointer card-sm d-flex flex-row flex-wrap align-items-center p-2 mb-3">
+                      <div
+                        className="cursor-pointer card-sm d-flex flex-row flex-wrap align-items-center p-2 mb-3"
+                        onClick={() => openTaskListDetail(item.id, item.name)}
+                      >
                         <Image
                           className="rounded col-12 col-md-4 py-3"
                           src={item.imageUrl}

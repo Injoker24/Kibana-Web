@@ -1,14 +1,10 @@
-import {
-  ErrorWrapper,
-  ServiceInquiryCategoryOutput,
-  ServiceInquiryServiceListOutput,
-} from 'models';
+import { ErrorWrapper, TaskInquiryCategoryOutput, TaskInquiryTaskListOutput } from 'models';
 import React, { useEffect, useState } from 'react';
 import { useInfiniteQuery, useQuery } from 'react-query';
-import { ServiceService } from 'services';
+import { TaskService } from 'services';
 import { Form, Image, Row } from 'react-bootstrap';
 
-import { Footer, FormInput, Header, InlineRetryError, Loader, Service } from 'shared/components';
+import { Footer, FormInput, Header, InlineRetryError, Loader, Task } from 'shared/components';
 import { useForm } from 'react-hook-form';
 import { IconChevronRight, IconClose, IconSearch, searchIllustration } from 'images';
 import Popup from 'reactjs-popup';
@@ -25,50 +21,43 @@ interface BudgetWrapper {
   id: string;
 }
 
-interface WorkingTimeWrapper {
-  workingTimeStart: number;
-  workingTimeEnd?: number;
-  name: string;
-  id: string;
-}
-
-const ServiceSearch: React.FC = ({ stateCategories }: any) => {
+const TaskSearch: React.FC = ({ stateCategories }: any) => {
   const [searchText, setSearchText] = useState();
   const [subCategory, setSubCategory] = useState<SubCategoryWrapper[]>();
   const [budget, setBudget] = useState<BudgetWrapper[]>();
-  const [workingTime, setWorkingTime] = useState<WorkingTimeWrapper[]>();
+  const [difficulty, setDifficulty] = useState<string[]>();
   const [openFilter, setOpenFilter] = useState(false);
   const [showSubCategoryFloating, setShowSubCategoryFloating] = useState(false);
   const [showBudgetFloating, setShowBudgetFloating] = useState(false);
-  const [showWorkingTimeFloating, setShowWorkingTimeFloating] = useState(false);
+  const [showDifficultyFloating, setShowDifficultyFloating] = useState(false);
 
   const {
-    data: serviceCategory,
-    isLoading: isLoadingServiceCategory,
-    refetch: refetchServiceCategory,
-    error: errorServiceCategory,
-  } = useQuery<ServiceInquiryCategoryOutput, ErrorWrapper>(
-    ['inquiry-service-category'],
-    async () => await ServiceService.inquiryCategory(),
+    data: taskCategory,
+    isLoading: isLoadingTaskCategory,
+    refetch: refetchTaskCategory,
+    error: errorTaskCategory,
+  } = useQuery<TaskInquiryCategoryOutput, ErrorWrapper>(
+    ['inquiry-task-category'],
+    async () => await TaskService.inquiryCategory(),
   );
 
   const {
-    data: serviceList,
-    isLoading: isLoadingServiceList,
+    data: taskList,
+    isLoading: isLoadingTaskList,
     isFetchingNextPage,
-    error: errorServiceList,
+    error: errorTaskList,
     isRefetchError: isErrorRefetch,
-    refetch: refetchServiceList,
+    refetch: refetchTaskList,
     fetchNextPage,
     hasNextPage,
-  } = useInfiniteQuery<ServiceInquiryServiceListOutput, ErrorWrapper>(
-    ['inquiry-service-list', searchText, subCategory, budget, workingTime],
+  } = useInfiniteQuery<TaskInquiryTaskListOutput, ErrorWrapper>(
+    ['inquiry-task-list', searchText, subCategory, budget, difficulty],
     async ({ pageParam }) =>
-      await ServiceService.inquiryServiceList({
+      await TaskService.inquiryTaskList({
         searchText: searchText,
         subCategory: subCategory?.map((t) => t.id),
         budget: budget,
-        workingTime: workingTime,
+        difficulty: difficulty,
         lastId: pageParam,
       }),
     {
@@ -94,7 +83,7 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
     mode: 'onChange',
   });
 
-  const { register: registerWorkingTime, handleSubmit: handleSubmitWorkingTime } = useForm({
+  const { register: registerDifficulty, handleSubmit: handleSubmitDifficulty } = useForm({
     mode: 'onChange',
   });
 
@@ -104,11 +93,11 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
 
   const submitSearch = (formData: any) => {
     setSearchText(formData.searchText);
-    refetchServiceList();
+    refetchTaskList();
   };
 
   const submitSubCategoryFilter = (formData: any) => {
-    const subArray = serviceCategory?.categories.flatMap((item) => {
+    const subArray = taskCategory?.categories.flatMap((item) => {
       const subArray = item.subCategories.map((sub) => {
         return sub;
       });
@@ -171,61 +160,20 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
     setBudget(budgetArray);
   };
 
-  const submitWorkingTimeFilter = (formData: any) => {
-    const workingTimeArray = formData.workingTime.map((time: string) => {
-      if (time === 'workingTime1') {
-        return {
-          workingTimeStart: 0,
-          workingTimeEnd: 1,
-          id: '1',
-          name: '< 1 hari',
-        };
-      }
-      if (time === 'workingTime2') {
-        return {
-          workingTimeStart: 1,
-          workingTimeEnd: 3,
-          id: '2',
-          name: '1 hari - 3 hari',
-        };
-      }
-      if (time === 'workingTime3') {
-        return {
-          workingTimeStart: 3,
-          workingTimeEnd: 7,
-          id: '3',
-          name: '3 hari - 1 minggu',
-        };
-      }
-      if (time === 'workingTime4') {
-        return {
-          workingTimeStart: 7,
-          workingTimeEnd: 31,
-          id: '4',
-          name: '1 minggu - 1 bulan',
-        };
-      }
-      if (time === 'workingTime5') {
-        return {
-          workingTimeStart: 31,
-          id: '5',
-          name: '> 1 bulan',
-        };
-      }
-      return undefined;
-    });
-    setWorkingTime(workingTimeArray);
+  const submitDifficultyFilter = (formData: any) => {
+    setDifficulty(formData.difficulty);
   };
 
   const submitFloatingButton = (formData: any) => {
+    console.log(formData);
     if (formData.subCategory) {
       submitSubCategoryFilter(formData);
     }
     if (formData.budget) {
       submitBudgetFilter(formData);
     }
-    if (formData.workingTime) {
-      submitWorkingTimeFilter(formData);
+    if (formData.difficulty) {
+      submitDifficultyFilter(formData);
     }
     setOpenFilter(false);
   };
@@ -255,7 +203,7 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
                       id="searchText"
                       name="searchText"
                       autoComplete="off"
-                      placeholder="Layanan apa yang anda butuhkan?"
+                      placeholder="Tugas apa yang anda butuhkan?"
                       className="pr-5"
                       ref={registerSearch() as string & ((ref: Element | null) => void)}
                     />
@@ -275,21 +223,21 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
             </div>
 
             <h3 className="mb-4">
-              {searchText ? 'Hasil pencarian untuk "' + searchText + '"' : 'Semua layanan'}
+              {searchText ? 'Hasil pencarian untuk "' + searchText + '"' : 'Semua tugas'}
             </h3>
 
-            {isLoadingServiceList && <Loader type="inline" />}
+            {isLoadingTaskList && <Loader type="inline" />}
 
-            {!serviceList && errorServiceList && (
+            {!taskList && errorTaskList && (
               <div className="flex-centered">
                 <InlineRetryError
-                  message={errorServiceList.message}
-                  onRetry={refetchServiceList}
+                  message={errorTaskList.message}
+                  onRetry={refetchTaskList}
                 />
               </div>
             )}
 
-            {serviceList && (
+            {taskList && (
               <>
                 <div className="d-none d-lg-flex flex-row mb-4">
                   <Popup
@@ -307,20 +255,20 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
                     className="filter-tooltip"
                   >
                     <div className="filter-tooltip d-flex flex-column">
-                      {errorServiceCategory && (
+                      {errorTaskCategory && (
                         <div className="flex-centered">
                           <InlineRetryError
-                            message={errorServiceCategory.message}
-                            onRetry={refetchServiceCategory}
+                            message={errorTaskCategory.message}
+                            onRetry={refetchTaskCategory}
                           />
                         </div>
                       )}
-                      {isLoadingServiceCategory && <Loader type="inline" />}
-                      {serviceCategory && (
+                      {isLoadingTaskCategory && <Loader type="inline" />}
+                      {taskCategory && (
                         <form onSubmit={handleSubmitSubCategory(submitSubCategoryFilter)}>
                           <FormInput>
                             <div className="d-flex flex-row flex-wrap">
-                              {serviceCategory.categories.map((item) => {
+                              {taskCategory.categories.map((item) => {
                                 return (
                                   <div
                                     key={item.id}
@@ -450,7 +398,7 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
                   <Popup
                     trigger={
                       <div className="d-flex mr-3 cursor-pointer dropdown">
-                        <p className="mr-4 cursor-pointer">Waktu Pengerjaan</p>
+                        <p className="mr-4 cursor-pointer">Tingkat Kesulitan</p>
                         <div className="rotate-icon-down">
                           <IconChevronRight />
                         </div>
@@ -462,61 +410,50 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
                     className="filter-tooltip"
                   >
                     <div className="filter-tooltip d-flex flex-column">
-                      <form onSubmit={handleSubmitWorkingTime(submitWorkingTimeFilter)}>
+                      <form onSubmit={handleSubmitDifficulty(submitDifficultyFilter)}>
                         <FormInput>
                           <Form.Check
                             type="checkbox"
-                            name="workingTime"
-                            id="workingTime1"
-                            value="workingTime1"
-                            label="< 1 hari"
+                            name="difficulty"
+                            id="Pemula"
+                            value="Pemula"
+                            label="Pemula"
                             className="mb-3"
-                            defaultChecked={workingTime?.some((e) => e.id === '1')}
-                            ref={registerWorkingTime() as string & ((ref: Element | null) => void)}
+                            defaultChecked={difficulty?.some((e) => e === 'Pemula')}
+                            ref={registerDifficulty() as string & ((ref: Element | null) => void)}
                           />
 
                           <Form.Check
                             type="checkbox"
-                            name="workingTime"
-                            id="workingTime2"
-                            value="workingTime2"
-                            label="1 hari - 3 hari"
+                            name="difficulty"
+                            id="Menengah"
+                            value="Menengah"
+                            label="Menengah"
                             className="mb-3"
-                            defaultChecked={workingTime?.some((e) => e.id === '2')}
-                            ref={registerWorkingTime() as string & ((ref: Element | null) => void)}
+                            defaultChecked={difficulty?.some((e) => e === 'Menengah')}
+                            ref={registerDifficulty() as string & ((ref: Element | null) => void)}
                           />
 
                           <Form.Check
                             type="checkbox"
-                            name="workingTime"
-                            id="workingTime3"
-                            value="workingTime3"
-                            label="3 hari - 1 minggu"
+                            name="difficulty"
+                            id="Expert"
+                            value="Expert"
+                            label="Expert"
                             className="mb-3"
-                            defaultChecked={workingTime?.some((e) => e.id === '3')}
-                            ref={registerWorkingTime() as string & ((ref: Element | null) => void)}
+                            defaultChecked={difficulty?.some((e) => e === 'Expert')}
+                            ref={registerDifficulty() as string & ((ref: Element | null) => void)}
                           />
 
                           <Form.Check
                             type="checkbox"
-                            name="workingTime"
-                            id="workingTime4"
-                            value="workingTime4"
-                            label="1 minggu - 1 bulan"
+                            name="difficulty"
+                            id="Profesional"
+                            value="Profesional"
+                            label="Profesional"
                             className="mb-3"
-                            defaultChecked={workingTime?.some((e) => e.id === '4')}
-                            ref={registerWorkingTime() as string & ((ref: Element | null) => void)}
-                          />
-
-                          <Form.Check
-                            type="checkbox"
-                            name="workingTime"
-                            id="workingTime5"
-                            value="workingTime5"
-                            label="> 1 bulan"
-                            className="mb-3"
-                            defaultChecked={workingTime?.some((e) => e.id === '5')}
-                            ref={registerWorkingTime() as string & ((ref: Element | null) => void)}
+                            defaultChecked={difficulty?.some((e) => e === 'Profesional')}
+                            ref={registerDifficulty() as string & ((ref: Element | null) => void)}
                           />
                         </FormInput>
                         <div className="d-flex justify-content-end">
@@ -553,16 +490,16 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
                         <IconClose />
                       </div>
                     </div>
-                    {errorServiceCategory && (
+                    {errorTaskCategory && (
                       <div className="flex-centered">
                         <InlineRetryError
-                          message={errorServiceCategory.message}
-                          onRetry={refetchServiceCategory}
+                          message={errorTaskCategory.message}
+                          onRetry={refetchTaskCategory}
                         />
                       </div>
                     )}
-                    {isLoadingServiceCategory && <Loader type="inline" />}
-                    {serviceCategory && (
+                    {isLoadingTaskCategory && <Loader type="inline" />}
+                    {taskCategory && (
                       <>
                         <form
                           onSubmit={handleSubmitFloatingButton(submitFloatingButton)}
@@ -588,7 +525,7 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
                             <div className={showSubCategoryFloating ? 'd-block' : 'd-none'}>
                               <FormInput>
                                 <div className="d-flex flex-column">
-                                  {serviceCategory.categories.map((item) => {
+                                  {taskCategory.categories.map((item) => {
                                     return (
                                       <div
                                         key={item.id}
@@ -714,27 +651,27 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
                             <div
                               className={
                                 'd-flex cursor-pointer dropdown justify-content-between ' +
-                                (showWorkingTimeFloating ? 'mb-2' : 'mb-4')
+                                (showDifficultyFloating ? 'mb-2' : 'mb-4')
                               }
-                              onClick={() => setShowWorkingTimeFloating((x) => !x)}
+                              onClick={() => setShowDifficultyFloating((x) => !x)}
                             >
-                              <p className="mr-4 cursor-pointer">Waktu Pengerjaan</p>
+                              <p className="mr-4 cursor-pointer">Tingkat Kesulitan</p>
                               <div className="rotate-icon-down">
                                 <IconChevronRight />
                               </div>
                             </div>
 
-                            <div className={showWorkingTimeFloating ? 'd-block' : 'd-none'}>
+                            <div className={showDifficultyFloating ? 'd-block' : 'd-none'}>
                               <div className="d-flex flex-column">
                                 <FormInput>
                                   <Form.Check
                                     type="checkbox"
-                                    name="workingTime"
-                                    id="workingTime1"
-                                    value="workingTime1"
-                                    label="< 1 hari"
+                                    name="difficulty"
+                                    id="Pemula"
+                                    value="Pemula"
+                                    label="Pemula"
                                     className="mb-3"
-                                    defaultChecked={workingTime?.some((e) => e.id === '1')}
+                                    defaultChecked={difficulty?.some((e) => e === 'Pemula')}
                                     ref={
                                       registerFloatingButton() as string &
                                         ((ref: Element | null) => void)
@@ -743,12 +680,12 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
 
                                   <Form.Check
                                     type="checkbox"
-                                    name="workingTime"
-                                    id="workingTime2"
-                                    value="workingTime2"
-                                    label="1 hari - 3 hari"
+                                    name="difficulty"
+                                    id="Menengah"
+                                    value="Menengah"
+                                    label="Menengah"
                                     className="mb-3"
-                                    defaultChecked={workingTime?.some((e) => e.id === '2')}
+                                    defaultChecked={difficulty?.some((e) => e === 'Menengah')}
                                     ref={
                                       registerFloatingButton() as string &
                                         ((ref: Element | null) => void)
@@ -757,12 +694,12 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
 
                                   <Form.Check
                                     type="checkbox"
-                                    name="workingTime"
-                                    id="workingTime3"
-                                    value="workingTime3"
-                                    label="3 hari - 1 minggu"
+                                    name="difficulty"
+                                    id="Expert"
+                                    value="Expert"
+                                    label="Expert"
                                     className="mb-3"
-                                    defaultChecked={workingTime?.some((e) => e.id === '3')}
+                                    defaultChecked={difficulty?.some((e) => e === 'Expert')}
                                     ref={
                                       registerFloatingButton() as string &
                                         ((ref: Element | null) => void)
@@ -771,26 +708,12 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
 
                                   <Form.Check
                                     type="checkbox"
-                                    name="workingTime"
-                                    id="workingTime4"
-                                    value="workingTime4"
-                                    label="1 minggu - 1 bulan"
+                                    name="difficulty"
+                                    id="Profesional"
+                                    value="Profesional"
+                                    label="Profesional"
                                     className="mb-3"
-                                    defaultChecked={workingTime?.some((e) => e.id === '4')}
-                                    ref={
-                                      registerFloatingButton() as string &
-                                        ((ref: Element | null) => void)
-                                    }
-                                  />
-
-                                  <Form.Check
-                                    type="checkbox"
-                                    name="workingTime"
-                                    id="workingTime5"
-                                    value="workingTime5"
-                                    label="> 1 bulan"
-                                    className="mb-3"
-                                    defaultChecked={workingTime?.some((e) => e.id === '5')}
+                                    defaultChecked={difficulty?.some((e) => e === 'Profesional')}
                                     ref={
                                       registerFloatingButton() as string &
                                         ((ref: Element | null) => void)
@@ -812,7 +735,7 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
                   </Popup>
                 </div>
 
-                {(budget || workingTime || subCategory) && (
+                {(budget || difficulty || subCategory) && (
                   <div className="d-flex flex-row flex-wrap">
                     {subCategory &&
                       subCategory.map((subCategory) => {
@@ -836,14 +759,14 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
                           </div>
                         );
                       })}
-                    {workingTime &&
-                      workingTime.map((work) => {
+                    {difficulty &&
+                      difficulty.map((dif) => {
                         return (
                           <div
-                            key={work.id}
+                            key={dif}
                             className="chip chip-primary mr-2 mb-3"
                           >
-                            {work.name}
+                            {dif}
                           </div>
                         );
                       })}
@@ -851,28 +774,26 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
                 )}
 
                 <p className="text-primary-dark mt-3">
-                  {serviceList.pages[0].totalAmount} layanan tersedia
+                  {taskList.pages[0].totalAmount} tugas tersedia
                 </p>
 
                 <Row className="d-flex flex-row flex-wrap mb-4 justify-content-center">
-                  {serviceList.pages.map((data) => {
+                  {taskList.pages.map((data) => {
                     return (
                       <>
-                        {data.services.map((item) => {
+                        {data.tasks.map((item) => {
                           return (
                             <div
                               key={item.id}
-                              className="col-xl-3 col-md-6 col-12 py-3"
+                              className="col-lg-6 col-12 py-3"
                             >
-                              <Service
-                                imageUrl={item.imageUrl}
+                              <Task
                                 name={item.name}
-                                freelancer={item.freelancer}
-                                averageRating={item.averageRating}
-                                ratingAmount={item.ratingAmount}
+                                description={item.description}
                                 tags={item.tags}
+                                dueDate={item.dueDate}
+                                difficulty={item.difficulty}
                                 price={item.price}
-                                workingTime={item.workingTime}
                               />
                             </div>
                           );
@@ -880,10 +801,10 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
                       </>
                     );
                   })}
-                  {isErrorRefetch && errorServiceList && !isFetchingNextPage && (
+                  {isErrorRefetch && errorTaskList && !isFetchingNextPage && (
                     <div className="flex-centered my-4">
                       <InlineRetryError
-                        message={errorServiceList.message}
+                        message={errorTaskList.message}
                         onRetry={fetchNextPage}
                       />
                     </div>
@@ -912,4 +833,4 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
   );
 };
 
-export default ServiceSearch;
+export default TaskSearch;
