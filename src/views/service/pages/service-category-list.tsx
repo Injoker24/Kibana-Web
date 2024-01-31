@@ -119,7 +119,7 @@ const ServiceCategoryList: React.FC = ({ stateId, stateName }: any) => {
                           <div
                             key={subCategory.id}
                             onClick={() => openServiceListDetail(subCategory.id, subCategory.name)}
-                            className="text-primary-dark mb-2"
+                            className="text-primary-dark mb-2 cursor-pointer"
                           >
                             {subCategory.name}
                           </div>

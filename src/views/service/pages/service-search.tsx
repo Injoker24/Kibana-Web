@@ -4,7 +4,7 @@ import {
   ServiceInquiryServiceListOutput,
 } from 'models';
 import React, { useEffect, useState } from 'react';
-import { useInfiniteQuery, useMutation, useQuery } from 'react-query';
+import { useInfiniteQuery, useQuery } from 'react-query';
 import { ServiceService } from 'services';
 import { Form, Image, Row } from 'react-bootstrap';
 
@@ -38,6 +38,9 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
   const [budget, setBudget] = useState<BudgetWrapper[]>();
   const [workingTime, setWorkingTime] = useState<WorkingTimeWrapper[]>();
   const [openFilter, setOpenFilter] = useState(false);
+  const [showSubCategoryFloating, setShowSubCategoryFloating] = useState(false);
+  const [showBudgetFloating, setShowBudgetFloating] = useState(false);
+  const [showWorkingTimeFloating, setShowWorkingTimeFloating] = useState(false);
 
   const {
     data: serviceCategory,
@@ -92,6 +95,10 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
   });
 
   const { register: registerWorkingTime, handleSubmit: handleSubmitWorkingTime } = useForm({
+    mode: 'onChange',
+  });
+
+  const { register: registerFloatingButton, handleSubmit: handleSubmitFloatingButton } = useForm({
     mode: 'onChange',
   });
 
@@ -159,6 +166,7 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
           name: '> Rp 1.500.000',
         };
       }
+      return undefined;
     });
     setBudget(budgetArray);
   };
@@ -204,8 +212,22 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
           name: '> 1 bulan',
         };
       }
+      return undefined;
     });
     setWorkingTime(workingTimeArray);
+  };
+
+  const submitFloatingButton = (formData: any) => {
+    if (formData.subCategory) {
+      submitSubCategoryFilter(formData);
+    }
+    if (formData.budget) {
+      submitBudgetFilter(formData);
+    }
+    if (formData.workingTime) {
+      submitWorkingTimeFilter(formData);
+    }
+    setOpenFilter(false);
   };
 
   useEffect(() => {
@@ -529,36 +551,262 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
                         <IconClose />
                       </div>
                     </div>
-                    <div
-                      style={{ height: '80%' }}
-                      className="mb-4"
-                    >
-                      <div className="mb-4">
-                        <div className="d-flex cursor-pointer dropdown justify-content-between">
-                          <p className="mr-4 cursor-pointer">Kategori / Sub Kategori</p>
-                          <div className="rotate-icon-down">
-                            <IconChevronRight />
-                          </div>
-                        </div>
+                    {errorServiceCategory && (
+                      <div className="flex-centered">
+                        <InlineRetryError
+                          message={errorServiceCategory.message}
+                          onRetry={refetchServiceCategory}
+                        />
                       </div>
-                      <div className="mb-4">
-                        <div className="d-flex cursor-pointer dropdown justify-content-between">
-                          <p className="mr-4 cursor-pointer">Budget</p>
-                          <div className="rotate-icon-down">
-                            <IconChevronRight />
+                    )}
+                    {isLoadingServiceCategory && <Loader type="inline" />}
+                    {serviceCategory && (
+                      <>
+                        <form
+                          onSubmit={handleSubmitFloatingButton(submitFloatingButton)}
+                          className="h-100"
+                        >
+                          <div
+                            style={{ height: '80%' }}
+                            className="mb-4 overflow-auto"
+                          >
+                            <div
+                              className={
+                                'd-flex cursor-pointer dropdown justify-content-between ' +
+                                (showSubCategoryFloating ? 'mb-2' : 'mb-4')
+                              }
+                              onClick={() => setShowSubCategoryFloating((x) => !x)}
+                            >
+                              <p className="mr-4 cursor-pointer">Kategori / Sub Kategori</p>
+                              <div className="rotate-icon-down">
+                                <IconChevronRight />
+                              </div>
+                            </div>
+
+                            <div className={showSubCategoryFloating ? 'd-block' : 'd-none'}>
+                              <FormInput>
+                                <div className="d-flex flex-column">
+                                  {serviceCategory.categories.map((item) => {
+                                    return (
+                                      <div
+                                        key={item.id}
+                                        className="mb-3"
+                                      >
+                                        <h4 className="font-weight-bold mb-3">{item.name}</h4>
+                                        {item.subCategories.map((subCat) => {
+                                          return (
+                                            <Form.Check
+                                              key={subCat.id}
+                                              type="checkbox"
+                                              name="subCategory"
+                                              id={subCat.id}
+                                              value={subCat.id}
+                                              label={subCat.name}
+                                              className="mb-3"
+                                              defaultChecked={subCategory?.some(
+                                                (e) => e.id === subCat.id,
+                                              )}
+                                              ref={
+                                                registerFloatingButton() as string &
+                                                  ((ref: Element | null) => void)
+                                              }
+                                            />
+                                          );
+                                        })}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </FormInput>
+                            </div>
+
+                            <div
+                              className={
+                                'd-flex cursor-pointer dropdown justify-content-between ' +
+                                (showBudgetFloating ? 'mb-2' : 'mb-4')
+                              }
+                              onClick={() => setShowBudgetFloating((x) => !x)}
+                            >
+                              <p className="mr-4 cursor-pointer">Budget</p>
+                              <div className="rotate-icon-down">
+                                <IconChevronRight />
+                              </div>
+                            </div>
+
+                            <div className={showBudgetFloating ? 'd-block' : 'd-none'}>
+                              <div className="d-flex flex-column">
+                                <FormInput>
+                                  <Form.Check
+                                    type="checkbox"
+                                    name="budget"
+                                    id="budget1"
+                                    value="budget1"
+                                    label="< Rp 100.000"
+                                    className="mb-3"
+                                    defaultChecked={budget?.some((e) => e.id === '1')}
+                                    ref={
+                                      registerFloatingButton() as string &
+                                        ((ref: Element | null) => void)
+                                    }
+                                  />
+
+                                  <Form.Check
+                                    type="checkbox"
+                                    name="budget"
+                                    id="budget2"
+                                    value="budget2"
+                                    label="Rp 100.000 - Rp 300.000"
+                                    className="mb-3"
+                                    defaultChecked={budget?.some((e) => e.id === '2')}
+                                    ref={
+                                      registerFloatingButton() as string &
+                                        ((ref: Element | null) => void)
+                                    }
+                                  />
+
+                                  <Form.Check
+                                    type="checkbox"
+                                    name="budget"
+                                    id="budget3"
+                                    value="budget3"
+                                    label="Rp 300.000 - Rp 700.000"
+                                    className="mb-3"
+                                    defaultChecked={budget?.some((e) => e.id === '3')}
+                                    ref={
+                                      registerFloatingButton() as string &
+                                        ((ref: Element | null) => void)
+                                    }
+                                  />
+
+                                  <Form.Check
+                                    type="checkbox"
+                                    name="budget"
+                                    id="budget4"
+                                    value="budget4"
+                                    label="Rp 700.000 - Rp 1.500.000"
+                                    className="mb-3"
+                                    defaultChecked={budget?.some((e) => e.id === '4')}
+                                    ref={
+                                      registerFloatingButton() as string &
+                                        ((ref: Element | null) => void)
+                                    }
+                                  />
+
+                                  <Form.Check
+                                    type="checkbox"
+                                    name="budget"
+                                    id="budget5"
+                                    value="budget5"
+                                    label="> Rp 1.500.000"
+                                    className="mb-3"
+                                    defaultChecked={budget?.some((e) => e.id === '5')}
+                                    ref={
+                                      registerFloatingButton() as string &
+                                        ((ref: Element | null) => void)
+                                    }
+                                  />
+                                </FormInput>
+                              </div>
+                            </div>
+
+                            <div
+                              className={
+                                'd-flex cursor-pointer dropdown justify-content-between ' +
+                                (showWorkingTimeFloating ? 'mb-2' : 'mb-4')
+                              }
+                              onClick={() => setShowWorkingTimeFloating((x) => !x)}
+                            >
+                              <p className="mr-4 cursor-pointer">Waktu Pengerjaan</p>
+                              <div className="rotate-icon-down">
+                                <IconChevronRight />
+                              </div>
+                            </div>
+
+                            <div className={showWorkingTimeFloating ? 'd-block' : 'd-none'}>
+                              <div className="d-flex flex-column">
+                                <FormInput>
+                                  <Form.Check
+                                    type="checkbox"
+                                    name="workingTime"
+                                    id="workingTime1"
+                                    value="workingTime1"
+                                    label="< 1 hari"
+                                    className="mb-3"
+                                    defaultChecked={workingTime?.some((e) => e.id === '1')}
+                                    ref={
+                                      registerFloatingButton() as string &
+                                        ((ref: Element | null) => void)
+                                    }
+                                  />
+
+                                  <Form.Check
+                                    type="checkbox"
+                                    name="workingTime"
+                                    id="workingTime2"
+                                    value="workingTime2"
+                                    label="1 hari - 3 hari"
+                                    className="mb-3"
+                                    defaultChecked={workingTime?.some((e) => e.id === '2')}
+                                    ref={
+                                      registerFloatingButton() as string &
+                                        ((ref: Element | null) => void)
+                                    }
+                                  />
+
+                                  <Form.Check
+                                    type="checkbox"
+                                    name="workingTime"
+                                    id="workingTime3"
+                                    value="workingTime3"
+                                    label="3 hari - 1 minggu"
+                                    className="mb-3"
+                                    defaultChecked={workingTime?.some((e) => e.id === '3')}
+                                    ref={
+                                      registerFloatingButton() as string &
+                                        ((ref: Element | null) => void)
+                                    }
+                                  />
+
+                                  <Form.Check
+                                    type="checkbox"
+                                    name="workingTime"
+                                    id="workingTime4"
+                                    value="workingTime4"
+                                    label="1 minggu - 1 bulan"
+                                    className="mb-3"
+                                    defaultChecked={workingTime?.some((e) => e.id === '4')}
+                                    ref={
+                                      registerFloatingButton() as string &
+                                        ((ref: Element | null) => void)
+                                    }
+                                  />
+
+                                  <Form.Check
+                                    type="checkbox"
+                                    name="workingTime"
+                                    id="workingTime5"
+                                    value="workingTime5"
+                                    label="> 1 bulan"
+                                    className="mb-3"
+                                    defaultChecked={workingTime?.some((e) => e.id === '5')}
+                                    ref={
+                                      registerFloatingButton() as string &
+                                        ((ref: Element | null) => void)
+                                    }
+                                  />
+                                </FormInput>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                      <div className="mb-4">
-                        <div className="d-flex cursor-pointer dropdown justify-content-between">
-                          <p className="mr-4 cursor-pointer">Waktu Pengerjaan</p>
-                          <div className="rotate-icon-down">
-                            <IconChevronRight />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="btn btn-primary">Terapkan Filter</div>
+                          <button
+                            type="submit"
+                            className="btn btn-primary w-100"
+                          >
+                            Terapkan Filter
+                          </button>
+                        </form>
+                      </>
+                    )}
                   </Popup>
                 </div>
 
