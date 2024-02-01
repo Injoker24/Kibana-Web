@@ -17,6 +17,7 @@ import IconNotificationBell from './icons/icon-notification-bell';
 import IconSearch from './icons/icon-search';
 import IconStar from './icons/icon-star';
 import IconEyeSlash from './icons/icon-eye-slash';
+import IconCrossCircle from './icons/icon-cross-circle';
 
 import logoLight from './logo/logo-light.svg';
 import logoDark from './logo/logo-dark.svg';
@@ -50,6 +51,7 @@ export {
   IconSearch,
   IconStar,
   IconEyeSlash,
+  IconCrossCircle,
   logoLight,
   logoDark,
   logoFacebook,

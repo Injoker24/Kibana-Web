@@ -2,11 +2,13 @@ import {
   ServiceInquiryCategoryOutput,
   ServiceInquiryDetailSubCategoryOutput,
   ServiceInquiryNewServiceOutput,
+  ServiceInquiryServiceDetailOutput,
   ServiceInquiryServiceListInput,
   ServiceInquiryServiceListOutput,
   transformToServiceInquiryCategoryOutput,
   transformToServiceInquiryDetailSubCategoryOutput,
   transformToServiceInquiryNewServiceOutput,
+  transformToServiceInquiryServiceDetailOutput,
   transformToServiceInquiryServiceListOutput,
 } from 'models';
 import {
@@ -14,6 +16,7 @@ import {
   ServiceInquiryCategoryResponse,
   ServiceInquiryDetailSubCategoryResponse,
   ServiceInquiryNewServiceResponse,
+  ServiceInquiryServiceDetailResponse,
   ServiceInquiryServiceListResponse,
   transformToServiceInquiryServiceListRequest,
 } from 'services/schemas';
@@ -62,6 +65,14 @@ const ServiceService = {
     );
 
     return transformToServiceInquiryServiceListOutput(response.data.output_schema);
+  },
+
+  inquiryServiceDetail: async (serviceId: string): Promise<ServiceInquiryServiceDetailOutput> => {
+    const response = await axiosInstance.get<ApiResponse<ServiceInquiryServiceDetailResponse>>(
+      `/service/detail/${serviceId}`,
+    );
+
+    return transformToServiceInquiryServiceDetailOutput(response.data.output_schema);
   },
 };
 

@@ -96,3 +96,36 @@ export interface ServiceInquiryServiceListResponse {
   has_next_page: boolean;
   last_id: string;
 }
+
+export interface ServiceInquiryServiceDetailResponse {
+  service_detail: {
+    id: string;
+    image_url: string[];
+    name: string;
+    tags: string[];
+    working_time: number;
+    price: number;
+    revision_count: number;
+    additional_info: {
+      title: string;
+      is_supported: boolean;
+    }[];
+    description: string;
+  };
+  freelancer: {
+    id: string;
+    profile_image_url: string;
+    name: string;
+    description: string;
+  };
+  review: {
+    average_rating: number;
+    rating_amount: number;
+    review_list?: {
+      name: string;
+      star: number;
+      description: string;
+      timestamp: string;
+    }[];
+  };
+}

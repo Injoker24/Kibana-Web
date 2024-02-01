@@ -11,6 +11,12 @@
   justify-content: center;
   text-align: center;
 
+  &.inline {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    display: block;
+  }
+
   &.absolute {
     position: absolute;
     background: rgba(255, 255, 255, 0.65);

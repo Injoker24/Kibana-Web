@@ -2,6 +2,7 @@ import {
   ServiceInquiryCategoryResponse,
   ServiceInquiryDetailSubCategoryResponse,
   ServiceInquiryNewServiceResponse,
+  ServiceInquiryServiceDetailResponse,
   ServiceInquiryServiceListResponse,
 } from 'services/schemas/service.schema';
 import { formatCurrency } from 'utils';
@@ -167,6 +168,82 @@ export function transformToServiceInquiryServiceListOutput(
     totalAmount: response.total_amount,
     hasNextPage: response.has_next_page,
     lastId: response.last_id,
+  };
+
+  return result;
+}
+
+export interface ServiceInquiryServiceDetailOutput {
+  serviceDetail: {
+    id: string;
+    imageUrl: string[];
+    name: string;
+    tags: string[];
+    workingTime: number;
+    price: number;
+    revisionCount: number;
+    additionalInfo: {
+      title: string;
+      isSupported: boolean;
+    }[];
+    description: string;
+  };
+  freelancer: {
+    id: string;
+    profileImageUrl: string;
+    name: string;
+    description: string;
+  };
+  review: {
+    averageRating: number;
+    ratingAmount: number;
+    reviewList?: {
+      name: string;
+      star: number;
+      description: string;
+      timestamp: string;
+    }[];
+  };
+}
+
+export function transformToServiceInquiryServiceDetailOutput(
+  response: ServiceInquiryServiceDetailResponse,
+): ServiceInquiryServiceDetailOutput {
+  const result: ServiceInquiryServiceDetailOutput = {
+    serviceDetail: {
+      id: response.service_detail.id,
+      imageUrl: response.service_detail.image_url,
+      name: response.service_detail.name,
+      tags: response.service_detail.tags,
+      workingTime: response.service_detail.working_time,
+      price: response.service_detail.price,
+      revisionCount: response.service_detail.revision_count,
+      additionalInfo: response.service_detail.additional_info.map((t) => {
+        return {
+          title: t.title,
+          isSupported: t.is_supported,
+        };
+      }),
+      description: response.service_detail.description,
+    },
+    freelancer: {
+      id: response.freelancer.id,
+      profileImageUrl: response.freelancer.profile_image_url,
+      name: response.freelancer.name,
+      description: response.freelancer.description,
+    },
+    review: {
+      averageRating: response.review.average_rating,
+      ratingAmount: response.review.rating_amount,
+      reviewList: response.review.review_list?.map((t) => {
+        return {
+          name: t.name,
+          star: t.star,
+          description: t.description,
+          timestamp: t.timestamp,
+        };
+      }),
+    },
   };
 
   return result;

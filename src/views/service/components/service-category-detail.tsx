@@ -113,7 +113,10 @@ const ServiceCategoryDetail = ({ title, id, onBack }: any) => {
                   return (
                     <div
                       key={item.id}
-                      className="col-xl-3 col-md-6 col-12 py-3"
+                      className="col-xl-3 col-md-6 col-12 py-3 cursor-pointer"
+                      onClick={() => {
+                        window.location.href = 'service/' + item.id;
+                      }}
                     >
                       <Service
                         imageUrl={item.imageUrl}

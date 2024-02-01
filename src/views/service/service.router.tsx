@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { getLocalStorage } from 'utils';
-import { ServiceCategoryList, ServiceSearch } from './pages';
+import { ServiceCategoryList, ServiceDetail, ServiceSearch } from './pages';
 
 interface categoryListStateWrapper {
   stateName: string;
@@ -42,6 +42,12 @@ const ServiceRouter = () => {
             key={Date.now()}
           />
         )}
+      />
+
+      <Route
+        exact
+        path={'/service/:serviceId'}
+        render={() => <ServiceDetail key={Date.now()} />}
       />
 
       <Route render={() => <Redirect to={`/dashboard`} />} />

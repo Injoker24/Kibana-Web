@@ -53,9 +53,14 @@ a.text-light:focus {
   color: $light !important;
 }
 
-hr {
+.sidebar-content hr {
   border-top: 1px solid $light;
 }
+
+hr {
+  border-top: 1px solid $primary;
+}
+
 .font-weight-semibold {
   font-weight: $font-weight-semibold !important;
 }
@@ -66,6 +71,15 @@ hr {
 
 .cursor-pointer {
   cursor: pointer !important;
+
+  & h1,
+  & h2,
+  & h3,
+  & h4,
+  & p,
+  & small {
+    cursor: pointer !important;
+  }
 }
 
 .text-line-clamp {

@@ -46,3 +46,22 @@
 .rotate-icon-down {
   transform: rotate(90deg);
 }
+
+.service-detail-image {
+  width: 27.5rem;
+  height: 20rem;
+  border-radius: 1rem;
+
+  @media only screen and (max-width: 576px) {
+    & {
+      width: 19rem;
+      height: 15rem;
+    }
+  }
+}
+
+.service-detail-freelancer-profile-image {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 10rem;
+}
