@@ -785,7 +785,10 @@ const TaskSearch: React.FC = ({ stateCategories }: any) => {
                           return (
                             <div
                               key={item.id}
-                              className="col-lg-6 col-12 py-3"
+                              className="col-lg-6 col-12 py-3 cursor-pointer"
+                              onClick={() => {
+                                window.location.href = 'task/' + item.id;
+                              }}
                             >
                               <Task
                                 name={item.name}

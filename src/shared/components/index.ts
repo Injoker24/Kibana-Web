@@ -7,6 +7,7 @@ import FormInput from './form-input';
 import InlineRetryError from './inline-retry-error';
 import PopUpError from './pop-up-error';
 import TitleBanner from './title-banner';
+import InfoBox from './info-box/info-box';
 
 export {
   Loader,
@@ -18,4 +19,5 @@ export {
   InlineRetryError,
   PopUpError,
   TitleBanner,
+  InfoBox,
 };

@@ -1,14 +1,10 @@
-import {
-  ErrorWrapper,
-  ServiceInquiryCategoryOutput,
-  ServiceInquiryServiceDetailOutput,
-} from 'models';
-import React, { useState } from 'react';
+import { ErrorWrapper, ServiceInquiryServiceDetailOutput } from 'models';
+import React from 'react';
 import { useQuery } from 'react-query';
 import { ServiceService } from 'services';
 import { Image, Row } from 'react-bootstrap';
 
-import { Footer, Header, InlineRetryError, Loader, TitleBanner } from 'shared/components';
+import { Footer, Header, InfoBox, InlineRetryError, Loader, TitleBanner } from 'shared/components';
 import { useParams } from 'react-router-dom';
 import { IconCheckmarkCircle, IconChevronLeft, IconCrossCircle, IconStar } from 'images';
 import { formatCurrency } from 'utils';
@@ -232,7 +228,7 @@ const ServiceDetail: React.FC = () => {
                             );
                           })}
                           {!serviceDetail.review.reviewList && (
-                            <h4 className="flex-centered mt-3">Belum ada review</h4>
+                            <InfoBox message={'Belum ada review'} />
                           )}
                         </div>
                       </div>

@@ -2,6 +2,7 @@ import {
   TaskInquiryCategoryResponse,
   TaskInquiryDetailSubCategoryResponse,
   TaskInquiryNewTaskResponse,
+  TaskInquiryTaskDetailResponse,
   TaskInquiryTaskListResponse,
 } from 'services/schemas';
 import { formatCurrency } from 'utils';
@@ -144,6 +145,80 @@ export function transformToTaskInquiryTaskListOutput(
     totalAmount: response.total_amount,
     hasNextPage: response.has_next_page,
     lastId: response.last_id,
+  };
+
+  return result;
+}
+
+export interface TaskInquiryTaskDetailOutput {
+  taskDetail: {
+    id: string;
+    name: string;
+    tags: string[];
+    dueDate: string;
+    difficulty: string;
+    price: number;
+    description: string;
+  };
+  client: {
+    id: string;
+    profileImageUrl: string;
+    name: string;
+  };
+  registeredFreelancer?: {
+    id: string;
+    profileImageUrl: string;
+    name: string;
+  }[];
+  review: {
+    averageRating: number;
+    ratingAmount: number;
+    reviewList?: {
+      name: string;
+      star: number;
+      description: string;
+      timestamp: string;
+    }[];
+  };
+}
+
+export function transformToTaskInquiryTaskDetailOutput(
+  response: TaskInquiryTaskDetailResponse,
+): TaskInquiryTaskDetailOutput {
+  const result: TaskInquiryTaskDetailOutput = {
+    taskDetail: {
+      id: response.task_detail.id,
+      name: response.task_detail.name,
+      tags: response.task_detail.tags,
+      dueDate: response.task_detail.due_date,
+      difficulty: response.task_detail.difficulty,
+      price: response.task_detail.price,
+      description: response.task_detail.description,
+    },
+    client: {
+      id: response.client.id,
+      profileImageUrl: response.client.profile_image_url,
+      name: response.client.name,
+    },
+    registeredFreelancer: response.registered_freelancer?.map((t) => {
+      return {
+        id: t.id,
+        profileImageUrl: t.profile_image_url,
+        name: t.name,
+      };
+    }),
+    review: {
+      averageRating: response.review.average_rating,
+      ratingAmount: response.review.rating_amount,
+      reviewList: response.review.review_list?.map((t) => {
+        return {
+          name: t.name,
+          star: t.star,
+          description: t.description,
+          timestamp: t.timestamp,
+        };
+      }),
+    },
   };
 
   return result;

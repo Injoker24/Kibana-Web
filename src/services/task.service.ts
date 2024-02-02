@@ -2,11 +2,13 @@ import {
   TaskInquiryCategoryOutput,
   TaskInquiryDetailSubCategoryOutput,
   TaskInquiryNewTaskOutput,
+  TaskInquiryTaskDetailOutput,
   TaskInquiryTaskListInput,
   TaskInquiryTaskListOutput,
   transformToTaskInquiryCategoryOutput,
   transformToTaskInquiryDetailSubCategoryOutput,
   transformToTaskInquiryNewTaskOutput,
+  transformToTaskInquiryTaskDetailOutput,
   transformToTaskInquiryTaskListOutput,
 } from 'models';
 
@@ -15,6 +17,7 @@ import {
   TaskInquiryCategoryResponse,
   TaskInquiryDetailSubCategoryResponse,
   TaskInquiryNewTaskResponse,
+  TaskInquiryTaskDetailResponse,
   TaskInquiryTaskListResponse,
   transformToTaskInquiryTaskListRequest,
 } from 'services/schemas';
@@ -60,6 +63,14 @@ const TaskService = {
     );
 
     return transformToTaskInquiryTaskListOutput(response.data.output_schema);
+  },
+
+  inquiryTaskDetail: async (taskId: string): Promise<TaskInquiryTaskDetailOutput> => {
+    const response = await axiosInstance.get<ApiResponse<TaskInquiryTaskDetailResponse>>(
+      `/task/detail/${taskId}`,
+    );
+
+    return transformToTaskInquiryTaskDetailOutput(response.data.output_schema);
   },
 };
 

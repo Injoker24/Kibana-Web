@@ -78,3 +78,35 @@ export interface TaskInquiryTaskListResponse {
   has_next_page: boolean;
   last_id: string;
 }
+
+export interface TaskInquiryTaskDetailResponse {
+  task_detail: {
+    id: string;
+    name: string;
+    tags: string[];
+    due_date: string;
+    difficulty: string;
+    price: number;
+    description: string;
+  };
+  client: {
+    id: string;
+    profile_image_url: string;
+    name: string;
+  };
+  registered_freelancer?: {
+    id: string;
+    profile_image_url: string;
+    name: string;
+  }[];
+  review: {
+    average_rating: number;
+    rating_amount: number;
+    review_list?: {
+      name: string;
+      star: number;
+      description: string;
+      timestamp: string;
+    }[];
+  };
+}

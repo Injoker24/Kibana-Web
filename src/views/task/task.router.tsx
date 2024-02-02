@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { getLocalStorage } from 'utils';
-import { TaskCategoryList } from './pages';
-import TaskSearch from './pages/task-search';
+import { TaskCategoryList, TaskSearch, TaskDetail } from './pages';
 
 interface categoryListStateWrapper {
   stateName: string;
@@ -43,6 +42,12 @@ const TaskRouter = () => {
             key={Date.now()}
           />
         )}
+      />
+
+      <Route
+        exact
+        path={'/task/:taskId'}
+        render={() => <TaskDetail key={Date.now()} />}
       />
 
       <Route render={() => <Redirect to={`/dashboard`} />} />
