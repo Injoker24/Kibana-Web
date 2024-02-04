@@ -9,11 +9,14 @@ import React, { useState } from 'react';
 
 import { Image, Row } from 'react-bootstrap';
 import { useQuery } from 'react-query';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useHistory, useLocation } from 'react-router-dom';
 import { ServiceService, TaskService } from 'services';
 import { Service, Task, Loader, Header, Footer, InlineRetryError } from 'shared/components';
 
 const DashboardIndex: React.FC = () => {
+  const history = useHistory();
+  const location = useLocation();
+
   const {
     data: serviceCategory,
     isLoading: isLoadingServiceCategory,
@@ -229,7 +232,12 @@ const DashboardIndex: React.FC = () => {
                       key={item.id}
                       className="col-lg-6 col-12 py-3 cursor-pointer"
                       onClick={() => {
-                        window.location.href = 'task/' + item.id;
+                        history.push({
+                          pathname: '/task/' + item.id,
+                          state: {
+                            prevPath: location.pathname,
+                          },
+                        });
                       }}
                     >
                       <Task
@@ -276,7 +284,12 @@ const DashboardIndex: React.FC = () => {
                       key={item.id}
                       className="col-xl-3 col-md-6 col-12 py-3 cursor-pointer"
                       onClick={() => {
-                        window.location.href = 'service/' + item.id;
+                        history.push({
+                          pathname: '/service/' + item.id,
+                          state: {
+                            prevPath: location.pathname,
+                          },
+                        });
                       }}
                     >
                       <Service

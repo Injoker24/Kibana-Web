@@ -3,14 +3,14 @@ import {
   ServiceInquiryDetailSubCategoryOutput,
   ServiceInquiryNewServiceOutput,
 } from 'models';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { ServiceService } from 'services';
 import { Image, Row } from 'react-bootstrap';
 
 import { Footer, Header, InlineRetryError, Loader, Service, TitleBanner } from 'shared/components';
 import { IconChevronLeft, IconNextCircle } from 'images';
-import { Redirect } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const ServiceCategoryDetail = ({ title, id, onBack }: any) => {
   const {
@@ -33,11 +33,12 @@ const ServiceCategoryDetail = ({ title, id, onBack }: any) => {
     async () => await ServiceService.inquiryDetailSubCategory(id),
   );
 
+  const history = useHistory();
+  const location = useLocation();
+
   useEffect(() => {
     document.body.scrollTo(0, 0);
   }, []);
-
-  const [categories, setCategories] = useState<{ id: string; name: string }[]>();
 
   const openServiceList = () => {
     const idArray = subCategoryDetail?.subCategories.map((item) => {
@@ -46,30 +47,28 @@ const ServiceCategoryDetail = ({ title, id, onBack }: any) => {
         name: item.name,
       };
     });
-    setCategories(idArray);
+
+    history.push({
+      pathname: '/service/search',
+      state: {
+        stateCategories: idArray,
+      },
+    });
   };
 
   const openServiceListDetail = (id: string, name: string) => {
-    setCategories([
-      {
-        id: id,
-        name: name,
-      },
-    ]);
-  };
-
-  if (categories) {
-    return (
-      <Redirect
-        to={{
-          pathname: `/service/search`,
-          state: {
-            stateCategories: categories,
+    history.push({
+      pathname: '/service/search',
+      state: {
+        stateCategories: [
+          {
+            id: id,
+            name: name,
           },
-        }}
-      />
-    );
-  }
+        ],
+      },
+    });
+  };
 
   return (
     <>
@@ -115,7 +114,12 @@ const ServiceCategoryDetail = ({ title, id, onBack }: any) => {
                       key={item.id}
                       className="col-xl-3 col-md-6 col-12 py-3 cursor-pointer"
                       onClick={() => {
-                        window.location.href = 'service/' + item.id;
+                        history.push({
+                          pathname: '/service/' + item.id,
+                          state: {
+                            prevPath: location.pathname,
+                          },
+                        });
                       }}
                     >
                       <Service

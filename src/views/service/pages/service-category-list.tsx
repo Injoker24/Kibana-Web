@@ -7,7 +7,7 @@ import { Image, Row } from 'react-bootstrap';
 import { Footer, Header, InlineRetryError, Loader, TitleBanner } from 'shared/components';
 import { IconChevronRight } from 'images';
 import ServiceCategoryDetail from '../components/service-category-detail';
-import { Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const ServiceCategoryList: React.FC = ({ stateId, stateName }: any) => {
   const {
@@ -24,7 +24,7 @@ const ServiceCategoryList: React.FC = ({ stateId, stateName }: any) => {
   const [categoryName, setCategoryName] = useState('');
   const [hasRedirected, setHasRedirected] = useState(false);
   const [step, setStep] = useState(0);
-  const [categories, setCategories] = useState<{ id: string; name: string }[]>();
+  const history = useHistory();
 
   const openDetailCategory = (id: string, name: string) => {
     setCategoryId(id);
@@ -54,26 +54,18 @@ const ServiceCategoryList: React.FC = ({ stateId, stateName }: any) => {
   }
 
   const openServiceListDetail = (id: string, name: string) => {
-    setCategories([
-      {
-        id: id,
-        name: name,
-      },
-    ]);
-  };
-
-  if (categories) {
-    return (
-      <Redirect
-        to={{
-          pathname: `/service/search`,
-          state: {
-            stateCategories: categories,
+    history.push({
+      pathname: '/service/search',
+      state: {
+        stateCategories: [
+          {
+            id: id,
+            name: name,
           },
-        }}
-      />
-    );
-  }
+        ],
+      },
+    });
+  };
 
   return (
     <>

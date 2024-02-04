@@ -22,7 +22,7 @@ const TitleBanner: React.FC<Props> = ({ message }: Props) => {
             (status === 'freelancer' ? 'bg-secondary-dark' : 'bg-primary-dark')
           }
         >
-          <h1 className="mb-0">{message}</h1>
+          <h2 className="mb-0">{message}</h2>
         </div>
       </div>
     </Row>

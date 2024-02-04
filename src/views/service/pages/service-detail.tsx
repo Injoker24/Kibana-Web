@@ -1,16 +1,17 @@
 import { ErrorWrapper, ServiceInquiryServiceDetailOutput } from 'models';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { ServiceService } from 'services';
 import { Image, Row } from 'react-bootstrap';
 
 import { Footer, Header, InfoBox, InlineRetryError, Loader, TitleBanner } from 'shared/components';
-import { useParams } from 'react-router-dom';
+import { Redirect, useHistory, useLocation, useParams } from 'react-router-dom';
 import { IconCheckmarkCircle, IconChevronLeft, IconCrossCircle, IconStar } from 'images';
-import { formatCurrency } from 'utils';
 
-const ServiceDetail: React.FC = () => {
+const ServiceDetail: React.FC = ({ prevPath }: any) => {
   const params = useParams<{ serviceId: string }>();
+  const history = useHistory();
+  const location = useLocation();
   const {
     data: serviceDetail,
     isLoading: isLoadingServiceDetail,
@@ -20,6 +21,20 @@ const ServiceDetail: React.FC = () => {
     ['inquiry-service-detail', params.serviceId],
     async () => await ServiceService.inquiryServiceDetail(params.serviceId),
   );
+
+  useEffect(() => {
+    document.body.scrollTo(0, 0);
+  }, []);
+
+  const openProfile = (id: string) => {
+    history.push({
+      pathname: '/account/profile/' + id,
+      state: {
+        status: 'freelancer',
+        prevPath: location.pathname,
+      },
+    });
+  };
 
   return (
     <>
@@ -31,7 +46,7 @@ const ServiceDetail: React.FC = () => {
             <div
               className="text-primary-dark flex-centered justify-content-start cursor-pointer mb-4"
               onClick={() => {
-                window.location.href = '/service/search';
+                history.push(prevPath ? prevPath : '/service/search');
               }}
             >
               <div className="mr-3">
@@ -114,7 +129,7 @@ const ServiceDetail: React.FC = () => {
                         })}
                         <div className="d-flex justify-content-end">
                           <h3 className="text-primary-dark mb-3">
-                            Rp {formatCurrency(serviceDetail.serviceDetail.price)}
+                            Rp {serviceDetail.serviceDetail.price}
                           </h3>
                         </div>
                         <div className="btn btn-primary">Beli Layanan</div>
@@ -141,11 +156,23 @@ const ServiceDetail: React.FC = () => {
                             <h4 className="font-weight-semibold">
                               {serviceDetail.freelancer.name}
                             </h4>
-                            <p>{serviceDetail.freelancer.description}</p>
+                            <p
+                              className="text-line-clamp line-4"
+                              dangerouslySetInnerHTML={{
+                                __html: serviceDetail.freelancer.description,
+                              }}
+                            ></p>
                           </div>
                         </div>
                         <div className="d-flex justify-content-end">
-                          <div className="btn btn-primary">Lihat Profil</div>
+                          <div
+                            className="btn btn-primary"
+                            onClick={() => {
+                              openProfile(serviceDetail.freelancer.id);
+                            }}
+                          >
+                            Lihat Profil
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -184,7 +211,7 @@ const ServiceDetail: React.FC = () => {
                       })}
                       <div className="d-flex justify-content-end">
                         <h3 className="text-primary-dark mb-3">
-                          Rp {formatCurrency(serviceDetail.serviceDetail.price)}
+                          Rp {serviceDetail.serviceDetail.price}
                         </h3>
                       </div>
                       <div className="btn btn-primary">Beli Layanan</div>

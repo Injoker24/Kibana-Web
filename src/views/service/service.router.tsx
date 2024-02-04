@@ -13,6 +13,10 @@ interface searchStateWrapper {
   stateCategories: string[];
 }
 
+interface detailStateWrapper {
+  prevPath: string;
+}
+
 const ServiceRouter = () => {
   const [token, setToken] = useState();
 
@@ -47,7 +51,12 @@ const ServiceRouter = () => {
       <Route
         exact
         path={'/service/:serviceId'}
-        render={() => <ServiceDetail key={Date.now()} />}
+        render={({ location: { state } }) => (
+          <ServiceDetail
+            {...(state as detailStateWrapper)}
+            key={Date.now()}
+          />
+        )}
       />
 
       <Route render={() => <Redirect to={`/dashboard`} />} />

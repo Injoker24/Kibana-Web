@@ -1,14 +1,16 @@
 import { ErrorWrapper, TaskInquiryDetailSubCategoryOutput, TaskInquiryNewTaskOutput } from 'models';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { TaskService } from 'services';
 import { Image, Row } from 'react-bootstrap';
 
 import { Footer, Header, InlineRetryError, Loader, Task, TitleBanner } from 'shared/components';
 import { IconChevronLeft, IconNextCircle } from 'images';
-import { Redirect } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const TaskCategoryDetail = ({ title, id, onBack }: any) => {
+  const history = useHistory();
+  const location = useLocation();
   const {
     data: newTask,
     isLoading: isLoadingNewTask,
@@ -33,8 +35,6 @@ const TaskCategoryDetail = ({ title, id, onBack }: any) => {
     document.body.scrollTo(0, 0);
   }, []);
 
-  const [categories, setCategories] = useState<{ id: string; name: string }[]>();
-
   const openTaskList = () => {
     const idArray = subCategoryDetail?.subCategories.map((item) => {
       return {
@@ -42,30 +42,28 @@ const TaskCategoryDetail = ({ title, id, onBack }: any) => {
         name: item.name,
       };
     });
-    setCategories(idArray);
+
+    history.push({
+      pathname: '/task/search',
+      state: {
+        stateCategories: idArray,
+      },
+    });
   };
 
   const openTaskListDetail = (id: string, name: string) => {
-    setCategories([
-      {
-        id: id,
-        name: name,
-      },
-    ]);
-  };
-
-  if (categories) {
-    return (
-      <Redirect
-        to={{
-          pathname: `/task/search`,
-          state: {
-            stateCategories: categories,
+    history.push({
+      pathname: '/task/search',
+      state: {
+        stateCategories: [
+          {
+            id: id,
+            name: name,
           },
-        }}
-      />
-    );
-  }
+        ],
+      },
+    });
+  };
 
   return (
     <>
@@ -111,7 +109,12 @@ const TaskCategoryDetail = ({ title, id, onBack }: any) => {
                       key={item.id}
                       className="col-md-6 col-12 py-3 cursor-pointer"
                       onClick={() => {
-                        window.location.href = 'task/' + item.id;
+                        history.push({
+                          pathname: '/task/' + item.id,
+                          state: {
+                            prevPath: location.pathname,
+                          },
+                        });
                       }}
                     >
                       <Task

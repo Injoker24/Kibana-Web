@@ -1,0 +1,22 @@
+.nav-tabs {
+  border-bottom: 2px solid $muted;
+}
+
+.nav-link {
+  color: $grey;
+
+  &:hover {
+    border-color: transparent !important;
+    color: $primary-dark;
+  }
+
+  &.active {
+    color: $primary-dark !important;
+    font-weight: bold;
+    border-bottom: 3px solid $primary-dark !important;
+    background-color: transparent !important;
+    border-top-color: transparent !important;
+    border-left-color: transparent !important;
+    border-right-color: transparent !important;
+  }
+}

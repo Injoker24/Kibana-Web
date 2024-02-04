@@ -5,6 +5,7 @@ import { DashboardRouter } from 'views/dashboard';
 import { AuthRouter } from 'views/auth';
 import { ServiceRouter } from 'views/service';
 import { TaskRouter } from 'views/task';
+import { AccountRouter } from 'views/account';
 
 const AppRouter: React.FC<any> = () => {
   return (
@@ -24,6 +25,10 @@ const AppRouter: React.FC<any> = () => {
 
         <Route path={'/task'}>
           <TaskRouter />
+        </Route>
+
+        <Route path={'/account'}>
+          <AccountRouter />
         </Route>
 
         <Route

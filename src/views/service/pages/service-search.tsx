@@ -12,6 +12,7 @@ import { Footer, FormInput, Header, InlineRetryError, Loader, Service } from 'sh
 import { useForm } from 'react-hook-form';
 import { IconChevronRight, IconClose, IconSearch, searchIllustration } from 'images';
 import Popup from 'reactjs-popup';
+import { useHistory, useLocation } from 'react-router-dom';
 
 interface SubCategoryWrapper {
   id: string;
@@ -41,6 +42,8 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
   const [showSubCategoryFloating, setShowSubCategoryFloating] = useState(false);
   const [showBudgetFloating, setShowBudgetFloating] = useState(false);
   const [showWorkingTimeFloating, setShowWorkingTimeFloating] = useState(false);
+  const history = useHistory();
+  const location = useLocation();
 
   const {
     data: serviceCategory,
@@ -864,7 +867,12 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
                               key={item.id}
                               className="col-xl-3 col-md-6 col-12 py-3 cursor-pointer"
                               onClick={() => {
-                                window.location.href = 'service/' + item.id;
+                                history.push({
+                                  pathname: '/service/' + item.id,
+                                  state: {
+                                    prevPath: location.pathname,
+                                  },
+                                });
                               }}
                             >
                               <Service

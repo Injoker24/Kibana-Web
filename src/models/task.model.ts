@@ -157,7 +157,7 @@ export interface TaskInquiryTaskDetailOutput {
     tags: string[];
     dueDate: string;
     difficulty: string;
-    price: number;
+    price: string;
     description: string;
   };
   client: {
@@ -192,7 +192,7 @@ export function transformToTaskInquiryTaskDetailOutput(
       tags: response.task_detail.tags,
       dueDate: response.task_detail.due_date,
       difficulty: response.task_detail.difficulty,
-      price: response.task_detail.price,
+      price: formatCurrency(response.task_detail.price),
       description: response.task_detail.description,
     },
     client: {

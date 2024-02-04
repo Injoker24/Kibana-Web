@@ -8,6 +8,7 @@ import { Footer, FormInput, Header, InlineRetryError, Loader, Task } from 'share
 import { useForm } from 'react-hook-form';
 import { IconChevronRight, IconClose, IconSearch, searchIllustration } from 'images';
 import Popup from 'reactjs-popup';
+import { useHistory, useLocation } from 'react-router-dom';
 
 interface SubCategoryWrapper {
   id: string;
@@ -30,6 +31,8 @@ const TaskSearch: React.FC = ({ stateCategories }: any) => {
   const [showSubCategoryFloating, setShowSubCategoryFloating] = useState(false);
   const [showBudgetFloating, setShowBudgetFloating] = useState(false);
   const [showDifficultyFloating, setShowDifficultyFloating] = useState(false);
+  const history = useHistory();
+  const location = useLocation();
 
   const {
     data: taskCategory,
@@ -787,7 +790,12 @@ const TaskSearch: React.FC = ({ stateCategories }: any) => {
                               key={item.id}
                               className="col-lg-6 col-12 py-3 cursor-pointer"
                               onClick={() => {
-                                window.location.href = 'task/' + item.id;
+                                history.push({
+                                  pathname: '/task/' + item.id,
+                                  state: {
+                                    prevPath: location.pathname,
+                                  },
+                                });
                               }}
                             >
                               <Task

@@ -13,6 +13,10 @@ interface searchStateWrapper {
   stateCategories: string[];
 }
 
+interface detailStateWrapper {
+  prevPath: string;
+}
+
 const TaskRouter = () => {
   const [token, setToken] = useState();
 
@@ -47,7 +51,12 @@ const TaskRouter = () => {
       <Route
         exact
         path={'/task/:taskId'}
-        render={() => <TaskDetail key={Date.now()} />}
+        render={({ location: { state } }) => (
+          <TaskDetail
+            {...(state as detailStateWrapper)}
+            key={Date.now()}
+          />
+        )}
       />
 
       <Route render={() => <Redirect to={`/dashboard`} />} />

@@ -180,7 +180,7 @@ export interface ServiceInquiryServiceDetailOutput {
     name: string;
     tags: string[];
     workingTime: number;
-    price: number;
+    price: string;
     revisionCount: number;
     additionalInfo: {
       title: string;
@@ -216,7 +216,7 @@ export function transformToServiceInquiryServiceDetailOutput(
       name: response.service_detail.name,
       tags: response.service_detail.tags,
       workingTime: response.service_detail.working_time,
-      price: response.service_detail.price,
+      price: formatCurrency(response.service_detail.price),
       revisionCount: response.service_detail.revision_count,
       additionalInfo: response.service_detail.additional_info.map((t) => {
         return {

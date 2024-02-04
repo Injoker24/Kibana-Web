@@ -1,16 +1,17 @@
 import { ErrorWrapper, TaskInquiryTaskDetailOutput } from 'models';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { TaskService } from 'services';
 import { Image, Row } from 'react-bootstrap';
 
 import { Footer, Header, InfoBox, InlineRetryError, Loader, TitleBanner } from 'shared/components';
-import { useParams } from 'react-router-dom';
-import { IconCheckmarkCircle, IconChevronLeft, IconClock, IconCrossCircle, IconStar } from 'images';
-import { formatCurrency } from 'utils';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { IconChevronLeft, IconClock, IconStar } from 'images';
 
-const TaskDetail: React.FC = () => {
+const TaskDetail: React.FC = ({ prevPath }: any) => {
   const params = useParams<{ taskId: string }>();
+  const history = useHistory();
+  const location = useLocation();
   const {
     data: taskDetail,
     isLoading: isLoadingTaskDetail,
@@ -20,6 +21,10 @@ const TaskDetail: React.FC = () => {
     ['inquiry-task-detail', params.taskId],
     async () => await TaskService.inquiryTaskDetail(params.taskId),
   );
+
+  useEffect(() => {
+    document.body.scrollTo(0, 0);
+  }, []);
 
   return (
     <>
@@ -31,7 +36,7 @@ const TaskDetail: React.FC = () => {
             <div
               className="text-primary-dark flex-centered justify-content-start cursor-pointer mb-4"
               onClick={() => {
-                window.location.href = '/task/search';
+                history.push(prevPath ? prevPath : '/task/search');
               }}
             >
               <div className="mr-3">
@@ -78,7 +83,7 @@ const TaskDetail: React.FC = () => {
                         <h3 className="text-primary-dark">{taskDetail.taskDetail.difficulty}</h3>
                         <div className="d-flex justify-content-end">
                           <h3 className="text-primary-dark mb-3">
-                            Rp {formatCurrency(taskDetail.taskDetail.price)}
+                            Rp {taskDetail.taskDetail.price}
                           </h3>
                         </div>
                         <div className="btn btn-primary w-100">Daftar untuk Mengerjakan</div>
@@ -141,9 +146,7 @@ const TaskDetail: React.FC = () => {
                       <p className="text-grey mb-1">Tingkat Kesulitan</p>
                       <h3 className="text-primary-dark">{taskDetail.taskDetail.difficulty}</h3>
                       <div className="d-flex justify-content-end">
-                        <h3 className="text-primary-dark mb-3">
-                          Rp {formatCurrency(taskDetail.taskDetail.price)}
-                        </h3>
+                        <h3 className="text-primary-dark mb-3">Rp {taskDetail.taskDetail.price}</h3>
                       </div>
                       <div className="btn btn-primary w-100">Daftar untuk Mengerjakan</div>
                     </div>
