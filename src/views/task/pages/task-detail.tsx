@@ -26,6 +26,16 @@ const TaskDetail: React.FC = ({ prevPath }: any) => {
     document.body.scrollTo(0, 0);
   }, []);
 
+  const openProfile = (id: string, status: string) => {
+    history.push({
+      pathname: '/account/profile/' + id,
+      state: {
+        status: status,
+        prevPath: location.pathname,
+      },
+    });
+  };
+
   return (
     <>
       <Header />
@@ -135,7 +145,14 @@ const TaskDetail: React.FC = ({ prevPath }: any) => {
                             />
                             <h4 className="font-weight-semibold mb-0">{taskDetail.client.name}</h4>
                           </div>
-                          <div className="btn btn-primary">Lihat Profil</div>
+                          <div
+                            className="btn btn-primary"
+                            onClick={() => {
+                              openProfile(taskDetail.client.id, 'client');
+                            }}
+                          >
+                            Lihat Profil
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -162,7 +179,12 @@ const TaskDetail: React.FC = ({ prevPath }: any) => {
                                 src={freelancer.profileImageUrl}
                                 alt={freelancer.name}
                               />
-                              <h4 className="font-weight-semibold mb-0 text-primary-dark">
+                              <h4
+                                className="font-weight-semibold mb-0 text-primary-dark cursor-pointer"
+                                onClick={() => {
+                                  openProfile(freelancer.id, 'freelancer');
+                                }}
+                              >
                                 {freelancer.name}
                               </h4>
                             </div>

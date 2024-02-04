@@ -1,11 +1,11 @@
 import { ErrorWrapper, ServiceInquiryServiceDetailOutput } from 'models';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { ServiceService } from 'services';
 import { Image, Row } from 'react-bootstrap';
 
 import { Footer, Header, InfoBox, InlineRetryError, Loader, TitleBanner } from 'shared/components';
-import { Redirect, useHistory, useLocation, useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { IconCheckmarkCircle, IconChevronLeft, IconCrossCircle, IconStar } from 'images';
 
 const ServiceDetail: React.FC = ({ prevPath }: any) => {
