@@ -1,6 +1,6 @@
 import { IconEyeOpen, IconEyeSlash } from 'images';
 import { AuthLoginInput, AuthLoginOutput, ErrorWrapper } from 'models';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
@@ -24,6 +24,10 @@ const AuthLogin: React.FC = () => {
   } = useForm({
     mode: 'onChange',
   });
+
+  useEffect(() => {
+    document.body.scrollTo(0, 0);
+  }, []);
 
   const {
     isLoading: isLoadingLogin,

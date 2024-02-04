@@ -5,7 +5,7 @@ import {
   ServiceInquiryNewServiceOutput,
   TaskInquiryNewTaskOutput,
 } from 'models';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Image, Row } from 'react-bootstrap';
 import { useQuery } from 'react-query';
@@ -16,6 +16,10 @@ import { Service, Task, Loader, Header, Footer, InlineRetryError } from 'shared/
 const DashboardIndex: React.FC = () => {
   const history = useHistory();
   const location = useLocation();
+
+  useEffect(() => {
+    document.body.scrollTo(0, 0);
+  }, []);
 
   const {
     data: serviceCategory,

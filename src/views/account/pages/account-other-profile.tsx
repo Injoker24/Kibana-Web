@@ -10,7 +10,7 @@ import {
   AccountInquirySkillOutput,
   ErrorWrapper,
 } from 'models';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { AccountService } from 'services';
 import { Image, Row, Tab, Tabs } from 'react-bootstrap';
@@ -32,6 +32,11 @@ const AccountOtherProfile: React.FC = ({ status, prevPath }: any) => {
   const params = useParams<{ userId: string }>();
   const history = useHistory();
   const location = useLocation();
+
+  useEffect(() => {
+    document.body.scrollTo(0, 0);
+  }, []);
+
   const {
     data: otherProfile,
     isLoading: isLoadingOtherProfile,

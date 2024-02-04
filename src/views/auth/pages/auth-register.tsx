@@ -31,6 +31,10 @@ const AuthRegister: React.FC = () => {
     mode: 'onChange',
   });
 
+  useEffect(() => {
+    document.body.scrollTo(0, 0);
+  }, []);
+
   const password = watch('password');
   useEffect(() => {
     triggerValidation('passwordRepeat');
