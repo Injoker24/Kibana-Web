@@ -71,3 +71,12 @@ export interface AccountInquiryOwnedServiceResponse {
     working_time: number;
   }[];
 }
+
+export interface AccountInquiryMyProfileResponse {
+  id: string;
+  profile_image_url: string;
+  email: string;
+  name: string;
+  username: string;
+  phone_number: string;
+}

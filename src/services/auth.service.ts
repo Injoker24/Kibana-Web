@@ -33,6 +33,12 @@ const AuthService = {
 
     return transformToAuthRegisterOutput(response.data.output_schema);
   },
+
+  logout: async (): Promise<{}> => {
+    const response = await axiosInstance.get<ApiResponse<{}>>(`/logout`);
+
+    return response.data.output_schema;
+  },
 };
 
 export default AuthService;

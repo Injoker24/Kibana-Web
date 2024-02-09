@@ -1,6 +1,6 @@
 import Axios, { AxiosInstance, AxiosError } from 'axios';
 
-import { uuid } from 'utils';
+import { getLocalStorage, uuid } from 'utils';
 
 import { HttpStatus, ErrorCode } from 'enums';
 
@@ -14,7 +14,9 @@ const axiosInstance: AxiosInstance = Axios.create({
 });
 
 axiosInstance.interceptors.request.use((request) => {
-  // request.headers['X-OID'] = uuid();
+  if (getLocalStorage('token')) {
+    request.headers['X-Token'] = getLocalStorage('token');
+  }
   return request;
 });
 

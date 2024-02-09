@@ -3,6 +3,7 @@ import {
   AccountInquiryClientReviewOutput,
   AccountInquiryDescriptionOutput,
   AccountInquiryEducationHistoryOutput,
+  AccountInquiryMyProfileOutput,
   AccountInquiryOtherProfileOutput,
   AccountInquiryOwnedServiceOutput,
   AccountInquiryOwnedTaskOutput,
@@ -12,6 +13,7 @@ import {
   transformToAccountInquiryClientReviewOutput,
   transformToAccountInquiryDescriptionOutput,
   transformToAccountInquiryEducationHistoryOutput,
+  transformToAccountInquiryMyProfileOutput,
   transformToAccountInquiryOtherProfileOutput,
   transformToAccountInquiryOwnedServiceOutput,
   transformToAccountInquiryOwnedTaskOutput,
@@ -24,6 +26,7 @@ import {
   AccountInquiryClientReviewResponse,
   AccountInquiryDescriptionResponse,
   AccountInquiryEducationHistoryResponse,
+  AccountInquiryMyProfileResponse,
   AccountInquiryOtherProfileResponse,
   AccountInquiryOwnedServiceResponse,
   AccountInquiryOwnedTaskResponse,
@@ -107,6 +110,14 @@ const AccountService = {
     );
 
     return transformToAccountInquiryOwnedServiceOutput(response.data.output_schema);
+  },
+
+  inquiryMyProfile: async (): Promise<AccountInquiryMyProfileOutput> => {
+    const response = await axiosInstance.get<ApiResponse<AccountInquiryMyProfileResponse>>(
+      `/account/my/profile`,
+    );
+
+    return transformToAccountInquiryMyProfileOutput(response.data.output_schema);
   },
 };
 

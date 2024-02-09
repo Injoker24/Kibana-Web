@@ -6,6 +6,9 @@ import { Link, useHistory, withRouter } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 import { clearLocalStorage, getLocalStorage, setLocalStorage } from 'utils';
 import Loader from '../loader';
+import { AuthService } from 'services';
+import { useMutation } from 'react-query';
+import { ErrorWrapper } from 'models';
 
 const Header: React.FC = () => {
   const [openSidebar, setOpenSidebar] = useState(false);
@@ -21,6 +24,17 @@ const Header: React.FC = () => {
     setIsFreelancer(getLocalStorage('isFreelancer') === 'true' ? true : false);
     setStatus(getLocalStorage('status'));
   }, []);
+
+  const { isLoading: isLoadingLogout, mutate: mutateLogout } = useMutation<{}, ErrorWrapper>(
+    ['logout'],
+    async () => await AuthService.logout(),
+    {
+      onSuccess: () => {
+        clearLocalStorage();
+        window.location.href = '/dashboard';
+      },
+    },
+  );
 
   const switchToFreelancer = () => {
     setLocalStorage('status', 'freelancer');
@@ -52,6 +66,7 @@ const Header: React.FC = () => {
       }
     >
       {isLoadingSwitch && <Loader type="fixed" />}
+      {isLoadingLogout && <Loader type="fixed" />}
       <div
         className="d-md-none d-flex flex-centered"
         onClick={() => setOpenSidebar((x) => !x)}
@@ -334,7 +349,7 @@ const Header: React.FC = () => {
         {status && (
           <div
             className="cursor-pointer"
-            onClick={() => clearLocalStorage()}
+            onClick={() => mutateLogout()}
           >
             <IconLogOut />
           </div>

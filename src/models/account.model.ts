@@ -3,6 +3,7 @@ import {
   AccountInquiryClientReviewResponse,
   AccountInquiryDescriptionResponse,
   AccountInquiryEducationHistoryResponse,
+  AccountInquiryMyProfileResponse,
   AccountInquiryOtherProfileResponse,
   AccountInquiryOwnedServiceResponse,
   AccountInquiryOwnedTaskResponse,
@@ -216,6 +217,30 @@ export function transformToAccountInquiryOwnedServiceOutput(
         workingTime: t.working_time,
       };
     }),
+  };
+
+  return result;
+}
+
+export interface AccountInquiryMyProfileOutput {
+  id: string;
+  profileImageUrl: string;
+  email: string;
+  name: string;
+  username: string;
+  phoneNumber: string;
+}
+
+export function transformToAccountInquiryMyProfileOutput(
+  response: AccountInquiryMyProfileResponse,
+): AccountInquiryMyProfileOutput {
+  const result: AccountInquiryMyProfileOutput = {
+    id: response.id,
+    profileImageUrl: response.profile_image_url,
+    email: response.email,
+    name: response.name,
+    username: response.username,
+    phoneNumber: response.phone_number,
   };
 
   return result;

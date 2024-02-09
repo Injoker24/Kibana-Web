@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { AccountOtherProfile } from './pages';
+import { AccountMyProfile, AccountOtherProfile } from './pages';
 import { ProtectedRoute } from 'shared/components';
 
 interface otherProfileStateWrapper {
@@ -28,7 +28,7 @@ const AccountRouter = () => {
         path={'/account/my/profile'}
         render={() => (
           <ProtectedRoute>
-            <AccountOtherProfile key={Date.now()} />
+            <AccountMyProfile key={Date.now()} />
           </ProtectedRoute>
         )}
       />
