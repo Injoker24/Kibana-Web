@@ -7,7 +7,8 @@ import FormInput from './form-input';
 import InlineRetryError from './inline-retry-error';
 import PopUpError from './pop-up-error';
 import TitleBanner from './title-banner';
-import InfoBox from './info-box/info-box';
+import InfoBox from './info-box';
+import ProtectedRoute from './protected-route';
 
 export {
   Loader,
@@ -20,4 +21,5 @@ export {
   PopUpError,
   TitleBanner,
   InfoBox,
+  ProtectedRoute,
 };

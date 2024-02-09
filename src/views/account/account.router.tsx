@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { getLocalStorage } from 'utils';
 import { AccountOtherProfile } from './pages';
+import { ProtectedRoute } from 'shared/components';
 
 interface otherProfileStateWrapper {
   status: string;
@@ -10,12 +10,6 @@ interface otherProfileStateWrapper {
 }
 
 const AccountRouter = () => {
-  const [token, setToken] = useState();
-
-  useEffect(() => {
-    setToken(getLocalStorage('token'));
-  }, []);
-
   return (
     <Switch>
       <Route
@@ -26,6 +20,16 @@ const AccountRouter = () => {
             {...(state as otherProfileStateWrapper)}
             key={Date.now()}
           />
+        )}
+      />
+
+      <Route
+        exact
+        path={'/account/my/profile'}
+        render={() => (
+          <ProtectedRoute>
+            <AccountOtherProfile key={Date.now()} />
+          </ProtectedRoute>
         )}
       />
 
