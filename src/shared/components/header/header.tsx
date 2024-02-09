@@ -2,9 +2,10 @@ import { IconArrowDown, IconBurgerMenu, IconClose, IconLogOut, logoLight } from 
 import React, { useEffect, useState } from 'react';
 
 import { Image } from 'react-bootstrap';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, useHistory, withRouter } from 'react-router-dom';
 import Popup from 'reactjs-popup';
-import { clearLocalStorage, getLocalStorage } from 'utils';
+import { clearLocalStorage, getLocalStorage, setLocalStorage } from 'utils';
+import Loader from '../loader';
 
 const Header: React.FC = () => {
   const [openSidebar, setOpenSidebar] = useState(false);
@@ -12,10 +13,36 @@ const Header: React.FC = () => {
   const [isFreelancer, setIsFreelancer] = useState<Boolean>();
   const [status, setStatus] = useState();
 
+  const history = useHistory();
+
+  const [isLoadingSwitch, setIsLoadingSwitch] = useState(false);
+
   useEffect(() => {
     setIsFreelancer(getLocalStorage('isFreelancer') === 'true' ? true : false);
     setStatus(getLocalStorage('status'));
   }, []);
+
+  const switchToFreelancer = () => {
+    setLocalStorage('status', 'freelancer');
+    setIsLoadingSwitch(true);
+    setTimeout(() => {
+      setIsLoadingSwitch(false);
+      history.push({
+        pathname: '/dashboard',
+      });
+    }, 1000);
+  };
+
+  const switchToClient = () => {
+    setLocalStorage('status', 'client');
+    setIsLoadingSwitch(true);
+    setTimeout(() => {
+      setIsLoadingSwitch(false);
+      history.push({
+        pathname: '/dashboard',
+      });
+    }, 1000);
+  };
 
   return (
     <div
@@ -24,6 +51,7 @@ const Header: React.FC = () => {
         (status === 'freelancer' ? 'bg-secondary-dark' : 'bg-primary')
       }
     >
+      {isLoadingSwitch && <Loader type="fixed" />}
       <div
         className="d-md-none d-flex flex-centered"
         onClick={() => setOpenSidebar((x) => !x)}
@@ -132,12 +160,12 @@ const Header: React.FC = () => {
             </Link>
           )}
           {status === 'freelancer' && (
-            <Link
-              to=""
+            <div
               className="btn btn-outline-white w-100"
+              onClick={() => switchToClient()}
             >
               Jadi Klien
-            </Link>
+            </div>
           )}
           {status === 'client' && !isFreelancer && (
             <Link
@@ -148,12 +176,12 @@ const Header: React.FC = () => {
             </Link>
           )}
           {status === 'client' && isFreelancer && (
-            <Link
-              to=""
+            <div
               className="btn btn-outline-white w-100"
+              onClick={() => switchToFreelancer()}
             >
               Jadi Freelancer
-            </Link>
+            </div>
           )}
         </div>
       </Popup>
@@ -285,13 +313,23 @@ const Header: React.FC = () => {
           </>
         )}
         {isFreelancer && status === 'client' && (
-          <div className="btn btn-outline-white mr-4 d-md-block d-none">Jadi Freelancer</div>
+          <div
+            className="btn btn-outline-white mr-4 d-md-block d-none"
+            onClick={() => switchToFreelancer()}
+          >
+            Jadi Freelancer
+          </div>
         )}
         {!isFreelancer && status === 'client' && (
           <div className="btn btn-outline-white mr-4 d-md-block d-none">Daftar Freelancer</div>
         )}
         {status === 'freelancer' && (
-          <div className="btn btn-outline-white mr-4 d-md-block d-none">Jadi Klien</div>
+          <div
+            className="btn btn-outline-white mr-4 d-md-block d-none"
+            onClick={() => switchToClient()}
+          >
+            Jadi Klien
+          </div>
         )}
         {status && (
           <div
