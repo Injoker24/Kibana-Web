@@ -9,6 +9,7 @@ import PopUpError from './pop-up-error';
 import TitleBanner from './title-banner';
 import InfoBox from './info-box';
 import ProtectedRoute from './protected-route';
+import PopUpConfirm from './pop-up-confirm';
 
 export {
   Loader,
@@ -22,4 +23,5 @@ export {
   TitleBanner,
   InfoBox,
   ProtectedRoute,
+  PopUpConfirm,
 };

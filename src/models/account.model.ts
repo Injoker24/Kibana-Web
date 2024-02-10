@@ -1,4 +1,5 @@
 import {
+  AccountInquiryBankDetailResponse,
   AccountInquiryCVUrlResponse,
   AccountInquiryClientReviewResponse,
   AccountInquiryDescriptionResponse,
@@ -244,4 +245,39 @@ export function transformToAccountInquiryMyProfileOutput(
   };
 
   return result;
+}
+
+export interface AccountInquiryBankDetailOutput {
+  bankDetail?: {
+    bankName: string;
+    beneficiaryName: string;
+    accountNumber: string;
+  };
+}
+
+export function transformToAccountInquiryBankDetailOutput(
+  response: AccountInquiryBankDetailResponse,
+): AccountInquiryBankDetailOutput {
+  let result: AccountInquiryBankDetailOutput;
+  if (response.bank_detail) {
+    result = {
+      bankDetail: {
+        bankName: response.bank_detail.bank_name,
+        beneficiaryName: response.bank_detail.beneficiary_name,
+        accountNumber: response.bank_detail.account_number,
+      },
+    };
+  } else {
+    result = {};
+  }
+
+  return result;
+}
+
+export interface AccountEditProfileInput {
+  profileImage?: File;
+  email?: string;
+  username?: string;
+  name?: string;
+  phoneNumber?: string;
 }

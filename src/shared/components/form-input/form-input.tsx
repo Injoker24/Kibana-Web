@@ -17,7 +17,7 @@ const FormInput: React.FC<PropsWithChildren<FormInputProps>> = ({
 }: PropsWithChildren<FormInputProps>): ReactElement => {
   return (
     <Form.Group>
-      <Form.Label htmlFor={labelFor}>{label}</Form.Label>
+      {label && <Form.Label htmlFor={labelFor}>{label}</Form.Label>}
       {children}
       {errorMessage && (
         <Form.Control.Feedback

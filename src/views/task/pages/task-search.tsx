@@ -199,7 +199,7 @@ const TaskSearch: React.FC = ({ stateCategories }: any) => {
                 onSubmit={handleSubmitSearch(submitSearch)}
                 className="col-12 col-lg-8"
               >
-                <div className="position-relative">
+                <div className="position-relative my-4">
                   <FormInput>
                     <Form.Control
                       type="text"

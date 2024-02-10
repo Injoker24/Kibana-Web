@@ -1,4 +1,6 @@
 import {
+  AccountEditProfileInput,
+  AccountInquiryBankDetailOutput,
   AccountInquiryCVUrlOutput,
   AccountInquiryClientReviewOutput,
   AccountInquiryDescriptionOutput,
@@ -13,14 +15,16 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { AccountService } from 'services';
-import { Image, Row } from 'react-bootstrap';
+import { Form, Image, Row } from 'react-bootstrap';
 
 import {
   Footer,
+  FormInput,
   Header,
   InfoBox,
   InlineRetryError,
   Loader,
+  PopUpConfirm,
   Service,
   Task,
   TitleBanner,
@@ -28,6 +32,7 @@ import {
 import { useHistory, useLocation } from 'react-router-dom';
 import { IconStar } from 'images';
 import { getLocalStorage } from 'utils';
+import { useForm } from 'react-hook-form';
 
 const AccountMyProfile: React.FC = () => {
   const history = useHistory();
@@ -36,17 +41,47 @@ const AccountMyProfile: React.FC = () => {
   const [status, setStatus] = useState();
   const [userId, setUserId] = useState('');
 
+  const [editProfile, setEditProfile] = useState(false);
+  const [confirmEditProfile, setConfirmEditProfile] = useState(false);
+
+  const [editProfileData, setEditProfileData] = useState<AccountEditProfileInput>({});
+
+  const {
+    register: registerProfile,
+    errors: errorsProfile,
+    formState: formStateProfile,
+    handleSubmit: handleSubmitProfile,
+    formState: { isValid: isValidProfile },
+  } = useForm({
+    mode: 'onChange',
+  });
+
+  const confirmSubmitProfile = (formData: any) => {
+    setEditProfileData(formData);
+    setConfirmEditProfile(true);
+  };
+
+  const submitProfile = () => {
+    setConfirmEditProfile(false);
+    mutateEditProfile();
+  };
+
+  const cancelSubmitProfile = () => {
+    setConfirmEditProfile(false);
+  };
+
   useEffect(() => {
     document.body.scrollTo(0, 0);
     setStatus(getLocalStorage('status'));
+    mutateMyProfile();
   }, []);
 
   const {
     data: myProfile,
     isLoading: isLoadingMyProfile,
-    refetch: refetchMyProfile,
+    mutate: mutateMyProfile,
     error: errorMyProfile,
-  } = useQuery<AccountInquiryMyProfileOutput, ErrorWrapper>(
+  } = useMutation<AccountInquiryMyProfileOutput, ErrorWrapper>(
     ['inquiry-my-profile'],
     async () => await AccountService.inquiryMyProfile(),
     {
@@ -54,6 +89,38 @@ const AccountMyProfile: React.FC = () => {
         setUserId(output.id);
       },
     },
+  );
+
+  const {
+    data: editProfileResponse,
+    isLoading: isLoadingEditProfile,
+    mutate: mutateEditProfile,
+    error: errorEditProfile,
+  } = useMutation<{}, ErrorWrapper>(
+    ['edit-profile'],
+    async () =>
+      await AccountService.editProfile({
+        email: editProfileData.email,
+        username: '@' + editProfileData.username,
+        name: editProfileData.name,
+        phoneNumber: '+62' + editProfileData.phoneNumber,
+      }),
+    {
+      onSuccess: () => {
+        setEditProfile(false);
+        mutateMyProfile();
+      },
+    },
+  );
+
+  const {
+    data: bankDetail,
+    isLoading: isLoadingBankDetail,
+    refetch: refetchBankDetail,
+    error: errorBankDetail,
+  } = useQuery<AccountInquiryBankDetailOutput, ErrorWrapper>(
+    ['inquiry-bank-detail'],
+    async () => await AccountService.inquiryBankDetail(),
   );
 
   const {
@@ -162,6 +229,14 @@ const AccountMyProfile: React.FC = () => {
 
   return (
     <>
+      {confirmEditProfile && (
+        <PopUpConfirm
+          title="Ubah profil"
+          message="Apakah anda yakin akan mengubah profil anda?"
+          onCancel={cancelSubmitProfile}
+          onSubmit={submitProfile}
+        />
+      )}
       <Header />
       <div className="min-layout-height">
         <TitleBanner message={'Profil Saya'} />
@@ -172,7 +247,7 @@ const AccountMyProfile: React.FC = () => {
               <div className="flex-centered">
                 <InlineRetryError
                   message={errorMyProfile.message}
-                  onRetry={refetchMyProfile}
+                  onRetry={mutateMyProfile}
                 />
               </div>
             )}
@@ -184,17 +259,233 @@ const AccountMyProfile: React.FC = () => {
                       <div className="mb-5">
                         <h4 className="font-weight-semibold mb-3">Profil saya</h4>
                         <div className="card-sm">
-                          <div className="d-flex flex-row align-items-center">
-                            <Image
-                              className="service-detail-freelancer-profile-image mr-4"
-                              src={myProfile.profileImageUrl}
-                              alt={myProfile.name}
-                            />
-                            <div>
-                              <h4 className="font-weight-bold mb-0">{myProfile.name}</h4>
-                              <p className="text-muted">{myProfile.username}</p>
+                          <Image
+                            className="my-profile-freelancer-profile-image mb-5"
+                            src={myProfile.profileImageUrl}
+                            alt={myProfile.name}
+                          />
+                          {!editProfile && (
+                            <>
+                              <Row className="mb-5 align-items-center">
+                                <h4 className="font-weight-semibold mb-0 col-5 col-md-3">E-Mail</h4>
+                                <p className="col-7 col-md-9">{myProfile.email}</p>
+                              </Row>
+                              <Row className="mb-5 align-items-center">
+                                <h4 className="font-weight-semibold mb-0 col-5 col-md-3">
+                                  Username
+                                </h4>
+                                <p className="col-7 col-md-9">{myProfile.username}</p>
+                              </Row>
+                              <Row className="mb-5 align-items-center">
+                                <h4 className="font-weight-semibold mb-0 col-5 col-md-3">Nama</h4>
+                                <p className="col-7 col-md-9">{myProfile.name}</p>
+                              </Row>
+                              <Row className="mb-5 align-items-center">
+                                <h4 className="font-weight-semibold mb-0 col-5 col-md-3">
+                                  Nomor Handphone
+                                </h4>
+                                <p className="col-7 col-md-9">{myProfile.phoneNumber}</p>
+                              </Row>
+                              <div
+                                className="btn btn-primary"
+                                onClick={() => setEditProfile(true)}
+                              >
+                                Ubah Profil
+                              </div>
+                            </>
+                          )}
+
+                          {editProfile && (
+                            <>
+                              {isLoadingEditProfile && <Loader type="inline" />}
+                              {!isLoadingEditProfile && (
+                                <form onSubmit={handleSubmitProfile(confirmSubmitProfile)}>
+                                  {errorEditProfile && (
+                                    <div className="mb-4">
+                                      <InfoBox
+                                        message={errorEditProfile?.message}
+                                        type="danger"
+                                      />
+                                    </div>
+                                  )}
+                                  <Row className="mb-5 align-items-center">
+                                    <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                      E-Mail
+                                    </h4>
+                                    <div className="col-12 col-md-9">
+                                      <FormInput errorMessage={errorsProfile?.email?.message}>
+                                        <Form.Control
+                                          type="text"
+                                          id="email"
+                                          name="email"
+                                          defaultValue={myProfile.email}
+                                          isInvalid={
+                                            formStateProfile.touched.email === true &&
+                                            !!errorsProfile.email
+                                          }
+                                          ref={
+                                            registerProfile({
+                                              required: {
+                                                value: true,
+                                                message: 'E-mail harus diisi.',
+                                              },
+                                            }) as string & ((ref: Element | null) => void)
+                                          }
+                                        />
+                                      </FormInput>
+                                    </div>
+                                  </Row>
+                                  <Row className="mb-5 align-items-center">
+                                    <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                      Username
+                                    </h4>
+                                    <div className="col-12 col-md-9">
+                                      <FormInput errorMessage={errorsProfile?.username?.message}>
+                                        <div className="d-flex flex-row">
+                                          <div className="input-prefix flex-centered mr-3">@</div>
+                                          <Form.Control
+                                            type="text"
+                                            id="username"
+                                            name="username"
+                                            defaultValue={myProfile.username.slice(1)}
+                                            className="w-100"
+                                            isInvalid={
+                                              formStateProfile.touched.username === true &&
+                                              !!errorsProfile.username
+                                            }
+                                            ref={
+                                              registerProfile({
+                                                required: {
+                                                  value: true,
+                                                  message: 'Username harus diisi.',
+                                                },
+                                              }) as string & ((ref: Element | null) => void)
+                                            }
+                                          />
+                                        </div>
+                                      </FormInput>
+                                    </div>
+                                  </Row>
+                                  <Row className="mb-5 align-items-center">
+                                    <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                      Nama
+                                    </h4>
+                                    <div className="col-12 col-md-9">
+                                      <FormInput errorMessage={errorsProfile?.name?.message}>
+                                        <Form.Control
+                                          type="text"
+                                          id="name"
+                                          name="name"
+                                          defaultValue={myProfile.name}
+                                          isInvalid={
+                                            formStateProfile.touched.name === true &&
+                                            !!errorsProfile.name
+                                          }
+                                          ref={
+                                            registerProfile({
+                                              required: {
+                                                value: true,
+                                                message: 'Nama harus diisi.',
+                                              },
+                                            }) as string & ((ref: Element | null) => void)
+                                          }
+                                        />
+                                      </FormInput>
+                                    </div>
+                                  </Row>
+                                  <Row className="mb-5">
+                                    <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                      Nomor Handphone
+                                    </h4>
+                                    <div className=" col-12 col-md-9">
+                                      <FormInput errorMessage={errorsProfile?.phoneNumber?.message}>
+                                        <div className="d-flex flex-row">
+                                          <div className="input-prefix flex-centered mr-3">+62</div>
+                                          <Form.Control
+                                            type="number"
+                                            id="phoneNumber"
+                                            name="phoneNumber"
+                                            defaultValue={myProfile.phoneNumber.slice(3)}
+                                            isInvalid={
+                                              formStateProfile.touched.phoneNumber === true &&
+                                              !!errorsProfile.phoneNumber
+                                            }
+                                            ref={
+                                              registerProfile({
+                                                required: {
+                                                  value: true,
+                                                  message: 'Nomor handphone harus diisi.',
+                                                },
+                                              }) as string & ((ref: Element | null) => void)
+                                            }
+                                          />
+                                        </div>
+                                      </FormInput>
+                                    </div>
+                                  </Row>
+                                  <button
+                                    className="btn btn-primary w-100 mb-4"
+                                    disabled={!isValidProfile}
+                                    type="submit"
+                                  >
+                                    Simpan
+                                  </button>
+
+                                  <div
+                                    className="btn btn-outline-primary w-100"
+                                    onClick={() => setEditProfile(false)}
+                                  >
+                                    Batal
+                                  </div>
+                                </form>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="mb-5">
+                        <h4 className="font-weight-semibold mb-3">Detail bank</h4>
+                        <div className="card-sm">
+                          {isLoadingBankDetail && <Loader type="inline" />}
+                          {errorBankDetail && (
+                            <div className="flex-centered">
+                              <InlineRetryError
+                                message={errorBankDetail.message}
+                                onRetry={refetchBankDetail}
+                              />
                             </div>
-                          </div>
+                          )}
+                          {bankDetail && bankDetail.bankDetail && (
+                            <>
+                              <Row className="mb-5">
+                                <h4 className="font-weight-semibold mb-0 col-5 col-md-3">
+                                  Nama Bank
+                                </h4>
+                                <p className="col-7 col-md-9">BCA</p>
+                              </Row>
+                              <Row className="mb-5">
+                                <h4 className="font-weight-semibold mb-0 col-5 col-md-3">
+                                  Penerima
+                                </h4>
+                                <p className="col-7 col-md-9">Michael Christian Lee</p>
+                              </Row>
+                              <Row className="mb-5">
+                                <h4 className="font-weight-semibold mb-0 col-5 col-md-3">
+                                  Nomor Rekening / Nomor Handphone
+                                </h4>
+                                <p className="col-7 col-md-9">123348312</p>
+                              </Row>
+                            </>
+                          )}
+                          {bankDetail && !bankDetail.bankDetail && (
+                            <div className="mb-5">
+                              <InfoBox
+                                message={myProfile.name + ' belum menambahkan detail bank.'}
+                              />
+                            </div>
+                          )}
+                          {bankDetail && <div className="btn btn-primary">Ubah Detail Bank</div>}
                         </div>
                       </div>
 

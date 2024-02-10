@@ -1,4 +1,6 @@
 import {
+  AccountEditProfileInput,
+  AccountInquiryBankDetailOutput,
   AccountInquiryCVUrlOutput,
   AccountInquiryClientReviewOutput,
   AccountInquiryDescriptionOutput,
@@ -9,6 +11,7 @@ import {
   AccountInquiryOwnedTaskOutput,
   AccountInquiryPortfolioUrlOutput,
   AccountInquirySkillOutput,
+  transformToAccountInquiryBankDetailOutput,
   transformToAccountInquiryCVUrlOutput,
   transformToAccountInquiryClientReviewOutput,
   transformToAccountInquiryDescriptionOutput,
@@ -22,6 +25,7 @@ import {
 } from 'models';
 
 import {
+  AccountInquiryBankDetailResponse,
   AccountInquiryCVUrlResponse,
   AccountInquiryClientReviewResponse,
   AccountInquiryDescriptionResponse,
@@ -33,6 +37,7 @@ import {
   AccountInquiryPortfolioUrlResponse,
   AccountInquirySkillResponse,
   ApiResponse,
+  transformToAccountEditProfileRequest,
 } from 'services/schemas';
 
 import { axiosInstance } from 'setup';
@@ -118,6 +123,24 @@ const AccountService = {
     );
 
     return transformToAccountInquiryMyProfileOutput(response.data.output_schema);
+  },
+
+  inquiryBankDetail: async (): Promise<AccountInquiryBankDetailOutput> => {
+    const response = await axiosInstance.get<ApiResponse<AccountInquiryBankDetailResponse>>(
+      `/account/bank-detail`,
+    );
+
+    return transformToAccountInquiryBankDetailOutput(response.data.output_schema);
+  },
+
+  editProfile: async (data: AccountEditProfileInput): Promise<{}> => {
+    const requestData = transformToAccountEditProfileRequest(data);
+    const response = await axiosInstance.post<ApiResponse<{}>>(
+      `/account/edit/profile`,
+      requestData,
+    );
+
+    return response.data.output_schema;
   },
 };
 
