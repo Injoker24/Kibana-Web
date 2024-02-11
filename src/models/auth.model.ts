@@ -8,7 +8,7 @@ import {
 export interface AuthLoginOutput {
   isFreelancer: boolean;
   isConnectedBank: boolean;
-  profileImageUrl: string;
+  profileImageUrl?: string;
   username: string;
   name: string;
   token: string;
@@ -44,7 +44,7 @@ export function transformToAuthLoginRequest(input: AuthLoginInput): AuthLoginReq
 export interface AuthRegisterOutput {
   isFreelancer: boolean;
   isConnectedBank: boolean;
-  profileImageUrl: string;
+  profileImageUrl?: string;
   username: string;
   name: string;
   token: string;

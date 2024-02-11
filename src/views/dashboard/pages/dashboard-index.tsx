@@ -28,7 +28,7 @@ const DashboardIndex: React.FC = () => {
   const [userData, setUserData] = useState<{
     name: string;
     username: string;
-    profileImageUrl: string;
+    profileImageUrl?: string;
   }>();
 
   useEffect(() => {

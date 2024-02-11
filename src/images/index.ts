@@ -35,6 +35,7 @@ import IconMyTaskService from './icons/icon-my-task-service';
 import IconHistoryTaskService from './icons/icon-history-task-service';
 import IconCreateTaskService from './icons/icon-create-task-service';
 import IconSearchTaskService from './icons/icon-search-task-service';
+import DefaultAvatar from './default-avatar.jpg';
 
 export {
   IconAddCircle,
@@ -71,4 +72,5 @@ export {
   IconCreateTaskService,
   IconHistoryTaskService,
   IconSearchTaskService,
+  DefaultAvatar,
 };

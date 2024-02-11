@@ -30,7 +30,7 @@ import {
   TitleBanner,
 } from 'shared/components';
 import { useHistory, useLocation } from 'react-router-dom';
-import { IconStar } from 'images';
+import { DefaultAvatar, IconStar } from 'images';
 import { getLocalStorage } from 'utils';
 import { useForm } from 'react-hook-form';
 
@@ -92,7 +92,6 @@ const AccountMyProfile: React.FC = () => {
   );
 
   const {
-    data: editProfileResponse,
     isLoading: isLoadingEditProfile,
     mutate: mutateEditProfile,
     error: errorEditProfile,
@@ -261,30 +260,36 @@ const AccountMyProfile: React.FC = () => {
                         <div className="card-sm">
                           <Image
                             className="my-profile-freelancer-profile-image mb-5"
-                            src={myProfile.profileImageUrl}
+                            src={
+                              myProfile.profileImageUrl ? myProfile.profileImageUrl : DefaultAvatar
+                            }
                             alt={myProfile.name}
                           />
                           {!editProfile && (
                             <>
                               <Row className="mb-5 align-items-center">
-                                <h4 className="font-weight-semibold mb-0 col-5 col-md-3">E-Mail</h4>
-                                <p className="col-7 col-md-9">{myProfile.email}</p>
+                                <h4 className="font-weight-semibold mb-2 mb-md-0 col-12 col-md-3">
+                                  E-Mail
+                                </h4>
+                                <p className="col-12 col-md-9">{myProfile.email}</p>
                               </Row>
                               <Row className="mb-5 align-items-center">
-                                <h4 className="font-weight-semibold mb-0 col-5 col-md-3">
+                                <h4 className="font-weight-semibold mb-2 mb-md-0 col-12 col-md-3">
                                   Username
                                 </h4>
-                                <p className="col-7 col-md-9">{myProfile.username}</p>
+                                <p className="col-12 col-md-9">{myProfile.username}</p>
                               </Row>
                               <Row className="mb-5 align-items-center">
-                                <h4 className="font-weight-semibold mb-0 col-5 col-md-3">Nama</h4>
-                                <p className="col-7 col-md-9">{myProfile.name}</p>
+                                <h4 className="font-weight-semibold mb-2 mb-md-0 col-12 col-md-3">
+                                  Nama
+                                </h4>
+                                <p className="col-12 col-md-9">{myProfile.name}</p>
                               </Row>
                               <Row className="mb-5 align-items-center">
-                                <h4 className="font-weight-semibold mb-0 col-5 col-md-3">
+                                <h4 className="font-weight-semibold mb-2 mb-md-0 col-12 col-md-3">
                                   Nomor Handphone
                                 </h4>
-                                <p className="col-7 col-md-9">{myProfile.phoneNumber}</p>
+                                <p className="col-12 col-md-9">{myProfile.phoneNumber}</p>
                               </Row>
                               <div
                                 className="btn btn-primary"

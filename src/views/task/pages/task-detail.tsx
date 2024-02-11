@@ -6,7 +6,7 @@ import { Image, Row } from 'react-bootstrap';
 
 import { Footer, Header, InfoBox, InlineRetryError, Loader, TitleBanner } from 'shared/components';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { IconChevronLeft, IconClock, IconStar } from 'images';
+import { DefaultAvatar, IconChevronLeft, IconClock, IconStar } from 'images';
 
 const TaskDetail: React.FC = ({ prevPath }: any) => {
   const params = useParams<{ taskId: string }>();
@@ -109,7 +109,11 @@ const TaskDetail: React.FC = ({ prevPath }: any) => {
                               <div className="d-flex flex-row align-items-center mb-4">
                                 <Image
                                   className="service-detail-freelancer-profile-image mr-4"
-                                  src={freelancer.profileImageUrl}
+                                  src={
+                                    freelancer.profileImageUrl
+                                      ? freelancer.profileImageUrl
+                                      : DefaultAvatar
+                                  }
                                   alt={freelancer.name}
                                 />
                                 <h4 className="font-weight-semibold mb-0 text-primary-dark">
@@ -140,7 +144,11 @@ const TaskDetail: React.FC = ({ prevPath }: any) => {
                           <div className="d-flex flex-row align-items-center">
                             <Image
                               className="service-detail-freelancer-profile-image mr-4"
-                              src={taskDetail.client.profileImageUrl}
+                              src={
+                                taskDetail.client.profileImageUrl
+                                  ? taskDetail.client.profileImageUrl
+                                  : DefaultAvatar
+                              }
                               alt={taskDetail.client.name}
                             />
                             <h4 className="font-weight-semibold mb-0">{taskDetail.client.name}</h4>
@@ -176,7 +184,11 @@ const TaskDetail: React.FC = ({ prevPath }: any) => {
                             <div className="d-flex flex-row align-items-center mb-4">
                               <Image
                                 className="service-detail-freelancer-profile-image mr-4"
-                                src={freelancer.profileImageUrl}
+                                src={
+                                  freelancer.profileImageUrl
+                                    ? freelancer.profileImageUrl
+                                    : DefaultAvatar
+                                }
                                 alt={freelancer.name}
                               />
                               <h4

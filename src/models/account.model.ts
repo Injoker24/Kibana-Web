@@ -15,7 +15,7 @@ import { formatCurrency } from 'utils';
 
 export interface AccountInquiryOtherProfileOutput {
   id: string;
-  profileImageUrl: string;
+  profileImageUrl?: string;
   name: string;
   username: string;
   isFreelancer: boolean;
@@ -187,7 +187,7 @@ export interface AccountInquiryOwnedServiceOutput {
     imageUrl: string;
     name: string;
     freelancer: {
-      profileImageUrl: string;
+      profileImageUrl?: string;
       name: string;
     };
     averageRating: number;
@@ -225,7 +225,7 @@ export function transformToAccountInquiryOwnedServiceOutput(
 
 export interface AccountInquiryMyProfileOutput {
   id: string;
-  profileImageUrl: string;
+  profileImageUrl?: string;
   email: string;
   name: string;
   username: string;

@@ -1,4 +1,4 @@
-export function setLocalStorage(key: string, value: string) {
+export function setLocalStorage(key: string, value: string | undefined) {
   localStorage.setItem(key, JSON.stringify(value));
 }
 

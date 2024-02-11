@@ -49,7 +49,7 @@ export interface ServiceInquiryNewServiceOutput {
     imageUrl: string;
     name: string;
     freelancer: {
-      profileImageUrl: string;
+      profileImageUrl?: string;
       name: string;
     };
     averageRating: number;
@@ -131,7 +131,7 @@ export interface ServiceInquiryServiceListOutput {
     imageUrl: string;
     name: string;
     freelancer: {
-      profileImageUrl: string;
+      profileImageUrl?: string;
       name: string;
     };
     averageRating: number;
@@ -190,7 +190,7 @@ export interface ServiceInquiryServiceDetailOutput {
   };
   freelancer: {
     id: string;
-    profileImageUrl: string;
+    profileImageUrl?: string;
     name: string;
     description: string;
   };

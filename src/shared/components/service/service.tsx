@@ -7,7 +7,7 @@ interface Props {
   imageUrl: string;
   name: string;
   freelancer: {
-    profileImageUrl: string;
+    profileImageUrl?: string;
     name: string;
   };
   averageRating: number;

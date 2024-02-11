@@ -6,7 +6,13 @@ import { Image, Row } from 'react-bootstrap';
 
 import { Footer, Header, InfoBox, InlineRetryError, Loader, TitleBanner } from 'shared/components';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { IconCheckmarkCircle, IconChevronLeft, IconCrossCircle, IconStar } from 'images';
+import {
+  DefaultAvatar,
+  IconCheckmarkCircle,
+  IconChevronLeft,
+  IconCrossCircle,
+  IconStar,
+} from 'images';
 
 const ServiceDetail: React.FC = ({ prevPath }: any) => {
   const params = useParams<{ serviceId: string }>();
@@ -149,7 +155,11 @@ const ServiceDetail: React.FC = ({ prevPath }: any) => {
                         <div className="d-flex flex-row mb-4">
                           <Image
                             className="service-detail-freelancer-profile-image mr-4"
-                            src={serviceDetail.freelancer.profileImageUrl}
+                            src={
+                              serviceDetail.freelancer.profileImageUrl
+                                ? serviceDetail.freelancer.profileImageUrl
+                                : DefaultAvatar
+                            }
                             alt={serviceDetail.freelancer.name}
                           />
                           <div>

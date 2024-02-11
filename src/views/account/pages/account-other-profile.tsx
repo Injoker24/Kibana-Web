@@ -26,7 +26,7 @@ import {
   TitleBanner,
 } from 'shared/components';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { IconChevronLeft, IconStar } from 'images';
+import { DefaultAvatar, IconChevronLeft, IconStar } from 'images';
 
 const AccountOtherProfile: React.FC = ({ status, prevPath }: any) => {
   const params = useParams<{ userId: string }>();
@@ -161,7 +161,9 @@ const AccountOtherProfile: React.FC = ({ status, prevPath }: any) => {
                   <div className="d-flex flex-row align-items-center">
                     <Image
                       className="service-detail-freelancer-profile-image mr-4"
-                      src={otherProfile.profileImageUrl}
+                      src={
+                        otherProfile.profileImageUrl ? otherProfile.profileImageUrl : DefaultAvatar
+                      }
                       alt={otherProfile.name}
                     />
                     <div>

@@ -162,12 +162,12 @@ export interface TaskInquiryTaskDetailOutput {
   };
   client: {
     id: string;
-    profileImageUrl: string;
+    profileImageUrl?: string;
     name: string;
   };
   registeredFreelancer?: {
     id: string;
-    profileImageUrl: string;
+    profileImageUrl?: string;
     name: string;
   }[];
   review: {
