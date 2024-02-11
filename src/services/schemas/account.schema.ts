@@ -1,4 +1,4 @@
-import { AccountEditProfileInput } from 'models';
+import { AccountEditBankDetailInput, AccountEditProfileInput } from 'models';
 
 export interface AccountInquiryOtherProfileResponse {
   id: string;
@@ -92,11 +92,11 @@ export interface AccountInquiryBankDetailResponse {
 }
 
 export interface AccountEditProfileRequest {
-  profile_image?: Blob;
-  email?: string;
-  name?: string;
-  username?: string;
-  phone_number?: string;
+  profile_image?: File;
+  email: string;
+  name: string;
+  username: string;
+  phone_number: string;
 }
 
 export function transformToAccountEditProfileRequest(
@@ -108,6 +108,24 @@ export function transformToAccountEditProfileRequest(
     name: input.name,
     username: input.username,
     phone_number: input.phoneNumber,
+  };
+
+  return result;
+}
+
+export interface AccountEditBankDetailRequest {
+  bank_name: string;
+  beneficiary_name: string;
+  account_number: string;
+}
+
+export function transformToAccountEditBankDetailRequest(
+  input: AccountEditBankDetailInput,
+): AccountEditBankDetailRequest {
+  const result: AccountEditBankDetailRequest = {
+    bank_name: input.bankName,
+    beneficiary_name: input.beneficiaryName,
+    account_number: input.accountNumber,
   };
 
   return result;

@@ -1,4 +1,5 @@
 import {
+  AccountEditBankDetailInput,
   AccountEditProfileInput,
   AccountInquiryBankDetailOutput,
   AccountInquiryCVUrlOutput,
@@ -41,52 +42,11 @@ const AccountMyProfile: React.FC = () => {
   const [status, setStatus] = useState();
   const [userId, setUserId] = useState('');
 
-  const [editProfile, setEditProfile] = useState(false);
-  const [confirmEditProfile, setConfirmEditProfile] = useState(false);
-
-  const [editProfileData, setEditProfileData] = useState<AccountEditProfileInput>({});
-  const [profileImage, setProfileImage] = useState<any>();
-
-  const handleUpload = (e: any) => {
-    const img = {
-      preview: URL.createObjectURL(e.target.files[0]),
-      data: e.target.files[0],
-    };
-    setProfileImage(img);
-  };
-
-  const uploadImage = () => {
-    document.getElementById('selectImage')?.click();
-  };
-
-  const {
-    register: registerProfile,
-    errors: errorsProfile,
-    formState: formStateProfile,
-    handleSubmit: handleSubmitProfile,
-    formState: { isValid: isValidProfile },
-  } = useForm({
-    mode: 'onChange',
-  });
-
-  const confirmSubmitProfile = (formData: any) => {
-    setEditProfileData(formData);
-    setConfirmEditProfile(true);
-  };
-
-  const submitProfile = () => {
-    setConfirmEditProfile(false);
-    mutateEditProfile();
-  };
-
-  const cancelSubmitProfile = () => {
-    setConfirmEditProfile(false);
-  };
-
   useEffect(() => {
     document.body.scrollTo(0, 0);
     setStatus(getLocalStorage('status'));
     mutateMyProfile();
+    mutateBankDetail();
   }, []);
 
   const {
@@ -103,6 +63,61 @@ const AccountMyProfile: React.FC = () => {
       },
     },
   );
+
+  //#region Edit Profile
+  const [editProfile, setEditProfile] = useState(false);
+  const [confirmEditProfile, setConfirmEditProfile] = useState(false);
+  const [editProfileData, setEditProfileData] = useState<AccountEditProfileInput>({
+    email: '',
+    username: '',
+    name: '',
+    phoneNumber: '',
+  });
+
+  const [profileImage, setProfileImage] = useState<any>();
+
+  const {
+    register: registerProfile,
+    errors: errorsProfile,
+    formState: formStateProfile,
+    handleSubmit: handleSubmitProfile,
+    formState: { isValid: isValidProfile },
+  } = useForm({
+    mode: 'onChange',
+  });
+
+  const handleUpload = (e: any) => {
+    if (e.target.files.length !== 0) {
+      const img = {
+        preview: URL.createObjectURL(e.target.files[0]),
+        data: e.target.files[0],
+      };
+      setProfileImage(img);
+    }
+  };
+
+  const uploadImage = () => {
+    document.getElementById('selectImage')?.click();
+  };
+
+  const cancelEditProfile = () => {
+    setEditProfile(false);
+    setProfileImage(null);
+  };
+
+  const confirmSubmitProfile = (formData: any) => {
+    setEditProfileData(formData);
+    setConfirmEditProfile(true);
+  };
+
+  const submitProfile = () => {
+    setConfirmEditProfile(false);
+    mutateEditProfile();
+  };
+
+  const cancelSubmitProfile = () => {
+    setConfirmEditProfile(false);
+  };
 
   const {
     isLoading: isLoadingEditProfile,
@@ -126,13 +141,72 @@ const AccountMyProfile: React.FC = () => {
       },
     },
   );
+  //#endregion
+
+  //#region Edit Bank
+  const [editBank, setEditBank] = useState(false);
+  const [confirmEditBank, setConfirmEditBank] = useState(false);
+  const [editBankData, setEditBankData] = useState<AccountEditBankDetailInput>({
+    bankName: '',
+    beneficiaryName: '',
+    accountNumber: '',
+  });
+
+  const {
+    register: registerBank,
+    errors: errorsBank,
+    formState: formStateBank,
+    handleSubmit: handleSubmitBank,
+    formState: { isValid: isValidBank },
+  } = useForm({
+    mode: 'onChange',
+  });
+
+  const cancelEditBank = () => {
+    setEditBank(false);
+  };
+
+  const confirmSubmitBank = (formData: any) => {
+    setEditBankData(formData);
+    setConfirmEditBank(true);
+  };
+
+  const submitBank = () => {
+    setConfirmEditBank(false);
+    mutateEditBank();
+  };
+
+  const cancelSubmitBank = () => {
+    setConfirmEditBank(false);
+  };
+
+  const {
+    isLoading: isLoadingEditBank,
+    mutate: mutateEditBank,
+    error: errorEditBank,
+  } = useMutation<{}, ErrorWrapper>(
+    ['edit-bank-detail'],
+    async () =>
+      await AccountService.editBankDetail({
+        bankName: editBankData.bankName,
+        beneficiaryName: editBankData.beneficiaryName,
+        accountNumber: editBankData.accountNumber,
+      }),
+    {
+      onSuccess: () => {
+        setEditBank(false);
+        mutateBankDetail();
+      },
+    },
+  );
+  //#endregion
 
   const {
     data: bankDetail,
     isLoading: isLoadingBankDetail,
-    refetch: refetchBankDetail,
+    mutate: mutateBankDetail,
     error: errorBankDetail,
-  } = useQuery<AccountInquiryBankDetailOutput, ErrorWrapper>(
+  } = useMutation<AccountInquiryBankDetailOutput, ErrorWrapper>(
     ['inquiry-bank-detail'],
     async () => await AccountService.inquiryBankDetail(),
   );
@@ -251,6 +325,14 @@ const AccountMyProfile: React.FC = () => {
           onSubmit={submitProfile}
         />
       )}
+      {confirmEditBank && (
+        <PopUpConfirm
+          title="Ubah detail bank"
+          message="Apakah anda yakin akan mengubah detail bank anda?"
+          onCancel={cancelSubmitBank}
+          onSubmit={submitBank}
+        />
+      )}
       <Header />
       <div className="min-layout-height">
         <TitleBanner message={'Profil Saya'} />
@@ -309,7 +391,7 @@ const AccountMyProfile: React.FC = () => {
                                 <p className="col-12 col-md-9">{myProfile.phoneNumber}</p>
                               </Row>
                               <div
-                                className="btn btn-primary"
+                                className="btn btn-outline-primary"
                                 onClick={() => setEditProfile(true)}
                               >
                                 Ubah Profil
@@ -484,10 +566,7 @@ const AccountMyProfile: React.FC = () => {
 
                                   <div
                                     className="btn btn-outline-primary w-100"
-                                    onClick={() => {
-                                      setEditProfile(false);
-                                      setProfileImage(null);
-                                    }}
+                                    onClick={cancelEditProfile}
                                   >
                                     Batal
                                   </div>
@@ -502,44 +581,179 @@ const AccountMyProfile: React.FC = () => {
                         <h4 className="font-weight-semibold mb-3">Detail bank</h4>
                         <div className="card-sm">
                           {isLoadingBankDetail && <Loader type="inline" />}
+
                           {errorBankDetail && (
                             <div className="flex-centered">
                               <InlineRetryError
                                 message={errorBankDetail.message}
-                                onRetry={refetchBankDetail}
+                                onRetry={mutateBankDetail}
                               />
                             </div>
                           )}
-                          {bankDetail && bankDetail.bankDetail && (
+
+                          {!editBank && bankDetail && (
                             <>
-                              <Row className="mb-5">
-                                <h4 className="font-weight-semibold mb-0 col-5 col-md-3">
-                                  Nama Bank
-                                </h4>
-                                <p className="col-7 col-md-9">BCA</p>
-                              </Row>
-                              <Row className="mb-5">
-                                <h4 className="font-weight-semibold mb-0 col-5 col-md-3">
-                                  Penerima
-                                </h4>
-                                <p className="col-7 col-md-9">Michael Christian Lee</p>
-                              </Row>
-                              <Row className="mb-5">
-                                <h4 className="font-weight-semibold mb-0 col-5 col-md-3">
-                                  Nomor Rekening / Nomor Handphone
-                                </h4>
-                                <p className="col-7 col-md-9">123348312</p>
-                              </Row>
+                              {bankDetail.bankDetail && (
+                                <>
+                                  <Row className="mb-5 align-items-center">
+                                    <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                      Nama Bank
+                                    </h4>
+                                    <p className="col-12 col-md-9">
+                                      {bankDetail.bankDetail.bankName.toUpperCase()}
+                                    </p>
+                                  </Row>
+                                  <Row className="mb-5 align-items-center">
+                                    <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                      Penerima
+                                    </h4>
+                                    <p className="col-12 col-md-9">
+                                      {bankDetail.bankDetail.beneficiaryName}
+                                    </p>
+                                  </Row>
+                                  <Row className="mb-5 align-items-center">
+                                    <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                      No. Rekening / No. Handphone
+                                    </h4>
+                                    <p className="col-12 col-md-9">
+                                      {bankDetail.bankDetail.accountNumber}
+                                    </p>
+                                  </Row>
+                                </>
+                              )}
+
+                              {!bankDetail.bankDetail && (
+                                <div className="mb-4">
+                                  <InfoBox
+                                    message={myProfile.name + ' belum menambahkan detail bank.'}
+                                  />
+                                </div>
+                              )}
+                              <div
+                                className="btn btn-outline-primary"
+                                onClick={() => setEditBank(true)}
+                              >
+                                Ubah Detail Bank
+                              </div>
                             </>
                           )}
-                          {bankDetail && !bankDetail.bankDetail && (
-                            <div className="mb-5">
-                              <InfoBox
-                                message={myProfile.name + ' belum menambahkan detail bank.'}
-                              />
-                            </div>
+
+                          {editBank && bankDetail && (
+                            <>
+                              {isLoadingEditBank && <Loader type="inline" />}
+                              {!isLoadingEditBank && (
+                                <form onSubmit={handleSubmitBank(confirmSubmitBank)}>
+                                  {errorEditBank && (
+                                    <div className="mb-4">
+                                      <InfoBox
+                                        message={errorEditBank?.message}
+                                        type="danger"
+                                      />
+                                    </div>
+                                  )}
+                                  <Row className="mb-5 align-items-center">
+                                    <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                      Nama Bank
+                                    </h4>
+                                    <div className="col-12 col-md-9">
+                                      <FormInput errorMessage={errorsBank?.bankName?.message}>
+                                        <Form.Control
+                                          as="select"
+                                          id="bankName"
+                                          name="bankName"
+                                          defaultValue={bankDetail.bankDetail?.bankName}
+                                          isInvalid={
+                                            formStateBank.touched.bankName === true &&
+                                            !!errorsBank.bankName
+                                          }
+                                          ref={
+                                            registerBank() as string &
+                                              ((ref: Element | null) => void)
+                                          }
+                                        >
+                                          <option value="bca">BCA</option>
+                                          <option value="mandiri">MANDIRI</option>
+                                          <option value="bni">BNI</option>
+                                          <option value="gopay">GOPAY</option>
+                                          <option value="ovo">OVO</option>
+                                        </Form.Control>
+                                      </FormInput>
+                                    </div>
+                                  </Row>
+                                  <Row className="mb-5 align-items-center">
+                                    <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                      Penerima
+                                    </h4>
+                                    <div className="col-12 col-md-9">
+                                      <FormInput
+                                        errorMessage={errorsBank?.beneficiaryName?.message}
+                                      >
+                                        <Form.Control
+                                          type="text"
+                                          id="beneficiaryName"
+                                          name="beneficiaryName"
+                                          defaultValue={bankDetail.bankDetail?.beneficiaryName}
+                                          isInvalid={
+                                            formStateBank.touched.beneficiaryName === true &&
+                                            !!errorsBank.beneficiaryName
+                                          }
+                                          ref={
+                                            registerBank({
+                                              required: {
+                                                value: true,
+                                                message: 'Penerima harus diisi.',
+                                              },
+                                            }) as string & ((ref: Element | null) => void)
+                                          }
+                                        />
+                                      </FormInput>
+                                    </div>
+                                  </Row>
+                                  <Row className="mb-5 align-items-center">
+                                    <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                      No. Rekening / No. Handphone
+                                    </h4>
+                                    <div className="col-12 col-md-9">
+                                      <FormInput errorMessage={errorsBank?.accountNumber?.message}>
+                                        <Form.Control
+                                          type="number"
+                                          id="accountNumber"
+                                          name="accountNumber"
+                                          defaultValue={bankDetail.bankDetail?.accountNumber}
+                                          isInvalid={
+                                            formStateBank.touched.accountNumber === true &&
+                                            !!errorsBank.accountNumber
+                                          }
+                                          ref={
+                                            registerBank({
+                                              required: {
+                                                value: true,
+                                                message:
+                                                  'No. rekening / No. handphone harus diisi.',
+                                              },
+                                            }) as string & ((ref: Element | null) => void)
+                                          }
+                                        />
+                                      </FormInput>
+                                    </div>
+                                  </Row>
+                                  <button
+                                    className="btn btn-primary w-100 mb-4"
+                                    disabled={!isValidBank}
+                                    type="submit"
+                                  >
+                                    Simpan
+                                  </button>
+                                  <div
+                                    className="btn btn-outline-primary w-100"
+                                    onClick={cancelEditBank}
+                                  >
+                                    Batal
+                                  </div>
+                                </form>
+                              )}
+                            </>
                           )}
-                          {bankDetail && <div className="btn btn-primary">Ubah Detail Bank</div>}
                         </div>
                       </div>
 

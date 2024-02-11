@@ -1,4 +1,5 @@
 import {
+  AccountEditBankDetailInput,
   AccountEditProfileInput,
   AccountInquiryBankDetailOutput,
   AccountInquiryCVUrlOutput,
@@ -37,6 +38,7 @@ import {
   AccountInquiryPortfolioUrlResponse,
   AccountInquirySkillResponse,
   ApiResponse,
+  transformToAccountEditBankDetailRequest,
   transformToAccountEditProfileRequest,
 } from 'services/schemas';
 
@@ -151,6 +153,16 @@ const AccountService = {
         'Content-Type': 'multipart/form-data',
       },
     });
+
+    return response.data.output_schema;
+  },
+
+  editBankDetail: async (data: AccountEditBankDetailInput): Promise<{}> => {
+    const requestData = transformToAccountEditBankDetailRequest(data);
+    const response = await axiosInstance.post<ApiResponse<{}>>(
+      `/account/edit/bank-detail`,
+      requestData,
+    );
 
     return response.data.output_schema;
   },

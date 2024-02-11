@@ -153,7 +153,7 @@ const DashboardIndex: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="col-12 col-xl-4 text-center">
+                      <div className="col-12 col-xl-4 text-center text-xl-right">
                         <a
                           className="text-primary"
                           href="/account/my/profile"
