@@ -36,7 +36,7 @@ export function transformToAccountInquiryOtherProfileOutput(
 }
 
 export interface AccountInquiryOwnedTaskOutput {
-  tasks: {
+  tasks?: {
     id: string;
     name: string;
     description: string;
@@ -51,7 +51,7 @@ export function transformToAccountInquiryOwnedTaskOutput(
   response: AccountInquiryOwnedTaskResponse,
 ): AccountInquiryOwnedTaskOutput {
   const result: AccountInquiryOwnedTaskOutput = {
-    tasks: response.tasks.map((t) => {
+    tasks: response.tasks?.map((t) => {
       return {
         id: t.id,
         name: t.name,
@@ -182,7 +182,7 @@ export function transformToAccountInquiryPortfolioUrlOutput(
 }
 
 export interface AccountInquiryOwnedServiceOutput {
-  services: {
+  services?: {
     id: string;
     imageUrl: string;
     name: string;
@@ -202,7 +202,7 @@ export function transformToAccountInquiryOwnedServiceOutput(
   response: AccountInquiryOwnedServiceResponse,
 ): AccountInquiryOwnedServiceOutput {
   const result: AccountInquiryOwnedServiceOutput = {
-    services: response.services.map((t) => {
+    services: response.services?.map((t) => {
       return {
         id: t.id,
         imageUrl: t.image_url,

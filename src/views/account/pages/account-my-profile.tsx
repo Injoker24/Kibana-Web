@@ -32,7 +32,7 @@ import {
 } from 'shared/components';
 import { useHistory, useLocation } from 'react-router-dom';
 import { DefaultAvatar, IconCameraSwap, IconStar } from 'images';
-import { getLocalStorage } from 'utils';
+import { getLocalStorage, setLocalStorage } from 'utils';
 import { useForm } from 'react-hook-form';
 
 const AccountMyProfile: React.FC = () => {
@@ -60,6 +60,9 @@ const AccountMyProfile: React.FC = () => {
     {
       onSuccess: (output) => {
         setUserId(output.id);
+        setLocalStorage('name', output.name);
+        setLocalStorage('username', output.username);
+        setLocalStorage('profileImageUrl', output.profileImageUrl);
       },
     },
   );
@@ -761,14 +764,20 @@ const AccountMyProfile: React.FC = () => {
                         <h4 className="font-weight-semibold mb-3">Tugas yang terbuka</h4>
                         {isLoadingOwnedTask && <Loader type="inline" />}
                         {errorOwnedTask && (
-                          <div className="card-sm mb-5 mb-lg-0">
+                          <div className="card-sm">
                             <InlineRetryError
                               message={errorOwnedTask.message}
                               onRetry={refetchOwnedTask}
                             />
                           </div>
                         )}
+                        {ownedTask && !ownedTask.tasks && (
+                          <div className="card-sm">
+                            <InfoBox message={myProfile.name + ' belum memiliki tugas.'} />
+                          </div>
+                        )}
                         {ownedTask &&
+                          ownedTask.tasks &&
                           ownedTask.tasks.map((item) => {
                             return (
                               <div
@@ -896,8 +905,14 @@ const AccountMyProfile: React.FC = () => {
                             />
                           </div>
                         )}
+                        {ownedService && !ownedService.services && (
+                          <div className="card-sm">
+                            <InfoBox message={myProfile.name + ' belum memiliki layanan.'} />
+                          </div>
+                        )}
                         <Row>
                           {ownedService &&
+                            ownedService.services &&
                             ownedService.services.map((item) => {
                               return (
                                 <div

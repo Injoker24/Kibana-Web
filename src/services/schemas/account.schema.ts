@@ -9,7 +9,7 @@ export interface AccountInquiryOtherProfileResponse {
 }
 
 export interface AccountInquiryOwnedTaskResponse {
-  tasks: {
+  tasks?: {
     id: string;
     name: string;
     description: string;
@@ -58,7 +58,7 @@ export interface AccountInquiryPortfolioUrlResponse {
 }
 
 export interface AccountInquiryOwnedServiceResponse {
-  services: {
+  services?: {
     id: string;
     image_url: string;
     name: string;

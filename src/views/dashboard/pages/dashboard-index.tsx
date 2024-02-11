@@ -140,8 +140,8 @@ const DashboardIndex: React.FC = () => {
                 <div className="d-flex flex-row justify-content-between flex-wrap">
                   <div className="col-12 col-lg-5 pr-lg-5 p-0 mb-4 mb-lg-0">
                     <div className="d-flex flex-row align-items-center dashboard-border-card h-100 flex-wrap">
-                      <div className="col-12 col-xl-8">
-                        <div className="d-flex flex-row align-items-center mr-0 mr-xl-3 mb-3 mb-lg-0">
+                      <div className="col-12 col-xl-9">
+                        <div className="d-flex flex-row align-items-center mr-0 mr-xl-3 mb-3 mb-xl-0">
                           <Image
                             className="dashboard-profile-image mr-4"
                             src={userData.profileImageUrl}
@@ -153,7 +153,7 @@ const DashboardIndex: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="col-12 col-xl-4 text-center text-xl-right">
+                      <div className="col-12 col-xl-3 text-center text-xl-right">
                         <a
                           className="text-primary"
                           href="/account/my/profile"
