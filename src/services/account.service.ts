@@ -135,10 +135,22 @@ const AccountService = {
 
   editProfile: async (data: AccountEditProfileInput): Promise<{}> => {
     const requestData = transformToAccountEditProfileRequest(data);
-    const response = await axiosInstance.post<ApiResponse<{}>>(
-      `/account/edit/profile`,
-      requestData,
-    );
+
+    let formData = new FormData();
+    if (requestData.profile_image) {
+      formData.append('profile_image', requestData.profile_image);
+    }
+
+    const blob = new Blob([JSON.stringify(requestData)], {
+      type: 'application/json',
+    });
+    formData.append('data', blob);
+
+    const response = await axiosInstance.post<ApiResponse<{}>>(`/account/edit/profile`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
 
     return response.data.output_schema;
   },

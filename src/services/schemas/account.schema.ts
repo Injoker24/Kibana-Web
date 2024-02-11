@@ -92,7 +92,7 @@ export interface AccountInquiryBankDetailResponse {
 }
 
 export interface AccountEditProfileRequest {
-  profile_image?: File;
+  profile_image?: Blob;
   email?: string;
   name?: string;
   username?: string;

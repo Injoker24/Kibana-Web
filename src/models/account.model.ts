@@ -275,7 +275,7 @@ export function transformToAccountInquiryBankDetailOutput(
 }
 
 export interface AccountEditProfileInput {
-  profileImage?: File;
+  profileImage?: Blob;
   email?: string;
   username?: string;
   name?: string;

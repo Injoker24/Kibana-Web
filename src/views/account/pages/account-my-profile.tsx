@@ -30,7 +30,7 @@ import {
   TitleBanner,
 } from 'shared/components';
 import { useHistory, useLocation } from 'react-router-dom';
-import { DefaultAvatar, IconStar } from 'images';
+import { DefaultAvatar, IconCameraSwap, IconStar } from 'images';
 import { getLocalStorage } from 'utils';
 import { useForm } from 'react-hook-form';
 
@@ -45,6 +45,19 @@ const AccountMyProfile: React.FC = () => {
   const [confirmEditProfile, setConfirmEditProfile] = useState(false);
 
   const [editProfileData, setEditProfileData] = useState<AccountEditProfileInput>({});
+  const [profileImage, setProfileImage] = useState<any>();
+
+  const handleUpload = (e: any) => {
+    const img = {
+      preview: URL.createObjectURL(e.target.files[0]),
+      data: e.target.files[0],
+    };
+    setProfileImage(img);
+  };
+
+  const uploadImage = () => {
+    document.getElementById('selectImage')?.click();
+  };
 
   const {
     register: registerProfile,
@@ -99,6 +112,7 @@ const AccountMyProfile: React.FC = () => {
     ['edit-profile'],
     async () =>
       await AccountService.editProfile({
+        profileImage: profileImage?.data,
         email: editProfileData.email,
         username: '@' + editProfileData.username,
         name: editProfileData.name,
@@ -107,6 +121,7 @@ const AccountMyProfile: React.FC = () => {
     {
       onSuccess: () => {
         setEditProfile(false);
+        setProfileImage(null);
         mutateMyProfile();
       },
     },
@@ -258,15 +273,17 @@ const AccountMyProfile: React.FC = () => {
                       <div className="mb-5">
                         <h4 className="font-weight-semibold mb-3">Profil saya</h4>
                         <div className="card-sm">
-                          <Image
-                            className="my-profile-freelancer-profile-image mb-5"
-                            src={
-                              myProfile.profileImageUrl ? myProfile.profileImageUrl : DefaultAvatar
-                            }
-                            alt={myProfile.name}
-                          />
                           {!editProfile && (
                             <>
+                              <Image
+                                className="my-profile-freelancer-profile-image mb-4"
+                                src={
+                                  myProfile.profileImageUrl
+                                    ? myProfile.profileImageUrl
+                                    : DefaultAvatar
+                                }
+                                alt={myProfile.name}
+                              />
                               <Row className="mb-5 align-items-center">
                                 <h4 className="font-weight-semibold mb-2 mb-md-0 col-12 col-md-3">
                                   E-Mail
@@ -313,6 +330,35 @@ const AccountMyProfile: React.FC = () => {
                                       />
                                     </div>
                                   )}
+                                  <div
+                                    className="position-relative cursor-pointer"
+                                    onClick={uploadImage}
+                                  >
+                                    <Image
+                                      className="my-profile-freelancer-profile-image mb-4"
+                                      src={
+                                        profileImage?.preview
+                                          ? profileImage?.preview
+                                          : myProfile.profileImageUrl
+                                          ? myProfile.profileImageUrl
+                                          : DefaultAvatar
+                                      }
+                                      alt={myProfile.name}
+                                      style={{ filter: 'brightness(0.75)' }}
+                                    />
+                                    <div
+                                      className="text-white position-absolute"
+                                      style={{ top: '1.5rem', left: '1.75rem' }}
+                                    >
+                                      <IconCameraSwap />
+                                    </div>
+                                  </div>
+                                  <input
+                                    hidden
+                                    id="selectImage"
+                                    type="file"
+                                    onChange={handleUpload}
+                                  />
                                   <Row className="mb-5 align-items-center">
                                     <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
                                       E-Mail
@@ -438,7 +484,10 @@ const AccountMyProfile: React.FC = () => {
 
                                   <div
                                     className="btn btn-outline-primary w-100"
-                                    onClick={() => setEditProfile(false)}
+                                    onClick={() => {
+                                      setEditProfile(false);
+                                      setProfileImage(null);
+                                    }}
                                   >
                                     Batal
                                   </div>
