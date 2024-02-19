@@ -1,6 +1,7 @@
 import {
   AccountEditBankDetailInput,
   AccountEditProfileInput,
+  AccountEditSkillInput,
   AccountInquiryBankDetailOutput,
   AccountInquiryCVUrlOutput,
   AccountInquiryClientReviewOutput,
@@ -43,6 +44,7 @@ import {
   ApiResponse,
   transformToAccountEditBankDetailRequest,
   transformToAccountEditProfileRequest,
+  transformToAccountEditSkillRequest,
 } from 'services/schemas';
 
 import { axiosInstance } from 'setup';
@@ -172,10 +174,17 @@ const AccountService = {
 
   inquiryReviewHistory: async (userId: string): Promise<AccountInquiryReviewHistoryOutput> => {
     const response = await axiosInstance.get<ApiResponse<AccountInquiryReviewHistoryResponse>>(
-      `/account/reviews/history/${userId}`,
+      `/account/project/history/${userId}`,
     );
 
     return transformToAccountInquiryReviewHistoryOutput(response.data.output_schema);
+  },
+
+  editSkill: async (data: AccountEditSkillInput): Promise<{}> => {
+    const requestData = transformToAccountEditSkillRequest(data);
+    const response = await axiosInstance.post<ApiResponse<{}>>(`/account/edit/skills`, requestData);
+
+    return response.data.output_schema;
   },
 };
 

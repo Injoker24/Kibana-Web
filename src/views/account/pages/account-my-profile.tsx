@@ -1,6 +1,7 @@
 import {
   AccountEditBankDetailInput,
   AccountEditProfileInput,
+  AccountEditSkillInput,
   AccountInquiryBankDetailOutput,
   AccountInquiryCVUrlOutput,
   AccountInquiryClientReviewOutput,
@@ -10,6 +11,7 @@ import {
   AccountInquiryOwnedServiceOutput,
   AccountInquiryOwnedTaskOutput,
   AccountInquiryPortfolioUrlOutput,
+  AccountInquiryReviewHistoryOutput,
   AccountInquirySkillOutput,
   ErrorWrapper,
 } from 'models';
@@ -31,7 +33,7 @@ import {
   TitleBanner,
 } from 'shared/components';
 import { useHistory, useLocation } from 'react-router-dom';
-import { DefaultAvatar, IconCameraSwap, IconStar } from 'images';
+import { DefaultAvatar, IconCameraSwap, IconClose, IconStar } from 'images';
 import { getLocalStorage, setLocalStorage } from 'utils';
 import { useForm } from 'react-hook-form';
 
@@ -63,6 +65,7 @@ const AccountMyProfile: React.FC = () => {
         setLocalStorage('name', output.name);
         setLocalStorage('username', output.username);
         setLocalStorage('profileImageUrl', output.profileImageUrl);
+        mutateSkills();
       },
     },
   );
@@ -204,6 +207,54 @@ const AccountMyProfile: React.FC = () => {
   );
   //#endregion
 
+  //#region Edit Skill
+  const [editSkill, setEditSkill] = useState(false);
+  const [editSkillData, setEditSkillData] = useState<string[]>([]);
+
+  const {
+    register: registerSkill,
+    errors: errorsSkill,
+    formState: formStateSkill,
+    handleSubmit: handleSubmitSkill,
+  } = useForm({
+    mode: 'onChange',
+  });
+
+  const addSkill = (formData: any) => {
+    setEditSkillData((current) => [...current, formData.skill]);
+  };
+
+  const cancelEditSkill = () => {
+    setEditSkill(false);
+  };
+
+  const confirmEditSkill = () => {
+    mutateEditSkill();
+  };
+
+  const removeSkill = (index: number) => {
+    setEditSkillData(editSkillData.filter((item, i) => i !== index));
+  };
+
+  const {
+    isLoading: isLoadingEditSkill,
+    mutate: mutateEditSkill,
+    error: errorEditSkill,
+  } = useMutation<{}, ErrorWrapper>(
+    ['edit-skill'],
+    async () =>
+      await AccountService.editSkill({
+        skills: editSkillData,
+      }),
+    {
+      onSuccess: () => {
+        setEditSkill(false);
+        mutateSkills();
+      },
+    },
+  );
+  //#endregion
+
   const {
     data: bankDetail,
     isLoading: isLoadingBankDetail,
@@ -267,16 +318,13 @@ const AccountMyProfile: React.FC = () => {
   );
 
   const {
-    data: skills,
+    data: skillsData,
     isLoading: isLoadingSkills,
-    refetch: refetchSkills,
+    mutate: mutateSkills,
     error: errorSkills,
-  } = useQuery<AccountInquirySkillOutput, ErrorWrapper>(
+  } = useMutation<AccountInquirySkillOutput, ErrorWrapper>(
     ['inquiry-skill', userId],
     async () => await AccountService.inquirySkill(userId),
-    {
-      enabled: !!userId,
-    },
   );
 
   const {
@@ -316,6 +364,16 @@ const AccountMyProfile: React.FC = () => {
     {
       enabled: !!userId,
     },
+  );
+
+  const {
+    data: reviewHistory,
+    isLoading: isLoadingReviewHistory,
+    refetch: refetchReviewHistory,
+    error: errorReviewHistory,
+  } = useQuery<AccountInquiryReviewHistoryOutput, ErrorWrapper>(
+    ['inquiry-review-history', userId],
+    async () => await AccountService.inquiryReviewHistory(userId),
   );
 
   return (
@@ -873,6 +931,231 @@ const AccountMyProfile: React.FC = () => {
                   <Row>
                     <div className="col-12 col-lg-6">
                       <div className="mb-5">
+                        <h4 className="font-weight-semibold mb-3">Profil saya</h4>
+                        <div className="card-sm">
+                          {!editProfile && (
+                            <>
+                              <Image
+                                className="my-profile-freelancer-profile-image mb-4"
+                                src={
+                                  myProfile.profileImageUrl
+                                    ? myProfile.profileImageUrl
+                                    : DefaultAvatar
+                                }
+                                alt={myProfile.name}
+                              />
+                              <Row className="mb-5 align-items-center">
+                                <h4 className="font-weight-semibold mb-2 mb-md-0 col-12 col-md-3">
+                                  E-Mail
+                                </h4>
+                                <p className="col-12 col-md-9">{myProfile.email}</p>
+                              </Row>
+                              <Row className="mb-5 align-items-center">
+                                <h4 className="font-weight-semibold mb-2 mb-md-0 col-12 col-md-3">
+                                  Username
+                                </h4>
+                                <p className="col-12 col-md-9">{myProfile.username}</p>
+                              </Row>
+                              <Row className="mb-5 align-items-center">
+                                <h4 className="font-weight-semibold mb-2 mb-md-0 col-12 col-md-3">
+                                  Nama
+                                </h4>
+                                <p className="col-12 col-md-9">{myProfile.name}</p>
+                              </Row>
+                              <Row className="mb-5 align-items-center">
+                                <h4 className="font-weight-semibold mb-2 mb-md-0 col-12 col-md-3">
+                                  Nomor Handphone
+                                </h4>
+                                <p className="col-12 col-md-9">{myProfile.phoneNumber}</p>
+                              </Row>
+                              <div
+                                className="btn btn-outline-primary"
+                                onClick={() => setEditProfile(true)}
+                              >
+                                Ubah Profil
+                              </div>
+                            </>
+                          )}
+
+                          {editProfile && (
+                            <>
+                              {isLoadingEditProfile && <Loader type="inline" />}
+                              {!isLoadingEditProfile && (
+                                <form onSubmit={handleSubmitProfile(confirmSubmitProfile)}>
+                                  {errorEditProfile && (
+                                    <div className="mb-4">
+                                      <InfoBox
+                                        message={errorEditProfile?.message}
+                                        type="danger"
+                                      />
+                                    </div>
+                                  )}
+                                  <div
+                                    className="position-relative cursor-pointer"
+                                    onClick={uploadImage}
+                                  >
+                                    <Image
+                                      className="my-profile-freelancer-profile-image mb-4"
+                                      src={
+                                        profileImage?.preview
+                                          ? profileImage?.preview
+                                          : myProfile.profileImageUrl
+                                          ? myProfile.profileImageUrl
+                                          : DefaultAvatar
+                                      }
+                                      alt={myProfile.name}
+                                      style={{ filter: 'brightness(0.75)' }}
+                                    />
+                                    <div
+                                      className="text-white position-absolute"
+                                      style={{ top: '1.5rem', left: '1.75rem' }}
+                                    >
+                                      <IconCameraSwap />
+                                    </div>
+                                  </div>
+                                  <input
+                                    hidden
+                                    id="selectImage"
+                                    type="file"
+                                    onChange={handleUpload}
+                                  />
+                                  <Row className="mb-5 align-items-center">
+                                    <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                      E-Mail
+                                    </h4>
+                                    <div className="col-12 col-md-9">
+                                      <FormInput errorMessage={errorsProfile?.email?.message}>
+                                        <Form.Control
+                                          type="text"
+                                          id="email"
+                                          name="email"
+                                          defaultValue={myProfile.email}
+                                          isInvalid={
+                                            formStateProfile.touched.email === true &&
+                                            !!errorsProfile.email
+                                          }
+                                          ref={
+                                            registerProfile({
+                                              required: {
+                                                value: true,
+                                                message: 'E-mail harus diisi.',
+                                              },
+                                            }) as string & ((ref: Element | null) => void)
+                                          }
+                                        />
+                                      </FormInput>
+                                    </div>
+                                  </Row>
+                                  <Row className="mb-5 align-items-center">
+                                    <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                      Username
+                                    </h4>
+                                    <div className="col-12 col-md-9">
+                                      <FormInput errorMessage={errorsProfile?.username?.message}>
+                                        <div className="d-flex flex-row">
+                                          <div className="input-prefix flex-centered mr-3">@</div>
+                                          <Form.Control
+                                            type="text"
+                                            id="username"
+                                            name="username"
+                                            defaultValue={myProfile.username.slice(1)}
+                                            className="w-100"
+                                            isInvalid={
+                                              formStateProfile.touched.username === true &&
+                                              !!errorsProfile.username
+                                            }
+                                            ref={
+                                              registerProfile({
+                                                required: {
+                                                  value: true,
+                                                  message: 'Username harus diisi.',
+                                                },
+                                              }) as string & ((ref: Element | null) => void)
+                                            }
+                                          />
+                                        </div>
+                                      </FormInput>
+                                    </div>
+                                  </Row>
+                                  <Row className="mb-5 align-items-center">
+                                    <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                      Nama
+                                    </h4>
+                                    <div className="col-12 col-md-9">
+                                      <FormInput errorMessage={errorsProfile?.name?.message}>
+                                        <Form.Control
+                                          type="text"
+                                          id="name"
+                                          name="name"
+                                          defaultValue={myProfile.name}
+                                          isInvalid={
+                                            formStateProfile.touched.name === true &&
+                                            !!errorsProfile.name
+                                          }
+                                          ref={
+                                            registerProfile({
+                                              required: {
+                                                value: true,
+                                                message: 'Nama harus diisi.',
+                                              },
+                                            }) as string & ((ref: Element | null) => void)
+                                          }
+                                        />
+                                      </FormInput>
+                                    </div>
+                                  </Row>
+                                  <Row className="mb-5">
+                                    <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                      Nomor Handphone
+                                    </h4>
+                                    <div className=" col-12 col-md-9">
+                                      <FormInput errorMessage={errorsProfile?.phoneNumber?.message}>
+                                        <div className="d-flex flex-row">
+                                          <div className="input-prefix flex-centered mr-3">+62</div>
+                                          <Form.Control
+                                            type="number"
+                                            id="phoneNumber"
+                                            name="phoneNumber"
+                                            defaultValue={myProfile.phoneNumber.slice(3)}
+                                            isInvalid={
+                                              formStateProfile.touched.phoneNumber === true &&
+                                              !!errorsProfile.phoneNumber
+                                            }
+                                            ref={
+                                              registerProfile({
+                                                required: {
+                                                  value: true,
+                                                  message: 'Nomor handphone harus diisi.',
+                                                },
+                                              }) as string & ((ref: Element | null) => void)
+                                            }
+                                          />
+                                        </div>
+                                      </FormInput>
+                                    </div>
+                                  </Row>
+                                  <button
+                                    className="btn btn-primary w-100 mb-4"
+                                    disabled={!isValidProfile}
+                                    type="submit"
+                                  >
+                                    Simpan
+                                  </button>
+
+                                  <div
+                                    className="btn btn-outline-primary w-100"
+                                    onClick={cancelEditProfile}
+                                  >
+                                    Batal
+                                  </div>
+                                </form>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="mb-5">
                         <h4 className="font-weight-semibold mb-3">Deskripsi freelancer</h4>
                         <div className="card-sm">
                           {isLoadingFreelancerDesc && <Loader type="inline" />}
@@ -946,6 +1229,67 @@ const AccountMyProfile: React.FC = () => {
 
                     <div className="col-12 col-lg-6">
                       <div className="mb-5">
+                        <h4 className="font-weight-semibold mb-3">Riwayat pengerjaan proyek</h4>
+                        <div className="card-sm">
+                          {isLoadingReviewHistory && <Loader type="inline" />}
+                          {errorReviewHistory && (
+                            <div className="flex-centered">
+                              <InlineRetryError
+                                message={errorReviewHistory.message}
+                                onRetry={refetchReviewHistory}
+                              />
+                            </div>
+                          )}
+                          {reviewHistory && (
+                            <div>
+                              <div className="d-flex justify-content-between align-items-center">
+                                <div className="d-flex flex-row align-items-center">
+                                  <h2 className="mr-2 mb-0">{reviewHistory.averageRating}</h2>
+                                  <div className="text-warning">
+                                    <IconStar />
+                                  </div>
+                                </div>
+                                <p>{reviewHistory.projectAmount} proyek</p>
+                              </div>
+                              <hr />
+                              <div
+                                className="overflow-auto"
+                                style={reviewHistory.projectList ? { maxHeight: '50rem' } : {}}
+                              >
+                                {reviewHistory.projectList?.map((review) => {
+                                  return (
+                                    <div className="mb-4">
+                                      <p className="font-weight-bold">{review.projectName}</p>
+                                      <div className="d-flex flex-row mb-2">
+                                        {review.star &&
+                                          Array(review.star)
+                                            .fill(null)
+                                            .map(() => {
+                                              return (
+                                                <div className="text-warning">
+                                                  <IconStar />
+                                                </div>
+                                              );
+                                            })}
+                                        {!review.star && <small>Belum ada ulasan</small>}
+                                      </div>
+                                      <small className="d-block mb-2">{review.description}</small>
+                                      <small className="d-block text-muted">
+                                        {review.timestamp}
+                                      </small>
+                                    </div>
+                                  );
+                                })}
+                                {!reviewHistory.projectList && (
+                                  <InfoBox message={'Belum ada review'} />
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="mb-5">
                         <h4 className="font-weight-semibold mb-3">Keahlian</h4>
                         <div className="card-sm mb-5 mb-lg-0">
                           {isLoadingSkills && <Loader type="inline" />}
@@ -953,18 +1297,113 @@ const AccountMyProfile: React.FC = () => {
                             <div className="flex-centered">
                               <InlineRetryError
                                 message={errorSkills.message}
-                                onRetry={refetchSkills}
+                                onRetry={mutateSkills}
                               />
                             </div>
                           )}
-                          <div className="d-flex flex-row flex-wrap">
-                            {skills &&
-                              skills.skills?.map((item) => {
-                                return <div className="chip chip-primary mr-2 mb-3">{item}</div>;
-                              })}
-                          </div>
-                          {skills && !skills.skills && (
-                            <InfoBox message={myProfile.name + ' belum menambahkan keahlian.'} />
+                          {!editSkill && skillsData && (
+                            <>
+                              <div className="d-flex flex-row flex-wrap">
+                                {skillsData.skills?.map((item) => {
+                                  return <div className="chip chip-primary mr-2 mb-3">{item}</div>;
+                                })}
+                              </div>
+                              {!skillsData.skills && (
+                                <InfoBox
+                                  message={myProfile.name + ' belum menambahkan keahlian.'}
+                                />
+                              )}
+                              <div
+                                className="btn btn-outline-primary"
+                                onClick={() => {
+                                  setEditSkill(true);
+                                  setEditSkillData(skillsData.skills ? skillsData.skills : []);
+                                }}
+                              >
+                                Ubah Keahlian
+                              </div>
+                            </>
+                          )}
+
+                          {editSkill && skillsData && (
+                            <>
+                              {isLoadingEditSkill && <Loader type="inline" />}
+                              {!isLoadingEditSkill && (
+                                <>
+                                  {errorEditSkill && (
+                                    <div className="mb-4">
+                                      <InfoBox
+                                        message={errorEditSkill?.message}
+                                        type="danger"
+                                      />
+                                    </div>
+                                  )}
+                                  <div className="d-flex flex-row flex-wrap">
+                                    {editSkillData.map((item, i) => {
+                                      return (
+                                        <div className="chip chip-primary mr-2 mb-3">
+                                          <span className="mr-2"> {item} </span>
+                                          <div
+                                            className="cursor-pointer"
+                                            onClick={() => removeSkill(i)}
+                                          >
+                                            <IconClose />
+                                          </div>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                  <form onSubmit={handleSubmitSkill(addSkill)}>
+                                    <div className="d-flex flex-row mb-4">
+                                      <div className="w-100 mr-3">
+                                        <FormInput errorMessage={errorsSkill?.skill?.message}>
+                                          <Form.Control
+                                            type="text"
+                                            id="skill"
+                                            name="skill"
+                                            isInvalid={
+                                              formStateSkill.touched.skill === true &&
+                                              !!errorsSkill.skill
+                                            }
+                                            ref={
+                                              registerSkill({
+                                                required: {
+                                                  value: true,
+                                                  message: 'Keahlian tidak boleh kosong.',
+                                                },
+                                              }) as string & ((ref: Element | null) => void)
+                                            }
+                                          ></Form.Control>
+                                        </FormInput>
+                                      </div>
+                                      <div style={{ width: '6rem' }}>
+                                        <button
+                                          type="submit"
+                                          className="btn btn-primary"
+                                          style={{ borderRadius: '0.5rem' }}
+                                        >
+                                          +
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </form>
+                                  <div className="d-flex flex-row justify-content-end">
+                                    <div
+                                      className="btn btn-outline-primary mr-3"
+                                      onClick={cancelEditSkill}
+                                    >
+                                      Batal
+                                    </div>
+                                    <div
+                                      className="btn btn-primary"
+                                      onClick={confirmEditSkill}
+                                    >
+                                      Simpan
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+                            </>
                           )}
                         </div>
                       </div>
