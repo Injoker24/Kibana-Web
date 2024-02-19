@@ -130,3 +130,14 @@ export function transformToAccountEditBankDetailRequest(
 
   return result;
 }
+
+export interface AccountInquiryReviewHistoryResponse {
+  average_rating: number;
+  project_amount: number;
+  project_list?: {
+    project_name: string;
+    star?: number;
+    description?: string;
+    timestamp: string;
+  }[];
+}

@@ -11,6 +11,7 @@ import {
   AccountInquiryOwnedServiceOutput,
   AccountInquiryOwnedTaskOutput,
   AccountInquiryPortfolioUrlOutput,
+  AccountInquiryReviewHistoryOutput,
   AccountInquirySkillOutput,
   transformToAccountInquiryBankDetailOutput,
   transformToAccountInquiryCVUrlOutput,
@@ -22,6 +23,7 @@ import {
   transformToAccountInquiryOwnedServiceOutput,
   transformToAccountInquiryOwnedTaskOutput,
   transformToAccountInquiryPortfolioUrlOutput,
+  transformToAccountInquiryReviewHistoryOutput,
   transformToAccountInquirySkillOutput,
 } from 'models';
 
@@ -36,6 +38,7 @@ import {
   AccountInquiryOwnedServiceResponse,
   AccountInquiryOwnedTaskResponse,
   AccountInquiryPortfolioUrlResponse,
+  AccountInquiryReviewHistoryResponse,
   AccountInquirySkillResponse,
   ApiResponse,
   transformToAccountEditBankDetailRequest,
@@ -165,6 +168,14 @@ const AccountService = {
     );
 
     return response.data.output_schema;
+  },
+
+  inquiryReviewHistory: async (userId: string): Promise<AccountInquiryReviewHistoryOutput> => {
+    const response = await axiosInstance.get<ApiResponse<AccountInquiryReviewHistoryResponse>>(
+      `/account/reviews/history/${userId}`,
+    );
+
+    return transformToAccountInquiryReviewHistoryOutput(response.data.output_schema);
   },
 };
 

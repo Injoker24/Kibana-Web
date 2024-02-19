@@ -7,6 +7,7 @@ import {
   AccountInquiryOwnedServiceOutput,
   AccountInquiryOwnedTaskOutput,
   AccountInquiryPortfolioUrlOutput,
+  AccountInquiryReviewHistoryOutput,
   AccountInquirySkillOutput,
   ErrorWrapper,
 } from 'models';
@@ -125,6 +126,16 @@ const AccountOtherProfile: React.FC = ({ status, prevPath }: any) => {
   } = useQuery<AccountInquiryPortfolioUrlOutput, ErrorWrapper>(
     ['inquiry-portfolio-url', params.userId],
     async () => await AccountService.inquiryPortfolio(params.userId),
+  );
+
+  const {
+    data: reviewHistory,
+    isLoading: isLoadingReviewHistory,
+    refetch: refetchReviewHistory,
+    error: errorReviewHistory,
+  } = useQuery<AccountInquiryReviewHistoryOutput, ErrorWrapper>(
+    ['inquiry-review-history', params.userId],
+    async () => await AccountService.inquiryReviewHistory(params.userId),
   );
 
   return (
@@ -258,7 +269,7 @@ const AccountOtherProfile: React.FC = ({ status, prevPath }: any) => {
                                 <hr />
                                 <div
                                   className="overflow-auto"
-                                  style={clientReview.reviewList ? { height: '70rem' } : {}}
+                                  style={clientReview.reviewList ? { maxHeight: '70rem' } : {}}
                                 >
                                   {clientReview.reviewList?.map((review) => {
                                     return (
@@ -380,6 +391,69 @@ const AccountOtherProfile: React.FC = ({ status, prevPath }: any) => {
                         </div>
 
                         <div className="col-12 col-lg-6">
+                          <div className="mb-5">
+                            <h4 className="font-weight-semibold mb-3">Riwayat pengerjaan proyek</h4>
+                            <div className="card-sm">
+                              {isLoadingReviewHistory && <Loader type="inline" />}
+                              {errorReviewHistory && (
+                                <div className="flex-centered">
+                                  <InlineRetryError
+                                    message={errorReviewHistory.message}
+                                    onRetry={refetchReviewHistory}
+                                  />
+                                </div>
+                              )}
+                              {reviewHistory && (
+                                <div>
+                                  <div className="d-flex justify-content-between align-items-center">
+                                    <div className="d-flex flex-row align-items-center">
+                                      <h2 className="mr-2 mb-0">{reviewHistory.averageRating}</h2>
+                                      <div className="text-warning">
+                                        <IconStar />
+                                      </div>
+                                    </div>
+                                    <p>{reviewHistory.projectAmount} proyek</p>
+                                  </div>
+                                  <hr />
+                                  <div
+                                    className="overflow-auto"
+                                    style={reviewHistory.projectList ? { maxHeight: '50rem' } : {}}
+                                  >
+                                    {reviewHistory.projectList?.map((review) => {
+                                      return (
+                                        <div className="mb-4">
+                                          <p className="font-weight-bold">{review.projectName}</p>
+                                          <div className="d-flex flex-row mb-2">
+                                            {review.star &&
+                                              Array(review.star)
+                                                .fill(null)
+                                                .map(() => {
+                                                  return (
+                                                    <div className="text-warning">
+                                                      <IconStar />
+                                                    </div>
+                                                  );
+                                                })}
+                                            {!review.star && <small>Belum ada ulasan</small>}
+                                          </div>
+                                          <small className="d-block mb-2">
+                                            {review.description}
+                                          </small>
+                                          <small className="d-block text-muted">
+                                            {review.timestamp}
+                                          </small>
+                                        </div>
+                                      );
+                                    })}
+                                    {!reviewHistory.projectList && (
+                                      <InfoBox message={'Belum ada review'} />
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
                           <div className="mb-5">
                             <h4 className="font-weight-semibold mb-3">Keahlian</h4>
                             <div className="card-sm mb-5 mb-lg-0">

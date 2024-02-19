@@ -9,6 +9,7 @@ import {
   AccountInquiryOwnedServiceResponse,
   AccountInquiryOwnedTaskResponse,
   AccountInquiryPortfolioUrlResponse,
+  AccountInquiryReviewHistoryResponse,
   AccountInquirySkillResponse,
 } from 'services/schemas';
 import { formatCurrency } from 'utils';
@@ -286,4 +287,34 @@ export interface AccountEditBankDetailInput {
   bankName: string;
   beneficiaryName: string;
   accountNumber: string;
+}
+
+export interface AccountInquiryReviewHistoryOutput {
+  averageRating: number;
+  projectAmount: number;
+  projectList?: {
+    projectName: string;
+    star?: number;
+    description?: string;
+    timestamp: string;
+  }[];
+}
+
+export function transformToAccountInquiryReviewHistoryOutput(
+  response: AccountInquiryReviewHistoryResponse,
+): AccountInquiryReviewHistoryOutput {
+  const result: AccountInquiryReviewHistoryOutput = {
+    averageRating: response.average_rating,
+    projectAmount: response.project_amount,
+    projectList: response.project_list?.map((t) => {
+      return {
+        projectName: t.project_name,
+        star: t.star,
+        description: t.description,
+        timestamp: t.timestamp,
+      };
+    }),
+  };
+
+  return result;
 }
