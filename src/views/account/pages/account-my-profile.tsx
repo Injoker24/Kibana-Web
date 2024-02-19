@@ -1,7 +1,6 @@
 import {
   AccountEditBankDetailInput,
   AccountEditProfileInput,
-  AccountEditSkillInput,
   AccountInquiryBankDetailOutput,
   AccountInquiryCVUrlOutput,
   AccountInquiryClientReviewOutput,
@@ -51,6 +50,7 @@ const AccountMyProfile: React.FC = () => {
     mutateBankDetail();
   }, []);
 
+  //#region Edit Profile
   const {
     data: myProfile,
     isLoading: isLoadingMyProfile,
@@ -70,7 +70,6 @@ const AccountMyProfile: React.FC = () => {
     },
   );
 
-  //#region Edit Profile
   const [editProfile, setEditProfile] = useState(false);
   const [confirmEditProfile, setConfirmEditProfile] = useState(false);
   const [editProfileData, setEditProfileData] = useState<AccountEditProfileInput>({
@@ -150,6 +149,16 @@ const AccountMyProfile: React.FC = () => {
   //#endregion
 
   //#region Edit Bank
+  const {
+    data: bankDetail,
+    isLoading: isLoadingBankDetail,
+    mutate: mutateBankDetail,
+    error: errorBankDetail,
+  } = useMutation<AccountInquiryBankDetailOutput, ErrorWrapper>(
+    ['inquiry-bank-detail'],
+    async () => await AccountService.inquiryBankDetail(),
+  );
+
   const [editBank, setEditBank] = useState(false);
   const [confirmEditBank, setConfirmEditBank] = useState(false);
   const [editBankData, setEditBankData] = useState<AccountEditBankDetailInput>({
@@ -208,6 +217,16 @@ const AccountMyProfile: React.FC = () => {
   //#endregion
 
   //#region Edit Skill
+  const {
+    data: skillsData,
+    isLoading: isLoadingSkills,
+    mutate: mutateSkills,
+    error: errorSkills,
+  } = useMutation<AccountInquirySkillOutput, ErrorWrapper>(
+    ['inquiry-skill', userId],
+    async () => await AccountService.inquirySkill(userId),
+  );
+
   const [editSkill, setEditSkill] = useState(false);
   const [editSkillData, setEditSkillData] = useState<string[]>([]);
 
@@ -255,15 +274,65 @@ const AccountMyProfile: React.FC = () => {
   );
   //#endregion
 
+  //#region Edit Description
   const {
-    data: bankDetail,
-    isLoading: isLoadingBankDetail,
-    mutate: mutateBankDetail,
-    error: errorBankDetail,
-  } = useMutation<AccountInquiryBankDetailOutput, ErrorWrapper>(
-    ['inquiry-bank-detail'],
-    async () => await AccountService.inquiryBankDetail(),
+    data: freelancerDesc,
+    isLoading: isLoadingFreelancerDesc,
+    refetch: refetchFreelancerDesc,
+    error: errorFreelancerDesc,
+  } = useQuery<AccountInquiryDescriptionOutput, ErrorWrapper>(
+    ['inquiry-description', userId],
+    async () => await AccountService.inquiryDescription(userId),
+    {
+      enabled: !!userId,
+    },
   );
+  //#endregion
+
+  //#region Edit Education
+  const {
+    data: education,
+    isLoading: isLoadingEducation,
+    refetch: refetchEducation,
+    error: errorEducation,
+  } = useQuery<AccountInquiryEducationHistoryOutput, ErrorWrapper>(
+    ['inquiry-education-history', userId],
+    async () => await AccountService.inquiryEducationHistory(userId),
+    {
+      enabled: !!userId,
+    },
+  );
+  //#endregion
+
+  //#region Edit CV
+  const {
+    data: cvUrl,
+    isLoading: isLoadingCVUrl,
+    refetch: refetchCVUrl,
+    error: errorCVUrl,
+  } = useQuery<AccountInquiryCVUrlOutput, ErrorWrapper>(
+    ['inquiry-cv-url', userId],
+    async () => await AccountService.inquiryCV(userId),
+    {
+      enabled: !!userId,
+    },
+  );
+  //#endregion
+
+  //#region Edit Portfolio
+  const {
+    data: portfolioUrl,
+    isLoading: isLoadingPortfolioUrl,
+    refetch: refetchPortfolioUrl,
+    error: errorPortfolioUrl,
+  } = useQuery<AccountInquiryPortfolioUrlOutput, ErrorWrapper>(
+    ['inquiry-portfolio-url', userId],
+    async () => await AccountService.inquiryPortfolio(userId),
+    {
+      enabled: !!userId,
+    },
+  );
+  //#endregion
 
   const {
     data: ownedTask,
@@ -292,19 +361,6 @@ const AccountMyProfile: React.FC = () => {
   );
 
   const {
-    data: freelancerDesc,
-    isLoading: isLoadingFreelancerDesc,
-    refetch: refetchFreelancerDesc,
-    error: errorFreelancerDesc,
-  } = useQuery<AccountInquiryDescriptionOutput, ErrorWrapper>(
-    ['inquiry-description', userId],
-    async () => await AccountService.inquiryDescription(userId),
-    {
-      enabled: !!userId,
-    },
-  );
-
-  const {
     data: ownedService,
     isLoading: isLoadingOwnedService,
     refetch: refetchOwnedService,
@@ -312,55 +368,6 @@ const AccountMyProfile: React.FC = () => {
   } = useQuery<AccountInquiryOwnedServiceOutput, ErrorWrapper>(
     ['inquiry-owned-service', userId],
     async () => await AccountService.inquiryOwnedService(userId),
-    {
-      enabled: !!userId,
-    },
-  );
-
-  const {
-    data: skillsData,
-    isLoading: isLoadingSkills,
-    mutate: mutateSkills,
-    error: errorSkills,
-  } = useMutation<AccountInquirySkillOutput, ErrorWrapper>(
-    ['inquiry-skill', userId],
-    async () => await AccountService.inquirySkill(userId),
-  );
-
-  const {
-    data: education,
-    isLoading: isLoadingEducation,
-    refetch: refetchEducation,
-    error: errorEducation,
-  } = useQuery<AccountInquiryEducationHistoryOutput, ErrorWrapper>(
-    ['inquiry-education-history', userId],
-    async () => await AccountService.inquiryEducationHistory(userId),
-    {
-      enabled: !!userId,
-    },
-  );
-
-  const {
-    data: cvUrl,
-    isLoading: isLoadingCVUrl,
-    refetch: refetchCVUrl,
-    error: errorCVUrl,
-  } = useQuery<AccountInquiryCVUrlOutput, ErrorWrapper>(
-    ['inquiry-cv-url', userId],
-    async () => await AccountService.inquiryCV(userId),
-    {
-      enabled: !!userId,
-    },
-  );
-
-  const {
-    data: portfolioUrl,
-    isLoading: isLoadingPortfolioUrl,
-    refetch: refetchPortfolioUrl,
-    error: errorPortfolioUrl,
-  } = useQuery<AccountInquiryPortfolioUrlOutput, ErrorWrapper>(
-    ['inquiry-portfolio-url', userId],
-    async () => await AccountService.inquiryPortfolio(userId),
     {
       enabled: !!userId,
     },
@@ -1173,6 +1180,186 @@ const AccountMyProfile: React.FC = () => {
                                 __html: freelancerDesc.description,
                               }}
                             ></p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="mb-5">
+                        <h4 className="font-weight-semibold mb-3">Detail bank</h4>
+                        <div className="card-sm">
+                          {isLoadingBankDetail && <Loader type="inline" />}
+
+                          {errorBankDetail && (
+                            <div className="flex-centered">
+                              <InlineRetryError
+                                message={errorBankDetail.message}
+                                onRetry={mutateBankDetail}
+                              />
+                            </div>
+                          )}
+
+                          {!editBank && bankDetail && (
+                            <>
+                              {bankDetail.bankDetail && (
+                                <>
+                                  <Row className="mb-5 align-items-center">
+                                    <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                      Nama Bank
+                                    </h4>
+                                    <p className="col-12 col-md-9">
+                                      {bankDetail.bankDetail.bankName.toUpperCase()}
+                                    </p>
+                                  </Row>
+                                  <Row className="mb-5 align-items-center">
+                                    <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                      Penerima
+                                    </h4>
+                                    <p className="col-12 col-md-9">
+                                      {bankDetail.bankDetail.beneficiaryName}
+                                    </p>
+                                  </Row>
+                                  <Row className="mb-5 align-items-center">
+                                    <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                      No. Rekening / No. Handphone
+                                    </h4>
+                                    <p className="col-12 col-md-9">
+                                      {bankDetail.bankDetail.accountNumber}
+                                    </p>
+                                  </Row>
+                                </>
+                              )}
+
+                              {!bankDetail.bankDetail && (
+                                <div className="mb-4">
+                                  <InfoBox
+                                    message={myProfile.name + ' belum menambahkan detail bank.'}
+                                  />
+                                </div>
+                              )}
+                              <div
+                                className="btn btn-outline-primary"
+                                onClick={() => setEditBank(true)}
+                              >
+                                Ubah Detail Bank
+                              </div>
+                            </>
+                          )}
+
+                          {editBank && bankDetail && (
+                            <>
+                              {isLoadingEditBank && <Loader type="inline" />}
+                              {!isLoadingEditBank && (
+                                <form onSubmit={handleSubmitBank(confirmSubmitBank)}>
+                                  {errorEditBank && (
+                                    <div className="mb-4">
+                                      <InfoBox
+                                        message={errorEditBank?.message}
+                                        type="danger"
+                                      />
+                                    </div>
+                                  )}
+                                  <Row className="mb-5 align-items-center">
+                                    <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                      Nama Bank
+                                    </h4>
+                                    <div className="col-12 col-md-9">
+                                      <FormInput errorMessage={errorsBank?.bankName?.message}>
+                                        <Form.Control
+                                          as="select"
+                                          id="bankName"
+                                          name="bankName"
+                                          defaultValue={bankDetail.bankDetail?.bankName}
+                                          isInvalid={
+                                            formStateBank.touched.bankName === true &&
+                                            !!errorsBank.bankName
+                                          }
+                                          ref={
+                                            registerBank() as string &
+                                              ((ref: Element | null) => void)
+                                          }
+                                        >
+                                          <option value="bca">BCA</option>
+                                          <option value="mandiri">MANDIRI</option>
+                                          <option value="bni">BNI</option>
+                                          <option value="gopay">GOPAY</option>
+                                          <option value="ovo">OVO</option>
+                                        </Form.Control>
+                                      </FormInput>
+                                    </div>
+                                  </Row>
+                                  <Row className="mb-5 align-items-center">
+                                    <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                      Penerima
+                                    </h4>
+                                    <div className="col-12 col-md-9">
+                                      <FormInput
+                                        errorMessage={errorsBank?.beneficiaryName?.message}
+                                      >
+                                        <Form.Control
+                                          type="text"
+                                          id="beneficiaryName"
+                                          name="beneficiaryName"
+                                          defaultValue={bankDetail.bankDetail?.beneficiaryName}
+                                          isInvalid={
+                                            formStateBank.touched.beneficiaryName === true &&
+                                            !!errorsBank.beneficiaryName
+                                          }
+                                          ref={
+                                            registerBank({
+                                              required: {
+                                                value: true,
+                                                message: 'Penerima harus diisi.',
+                                              },
+                                            }) as string & ((ref: Element | null) => void)
+                                          }
+                                        />
+                                      </FormInput>
+                                    </div>
+                                  </Row>
+                                  <Row className="mb-5 align-items-center">
+                                    <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                      No. Rekening / No. Handphone
+                                    </h4>
+                                    <div className="col-12 col-md-9">
+                                      <FormInput errorMessage={errorsBank?.accountNumber?.message}>
+                                        <Form.Control
+                                          type="number"
+                                          id="accountNumber"
+                                          name="accountNumber"
+                                          defaultValue={bankDetail.bankDetail?.accountNumber}
+                                          isInvalid={
+                                            formStateBank.touched.accountNumber === true &&
+                                            !!errorsBank.accountNumber
+                                          }
+                                          ref={
+                                            registerBank({
+                                              required: {
+                                                value: true,
+                                                message:
+                                                  'No. rekening / No. handphone harus diisi.',
+                                              },
+                                            }) as string & ((ref: Element | null) => void)
+                                          }
+                                        />
+                                      </FormInput>
+                                    </div>
+                                  </Row>
+                                  <button
+                                    className="btn btn-primary w-100 mb-4"
+                                    disabled={!isValidBank}
+                                    type="submit"
+                                  >
+                                    Simpan
+                                  </button>
+                                  <div
+                                    className="btn btn-outline-primary w-100"
+                                    onClick={cancelEditBank}
+                                  >
+                                    Batal
+                                  </div>
+                                </form>
+                              )}
+                            </>
                           )}
                         </div>
                       </div>
