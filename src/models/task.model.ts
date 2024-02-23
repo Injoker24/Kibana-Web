@@ -12,7 +12,7 @@ export interface TaskInquiryCategoryOutput {
     id: string;
     name: string;
     imageUrl: string;
-    taskAmount: Number;
+    taskAmount: number;
     subCategories: {
       id: string;
       name: string;

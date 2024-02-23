@@ -5,7 +5,7 @@ export interface TaskInquiryCategoryResponse {
     id: string;
     name: string;
     image_url: string;
-    task_amount: Number;
+    task_amount: number;
     sub_categories: {
       id: string;
       name: string;

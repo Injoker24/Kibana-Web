@@ -1,6 +1,7 @@
 import {
   AccountEditBankDetailInput,
   AccountEditDescInput,
+  AccountEditEducationInput,
   AccountEditProfileInput,
   AccountEditSkillInput,
   AccountInquiryBankDetailOutput,
@@ -45,6 +46,7 @@ import {
   ApiResponse,
   transformToAccountEditBankDetailRequest,
   transformToAccountEditDescRequest,
+  transformToAccountEditEducationRequest,
   transformToAccountEditProfileRequest,
   transformToAccountEditSkillRequest,
 } from 'services/schemas';
@@ -193,6 +195,16 @@ const AccountService = {
     const requestData = transformToAccountEditDescRequest(data);
     const response = await axiosInstance.post<ApiResponse<{}>>(
       `/account/edit/description`,
+      requestData,
+    );
+
+    return response.data.output_schema;
+  },
+
+  editEducation: async (data: AccountEditEducationInput): Promise<{}> => {
+    const requestData = transformToAccountEditEducationRequest(data);
+    const response = await axiosInstance.post<ApiResponse<{}>>(
+      `/account/edit/educations`,
       requestData,
     );
 

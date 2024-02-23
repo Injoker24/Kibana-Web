@@ -1,6 +1,7 @@
 import {
   AccountEditBankDetailInput,
   AccountEditDescInput,
+  AccountEditEducationInput,
   AccountEditProfileInput,
   AccountEditSkillInput,
 } from 'models';
@@ -170,6 +171,34 @@ export function transformToAccountEditDescRequest(
 ): AccountEditDescRequest {
   const result: AccountEditDescRequest = {
     description: input.description,
+  };
+
+  return result;
+}
+
+export interface AccountEditEducationRequest {
+  education_history: {
+    degree: string;
+    major: string;
+    university: string;
+    country: string;
+    graduation_year: string;
+  }[];
+}
+
+export function transformToAccountEditEducationRequest(
+  input: AccountEditEducationInput,
+): AccountEditEducationRequest {
+  const result: AccountEditEducationRequest = {
+    education_history: input.educationHistory.map((t) => {
+      return {
+        degree: t.degree,
+        major: t.major,
+        university: t.university,
+        country: t.country,
+        graduation_year: t.graduationYear,
+      };
+    }),
   };
 
   return result;

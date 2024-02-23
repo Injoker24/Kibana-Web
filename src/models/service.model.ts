@@ -12,7 +12,7 @@ export interface ServiceInquiryCategoryOutput {
     id: string;
     name: string;
     imageUrl: string;
-    serviceAmount: Number;
+    serviceAmount: number;
     subCategories: {
       id: string;
       name: string;

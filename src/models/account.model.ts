@@ -326,3 +326,13 @@ export interface AccountEditSkillInput {
 export interface AccountEditDescInput {
   description: string;
 }
+
+export interface AccountEditEducationInput {
+  educationHistory: {
+    degree: string;
+    major: string;
+    university: string;
+    country: string;
+    graduationYear: string;
+  }[];
+}

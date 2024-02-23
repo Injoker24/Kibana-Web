@@ -5,7 +5,7 @@ export interface ServiceInquiryCategoryResponse {
     id: string;
     name: string;
     image_url: string;
-    service_amount: Number;
+    service_amount: number;
     sub_categories: {
       id: string;
       name: string;

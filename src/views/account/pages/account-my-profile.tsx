@@ -1,5 +1,6 @@
 import {
   AccountEditBankDetailInput,
+  AccountEditEducationInput,
   AccountEditProfileInput,
   AccountInquiryBankDetailOutput,
   AccountInquiryCVUrlOutput,
@@ -67,6 +68,7 @@ const AccountMyProfile: React.FC = () => {
         setLocalStorage('profileImageUrl', output.profileImageUrl);
         mutateSkills();
         mutateFreelancerDesc();
+        mutateEducation();
       },
     },
   );
@@ -331,13 +333,67 @@ const AccountMyProfile: React.FC = () => {
   const {
     data: education,
     isLoading: isLoadingEducation,
-    refetch: refetchEducation,
+    mutate: mutateEducation,
     error: errorEducation,
-  } = useQuery<AccountInquiryEducationHistoryOutput, ErrorWrapper>(
+  } = useMutation<AccountInquiryEducationHistoryOutput, ErrorWrapper>(
     ['inquiry-education-history', userId],
     async () => await AccountService.inquiryEducationHistory(userId),
+  );
+
+  const [editEducation, setEditEducation] = useState(false);
+  const [editEducationData, setEditEducationData] = useState<
+    { degree: string; major: string; university: string; country: string; graduationYear: string }[]
+  >([{ degree: '', major: '', university: '', country: '', graduationYear: '' }]);
+
+  const {
+    register: registerEducation,
+    errors: errorsEducation,
+    formState: formStateEducation,
+    handleSubmit: handleSubmitEducation,
+    formState: { isValid: isValidEducation },
+  } = useForm({
+    mode: 'onChange',
+  });
+
+  const cancelEditEducation = () => {
+    setEditEducation(false);
+  };
+
+  const confirmEditEducation = () => {
+    mutateEditEducation();
+  };
+
+  const addEducation = (formData: any) => {
+    const newEducation = {
+      degree: formData.degree,
+      major: formData.major,
+      university: formData.university,
+      country: formData.country,
+      graduationYear: formData.graduationYear,
+    };
+
+    setEditEducationData((current) => [...current, newEducation]);
+  };
+
+  const removeEducation = (index: number) => {
+    setEditEducationData(editEducationData.filter((item: any, i: number) => i !== index));
+  };
+
+  const {
+    isLoading: isLoadingEditEducation,
+    mutate: mutateEditEducation,
+    error: errorEditEducation,
+  } = useMutation<{}, ErrorWrapper>(
+    ['edit-education'],
+    async () =>
+      await AccountService.editEducation({
+        educationHistory: editEducationData,
+      }),
     {
-      enabled: !!userId,
+      onSuccess: () => {
+        setEditEducation(false);
+        mutateEducation();
+      },
     },
   );
   //#endregion
@@ -1710,29 +1766,249 @@ const AccountMyProfile: React.FC = () => {
                             <div className="flex-centered">
                               <InlineRetryError
                                 message={errorEducation.message}
-                                onRetry={refetchEducation}
+                                onRetry={mutateEducation}
                               />
                             </div>
                           )}
-                          {education &&
-                            education.educationHistory?.map((item, i, { length }) => {
-                              return (
-                                <div className="mb-3">
-                                  <p className="mb-2">
-                                    {item.degree} {item.major}
-                                  </p>
-                                  <p className="font-weight-bold mb-2">{item.university}</p>
-                                  <p className="text-muted">
-                                    {item.country} ({item.graduationYear})
-                                  </p>
-                                  {i + 1 !== length && <hr />}
-                                </div>
-                              );
-                            })}
+                          {!editEducation && education && (
+                            <>
+                              {education.educationHistory?.map((item, i, { length }) => {
+                                return (
+                                  <div className="mb-3">
+                                    <p className="mb-2">
+                                      {item.degree} {item.major}
+                                    </p>
+                                    <p className="font-weight-bold mb-2">{item.university}</p>
+                                    <p className="text-muted">
+                                      {item.country} ({item.graduationYear})
+                                    </p>
+                                    {i + 1 !== length && <hr />}
+                                  </div>
+                                );
+                              })}
+                              <div
+                                className="btn btn-outline-primary"
+                                onClick={() => {
+                                  setEditEducation(true);
+                                  setEditEducationData(
+                                    education.educationHistory ? education.educationHistory : [],
+                                  );
+                                }}
+                              >
+                                Ubah Riwayat Edukasi
+                              </div>
+                            </>
+                          )}
                           {education && !education.educationHistory && (
                             <InfoBox
                               message={myProfile.name + ' belum menambahkan riwayat edukasi.'}
                             />
+                          )}
+                          {editEducation && education && (
+                            <>
+                              {isLoadingEditEducation && <Loader type="inline" />}
+                              {!isLoadingEditEducation && (
+                                <>
+                                  {errorEditEducation && (
+                                    <div className="mb-4">
+                                      <InfoBox
+                                        message={errorEditEducation?.message}
+                                        type="danger"
+                                      />
+                                    </div>
+                                  )}
+                                  {editEducationData.map((item: any, i: any) => {
+                                    return (
+                                      <div className="mb-3 card-sm">
+                                        <p className="mb-2">
+                                          {item.degree} {item.major}
+                                        </p>
+                                        <div className="d-flex flex-row justify-content-between">
+                                          <p className="font-weight-bold mb-2">{item.university}</p>
+                                          <div
+                                            className="text-primary-dark cursor-pointer"
+                                            onClick={() => removeEducation(i)}
+                                          >
+                                            <IconClose />
+                                          </div>
+                                        </div>
+                                        <p className="text-muted">
+                                          {item.country} ({item.graduationYear})
+                                        </p>
+                                      </div>
+                                    );
+                                  })}
+                                  <div className="card-sm mb-4">
+                                    <form onSubmit={handleSubmitEducation(addEducation)}>
+                                      <div className="d-flex flex-column">
+                                        <Row className="mb-5 align-items-center">
+                                          <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                            Strata
+                                          </h4>
+                                          <div className="col-12 col-md-9">
+                                            <FormInput
+                                              errorMessage={errorsEducation?.degree?.message}
+                                            >
+                                              <Form.Control
+                                                type="text"
+                                                id="degree"
+                                                name="degree"
+                                                isInvalid={
+                                                  formStateEducation.touched.degree === true &&
+                                                  !!errorsEducation.degree
+                                                }
+                                                ref={
+                                                  registerEducation({
+                                                    required: {
+                                                      value: true,
+                                                      message: 'Strata tidak boleh kosong.',
+                                                    },
+                                                  }) as string & ((ref: Element | null) => void)
+                                                }
+                                              ></Form.Control>
+                                            </FormInput>
+                                          </div>
+                                        </Row>
+                                        <Row className="mb-5 align-items-center">
+                                          <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                            Jurusan
+                                          </h4>
+                                          <div className="col-12 col-md-9">
+                                            <FormInput
+                                              errorMessage={errorsEducation?.major?.message}
+                                            >
+                                              <Form.Control
+                                                type="text"
+                                                id="major"
+                                                name="major"
+                                                isInvalid={
+                                                  formStateEducation.touched.major === true &&
+                                                  !!errorsEducation.major
+                                                }
+                                                ref={
+                                                  registerEducation({
+                                                    required: {
+                                                      value: true,
+                                                      message: 'Jurusan tidak boleh kosong.',
+                                                    },
+                                                  }) as string & ((ref: Element | null) => void)
+                                                }
+                                              ></Form.Control>
+                                            </FormInput>
+                                          </div>
+                                        </Row>
+                                        <Row className="mb-5 align-items-center">
+                                          <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                            Negara
+                                          </h4>
+                                          <div className="col-12 col-md-9">
+                                            <FormInput
+                                              errorMessage={errorsEducation?.country?.message}
+                                            >
+                                              <Form.Control
+                                                type="text"
+                                                id="country"
+                                                name="country"
+                                                isInvalid={
+                                                  formStateEducation.touched.country === true &&
+                                                  !!errorsEducation.country
+                                                }
+                                                ref={
+                                                  registerEducation({
+                                                    required: {
+                                                      value: true,
+                                                      message: 'Negara tidak boleh kosong.',
+                                                    },
+                                                  }) as string & ((ref: Element | null) => void)
+                                                }
+                                              ></Form.Control>
+                                            </FormInput>
+                                          </div>
+                                        </Row>
+                                        <Row className="mb-5 align-items-center">
+                                          <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                            Tahun Kelulusan
+                                          </h4>
+                                          <div className="col-12 col-md-9">
+                                            <FormInput
+                                              errorMessage={
+                                                errorsEducation?.graduationYear?.message
+                                              }
+                                            >
+                                              <Form.Control
+                                                type="text"
+                                                id="graduationYear"
+                                                name="graduationYear"
+                                                isInvalid={
+                                                  formStateEducation.touched.graduationYear ===
+                                                    true && !!errorsEducation.graduationYear
+                                                }
+                                                ref={
+                                                  registerEducation({
+                                                    required: {
+                                                      value: true,
+                                                      message:
+                                                        'Tahun kelulusan tidak boleh kosong.',
+                                                    },
+                                                  }) as string & ((ref: Element | null) => void)
+                                                }
+                                              ></Form.Control>
+                                            </FormInput>
+                                          </div>
+                                        </Row>
+                                        <Row className="mb-5 align-items-center">
+                                          <h4 className="font-weight-semibold mb-3 mb-md-0 col-12 col-md-3">
+                                            Universitas
+                                          </h4>
+                                          <div className="col-12 col-md-9">
+                                            <FormInput
+                                              errorMessage={errorsEducation?.university?.message}
+                                            >
+                                              <Form.Control
+                                                type="text"
+                                                id="university"
+                                                name="university"
+                                                isInvalid={
+                                                  formStateEducation.touched.university === true &&
+                                                  !!errorsEducation.university
+                                                }
+                                                ref={
+                                                  registerEducation({
+                                                    required: {
+                                                      value: true,
+                                                      message: 'Universitas tidak boleh kosong.',
+                                                    },
+                                                  }) as string & ((ref: Element | null) => void)
+                                                }
+                                              ></Form.Control>
+                                            </FormInput>
+                                          </div>
+                                        </Row>
+                                        <button
+                                          type="submit"
+                                          disabled={!isValidEducation}
+                                          className="btn btn-outline-primary"
+                                        >
+                                          Tambah Edukasi
+                                        </button>
+                                      </div>
+                                    </form>
+                                  </div>
+                                  <div
+                                    className="btn btn-primary w-100 mb-4"
+                                    onClick={confirmEditEducation}
+                                  >
+                                    Simpan
+                                  </div>
+                                  <div
+                                    className="btn btn-outline-primary w-100"
+                                    onClick={cancelEditEducation}
+                                  >
+                                    Batal
+                                  </div>
+                                </>
+                              )}
+                            </>
                           )}
                         </div>
                       </div>
