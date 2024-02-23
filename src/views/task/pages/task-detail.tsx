@@ -131,10 +131,10 @@ const TaskDetail: React.FC = ({ prevPath }: any) => {
                       <h4 className="font-weight-semibold mb-3">Deskripsi Tugas</h4>
                       <p
                         className="mb-5"
-                        dangerouslySetInnerHTML={{
-                          __html: taskDetail.taskDetail.description,
-                        }}
-                      ></p>
+                        style={{ whiteSpace: 'pre-wrap' }}
+                      >
+                        {taskDetail.taskDetail.description}
+                      </p>
                     </div>
 
                     <div className="mb-5 mb-lg-0">

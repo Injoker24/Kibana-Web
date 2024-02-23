@@ -1,4 +1,9 @@
-import { AccountEditBankDetailInput, AccountEditProfileInput, AccountEditSkillInput } from 'models';
+import {
+  AccountEditBankDetailInput,
+  AccountEditDescInput,
+  AccountEditProfileInput,
+  AccountEditSkillInput,
+} from 'models';
 
 export interface AccountInquiryOtherProfileResponse {
   id: string;
@@ -151,6 +156,20 @@ export function transformToAccountEditSkillRequest(
 ): AccountEditSkillRequest {
   const result: AccountEditSkillRequest = {
     skills: input.skills,
+  };
+
+  return result;
+}
+
+export interface AccountEditDescRequest {
+  description: string;
+}
+
+export function transformToAccountEditDescRequest(
+  input: AccountEditDescInput,
+): AccountEditDescRequest {
+  const result: AccountEditDescRequest = {
+    description: input.description,
   };
 
   return result;

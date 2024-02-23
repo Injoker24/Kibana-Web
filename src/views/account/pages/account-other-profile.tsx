@@ -331,11 +331,9 @@ const AccountOtherProfile: React.FC = ({ status, prevPath }: any) => {
                                 </div>
                               )}
                               {freelancerDesc && (
-                                <p
-                                  dangerouslySetInnerHTML={{
-                                    __html: freelancerDesc.description,
-                                  }}
-                                ></p>
+                                <p style={{ whiteSpace: 'pre-wrap' }}>
+                                  {freelancerDesc.description}
+                                </p>
                               )}
                             </div>
                           </div>

@@ -322,3 +322,7 @@ export function transformToAccountInquiryReviewHistoryOutput(
 export interface AccountEditSkillInput {
   skills: string[];
 }
+
+export interface AccountEditDescInput {
+  description: string;
+}

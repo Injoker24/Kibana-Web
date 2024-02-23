@@ -66,6 +66,7 @@ const AccountMyProfile: React.FC = () => {
         setLocalStorage('username', output.username);
         setLocalStorage('profileImageUrl', output.profileImageUrl);
         mutateSkills();
+        mutateFreelancerDesc();
       },
     },
   );
@@ -278,13 +279,50 @@ const AccountMyProfile: React.FC = () => {
   const {
     data: freelancerDesc,
     isLoading: isLoadingFreelancerDesc,
-    refetch: refetchFreelancerDesc,
+    mutate: mutateFreelancerDesc,
     error: errorFreelancerDesc,
-  } = useQuery<AccountInquiryDescriptionOutput, ErrorWrapper>(
+  } = useMutation<AccountInquiryDescriptionOutput, ErrorWrapper>(
     ['inquiry-description', userId],
     async () => await AccountService.inquiryDescription(userId),
+  );
+
+  const [editDesc, setEditDesc] = useState(false);
+  const [editDescData, setEditDescData] = useState<string>('');
+
+  const {
+    register: registerDesc,
+    errors: errorsDesc,
+    formState: formStateDesc,
+    handleSubmit: handleSubmitDesc,
+    formState: { isValid: isValidDesc },
+  } = useForm({
+    mode: 'onChange',
+  });
+
+  const cancelEditDescription = () => {
+    setEditDesc(false);
+  };
+
+  const confirmEditDescription = (formData: any) => {
+    setEditDescData(formData.desc);
+    mutateEditDesc();
+  };
+
+  const {
+    isLoading: isLoadingEditDesc,
+    mutate: mutateEditDesc,
+    error: errorEditDesc,
+  } = useMutation<{}, ErrorWrapper>(
+    ['edit-description'],
+    async () =>
+      await AccountService.editDesc({
+        description: editDescData,
+      }),
     {
-      enabled: !!userId,
+      onSuccess: () => {
+        setEditDesc(false);
+        mutateFreelancerDesc();
+      },
     },
   );
   //#endregion
@@ -1170,16 +1208,85 @@ const AccountMyProfile: React.FC = () => {
                             <div className="card-sm mb-5 mb-lg-0">
                               <InlineRetryError
                                 message={errorFreelancerDesc.message}
-                                onRetry={refetchFreelancerDesc}
+                                onRetry={mutateFreelancerDesc}
                               />
                             </div>
                           )}
-                          {freelancerDesc && (
-                            <p
-                              dangerouslySetInnerHTML={{
-                                __html: freelancerDesc.description,
-                              }}
-                            ></p>
+                          {!editDesc && freelancerDesc && (
+                            <>
+                              <p
+                                className="mb-4"
+                                style={{ whiteSpace: 'pre-wrap' }}
+                              >
+                                {freelancerDesc.description}
+                              </p>
+                              <div
+                                className="btn btn-outline-primary"
+                                onClick={() => {
+                                  setEditDesc(true);
+                                  setEditDescData(freelancerDesc.description);
+                                }}
+                              >
+                                Ubah Deskripsi
+                              </div>
+                            </>
+                          )}
+                          {editDesc && freelancerDesc && (
+                            <>
+                              {isLoadingEditDesc && <Loader type="inline" />}
+                              {!isLoadingEditDesc && (
+                                <>
+                                  {errorEditDesc && (
+                                    <div className="mb-4">
+                                      <InfoBox
+                                        message={errorEditDesc?.message}
+                                        type="danger"
+                                      />
+                                    </div>
+                                  )}
+                                  <form onSubmit={handleSubmitDesc(confirmEditDescription)}>
+                                    <div className="d-flex flex-column">
+                                      <div className="mb-4">
+                                        <FormInput errorMessage={errorsDesc?.desc?.message}>
+                                          <Form.Control
+                                            as="textarea"
+                                            id="desc"
+                                            name="desc"
+                                            className="desc-text-area"
+                                            defaultValue={editDescData}
+                                            isInvalid={
+                                              formStateDesc.touched.desc === true &&
+                                              !!errorsDesc.desc
+                                            }
+                                            ref={
+                                              registerDesc({
+                                                required: {
+                                                  value: true,
+                                                  message: 'Deskripsi tidak boleh kosong.',
+                                                },
+                                              }) as string & ((ref: Element | null) => void)
+                                            }
+                                          ></Form.Control>
+                                        </FormInput>
+                                      </div>
+                                      <button
+                                        type="submit"
+                                        disabled={!isValidDesc}
+                                        className="btn btn-primary mb-4"
+                                      >
+                                        Simpan
+                                      </button>
+                                      <div
+                                        className="btn btn-outline-primary"
+                                        onClick={cancelEditDescription}
+                                      >
+                                        Batal
+                                      </div>
+                                    </div>
+                                  </form>
+                                </>
+                              )}
+                            </>
                           )}
                         </div>
                       </div>

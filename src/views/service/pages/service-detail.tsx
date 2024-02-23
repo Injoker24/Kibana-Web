@@ -143,10 +143,10 @@ const ServiceDetail: React.FC = ({ prevPath }: any) => {
                       <h4 className="font-weight-semibold mb-3">Deskripsi Layanan</h4>
                       <p
                         className="mb-5"
-                        dangerouslySetInnerHTML={{
-                          __html: serviceDetail.serviceDetail.description,
-                        }}
-                      ></p>
+                        style={{ whiteSpace: 'pre-wrap' }}
+                      >
+                        {serviceDetail.serviceDetail.description}
+                      </p>
                     </div>
 
                     <div className="mb-5 mb-lg-0">
@@ -168,10 +168,10 @@ const ServiceDetail: React.FC = ({ prevPath }: any) => {
                             </h4>
                             <p
                               className="text-line-clamp line-4"
-                              dangerouslySetInnerHTML={{
-                                __html: serviceDetail.freelancer.description,
-                              }}
-                            ></p>
+                              style={{ whiteSpace: 'pre-wrap' }}
+                            >
+                              {serviceDetail.freelancer.description}
+                            </p>
                           </div>
                         </div>
                         <div className="d-flex justify-content-end">
