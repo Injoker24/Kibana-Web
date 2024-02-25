@@ -7,6 +7,7 @@ import { Image, Row } from 'react-bootstrap';
 import { Footer, Header, InfoBox, InlineRetryError, Loader, TitleBanner } from 'shared/components';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { DefaultAvatar, IconChevronLeft, IconClock, IconStar } from 'images';
+import { getLocalStorage } from 'utils';
 
 const TaskDetail: React.FC = ({ prevPath }: any) => {
   const params = useParams<{ taskId: string }>();
@@ -96,7 +97,17 @@ const TaskDetail: React.FC = ({ prevPath }: any) => {
                             Rp {taskDetail.taskDetail.price}
                           </h3>
                         </div>
-                        <div className="btn btn-primary w-100">Daftar untuk Mengerjakan</div>
+                        {taskDetail.client.id !== getLocalStorage('id') && (
+                          <div className="btn btn-primary w-100">Daftar untuk Mengerjakan</div>
+                        )}
+                        {taskDetail.client.id === getLocalStorage('id') && (
+                          <button
+                            disabled
+                            className="btn btn-primary w-100"
+                          >
+                            Tugas Kamu
+                          </button>
+                        )}
                       </div>
 
                       <div className="mb-5 d-block d-lg-none">
@@ -173,7 +184,17 @@ const TaskDetail: React.FC = ({ prevPath }: any) => {
                       <div className="d-flex justify-content-end">
                         <h3 className="text-primary-dark mb-3">Rp {taskDetail.taskDetail.price}</h3>
                       </div>
-                      <div className="btn btn-primary w-100">Daftar untuk Mengerjakan</div>
+                      {taskDetail.client.id !== getLocalStorage('id') && (
+                        <div className="btn btn-primary w-100">Daftar untuk Mengerjakan</div>
+                      )}
+                      {taskDetail.client.id === getLocalStorage('id') && (
+                        <button
+                          disabled
+                          className="btn btn-primary w-100"
+                        >
+                          Tugas Kamu
+                        </button>
+                      )}
                     </div>
 
                     <div className="mb-5 d-none d-lg-block">

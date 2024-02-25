@@ -13,6 +13,7 @@ import {
   IconCrossCircle,
   IconStar,
 } from 'images';
+import { getLocalStorage } from 'utils';
 
 const ServiceDetail: React.FC = ({ prevPath }: any) => {
   const params = useParams<{ serviceId: string }>();
@@ -138,7 +139,17 @@ const ServiceDetail: React.FC = ({ prevPath }: any) => {
                             Rp {serviceDetail.serviceDetail.price}
                           </h3>
                         </div>
-                        <div className="btn btn-primary">Beli Layanan</div>
+                        {serviceDetail.freelancer.id !== getLocalStorage('id') && (
+                          <div className="btn btn-primary w-100">Beli Layanan</div>
+                        )}
+                        {serviceDetail.freelancer.id === getLocalStorage('id') && (
+                          <button
+                            disabled
+                            className="btn btn-primary w-100"
+                          >
+                            Layanan Kamu
+                          </button>
+                        )}
                       </div>
                       <h4 className="font-weight-semibold mb-3">Deskripsi Layanan</h4>
                       <p
@@ -224,7 +235,17 @@ const ServiceDetail: React.FC = ({ prevPath }: any) => {
                           Rp {serviceDetail.serviceDetail.price}
                         </h3>
                       </div>
-                      <div className="btn btn-primary">Beli Layanan</div>
+                      {serviceDetail.freelancer.id !== getLocalStorage('id') && (
+                        <div className="btn btn-primary w-100">Beli Layanan</div>
+                      )}
+                      {serviceDetail.freelancer.id === getLocalStorage('id') && (
+                        <button
+                          disabled
+                          className="btn btn-primary w-100"
+                        >
+                          Layanan Kamu
+                        </button>
+                      )}
                     </div>
 
                     <div>

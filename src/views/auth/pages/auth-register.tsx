@@ -62,6 +62,7 @@ const AuthRegister: React.FC = () => {
         setLocalStorage('username', result.username);
         setLocalStorage('name', result.name);
         setLocalStorage('token', result.token);
+        setLocalStorage('id', result.id);
         setLocalStorage('status', 'client');
         window.location.href = '/dashboard';
       },

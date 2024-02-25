@@ -12,6 +12,7 @@ export interface AuthLoginOutput {
   username: string;
   name: string;
   token: string;
+  id: string;
 }
 
 export interface AuthLoginInput {
@@ -27,6 +28,7 @@ export function transformToAuthLoginOutput(response: AuthLoginResponse): AuthLog
     username: response.username,
     name: response.name,
     token: response.token,
+    id: response.id,
   };
 
   return result;
@@ -48,6 +50,7 @@ export interface AuthRegisterOutput {
   username: string;
   name: string;
   token: string;
+  id: string;
 }
 
 export interface AuthRegisterInput {
@@ -66,6 +69,7 @@ export function transformToAuthRegisterOutput(response: AuthRegisterResponse): A
     username: response.username,
     name: response.name,
     token: response.token,
+    id: response.id,
   };
 
   return result;

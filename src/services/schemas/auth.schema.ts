@@ -5,6 +5,7 @@ export interface AuthLoginResponse {
   username: string;
   name: string;
   token: string;
+  id: string;
 }
 
 export interface AuthLoginRequest {
@@ -19,6 +20,7 @@ export interface AuthRegisterResponse {
   username: string;
   name: string;
   token: string;
+  id: string;
 }
 
 export interface AuthRegisterRequest {
