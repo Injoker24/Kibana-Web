@@ -184,7 +184,7 @@ const Header: React.FC = () => {
           )}
           {status === 'client' && !isFreelancer && (
             <Link
-              to=""
+              to="/auth/register/freelancer"
               className="btn btn-outline-white w-100"
             >
               Daftar Freelancer
@@ -336,7 +336,16 @@ const Header: React.FC = () => {
           </div>
         )}
         {!isFreelancer && status === 'client' && (
-          <div className="btn btn-outline-white mr-4 d-md-block d-none">Daftar Freelancer</div>
+          <div
+            className="btn btn-outline-white mr-4 d-md-block d-none"
+            onClick={() =>
+              history.push({
+                pathname: '/auth/register/freelancer',
+              })
+            }
+          >
+            Daftar Freelancer
+          </div>
         )}
         {status === 'freelancer' && (
           <div
