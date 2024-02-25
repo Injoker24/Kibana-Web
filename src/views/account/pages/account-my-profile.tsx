@@ -33,7 +33,7 @@ import {
   TitleBanner,
 } from 'shared/components';
 import { useHistory, useLocation } from 'react-router-dom';
-import { DefaultAvatar, IconCameraSwap, IconClose, IconStar } from 'images';
+import { DefaultAvatar, IconAddCircle, IconCameraSwap, IconClose, IconStar } from 'images';
 import { getLocalStorage, setLocalStorage } from 'utils';
 import { useForm } from 'react-hook-form';
 
@@ -69,6 +69,8 @@ const AccountMyProfile: React.FC = () => {
         mutateSkills();
         mutateFreelancerDesc();
         mutateEducation();
+        mutateCVUrl();
+        mutatePortfolioUrl();
       },
     },
   );
@@ -402,13 +404,55 @@ const AccountMyProfile: React.FC = () => {
   const {
     data: cvUrl,
     isLoading: isLoadingCVUrl,
-    refetch: refetchCVUrl,
+    mutate: mutateCVUrl,
     error: errorCVUrl,
-  } = useQuery<AccountInquiryCVUrlOutput, ErrorWrapper>(
+  } = useMutation<AccountInquiryCVUrlOutput, ErrorWrapper>(
     ['inquiry-cv-url', userId],
     async () => await AccountService.inquiryCV(userId),
+  );
+
+  const [editCV, setEditCV] = useState(false);
+  const [editCVData, setEditCVData] = useState<any>();
+
+  const cancelEditCV = () => {
+    setEditCV(false);
+    setEditCVData(null);
+  };
+
+  const confirmEditCV = () => {
+    mutateEditCV();
+  };
+
+  const handleUploadCV = (e: any) => {
+    if (e.target.files.length !== 0) {
+      const cv = {
+        preview: URL.createObjectURL(e.target.files[0]),
+        data: e.target.files[0],
+      };
+      setEditCVData(cv);
+    }
+  };
+
+  const uploadCV = () => {
+    document.getElementById('selectCV')?.click();
+  };
+
+  const {
+    isLoading: isLoadingEditCV,
+    mutate: mutateEditCV,
+    error: errorEditCV,
+  } = useMutation<{}, ErrorWrapper>(
+    ['edit-cv'],
+    async () =>
+      await AccountService.editCV({
+        cv: editCVData.data,
+      }),
     {
-      enabled: !!userId,
+      onSuccess: () => {
+        setEditCV(false);
+        setEditCVData(null);
+        mutateCVUrl();
+      },
     },
   );
   //#endregion
@@ -417,13 +461,55 @@ const AccountMyProfile: React.FC = () => {
   const {
     data: portfolioUrl,
     isLoading: isLoadingPortfolioUrl,
-    refetch: refetchPortfolioUrl,
+    mutate: mutatePortfolioUrl,
     error: errorPortfolioUrl,
-  } = useQuery<AccountInquiryPortfolioUrlOutput, ErrorWrapper>(
+  } = useMutation<AccountInquiryPortfolioUrlOutput, ErrorWrapper>(
     ['inquiry-portfolio-url', userId],
     async () => await AccountService.inquiryPortfolio(userId),
+  );
+
+  const [editPortfolio, setEditPortfolio] = useState(false);
+  const [editPortfolioData, setEditPortfolioData] = useState<any>();
+
+  const cancelEditPortfolio = () => {
+    setEditPortfolio(false);
+    setEditPortfolioData(null);
+  };
+
+  const confirmEditPortfolio = () => {
+    mutateEditPortfolio();
+  };
+
+  const handleUploadPortfolio = (e: any) => {
+    if (e.target.files.length !== 0) {
+      const portfolio = {
+        preview: URL.createObjectURL(e.target.files[0]),
+        data: e.target.files[0],
+      };
+      setEditPortfolioData(portfolio);
+    }
+  };
+
+  const uploadPortfolio = () => {
+    document.getElementById('selectPortfolio')?.click();
+  };
+
+  const {
+    isLoading: isLoadingEditPortfolio,
+    mutate: mutateEditPortfolio,
+    error: errorEditPortfolio,
+  } = useMutation<{}, ErrorWrapper>(
+    ['edit-portfolio'],
+    async () =>
+      await AccountService.editPortfolio({
+        portfolio: editPortfolioData.data,
+      }),
     {
-      enabled: !!userId,
+      onSuccess: () => {
+        setEditPortfolio(false);
+        setEditPortfolioData(null);
+        mutatePortfolioUrl();
+      },
     },
   );
   //#endregion
@@ -1659,9 +1745,11 @@ const AccountMyProfile: React.FC = () => {
                                 })}
                               </div>
                               {!skillsData.skills && (
-                                <InfoBox
-                                  message={myProfile.name + ' belum menambahkan keahlian.'}
-                                />
+                                <div className="mb-4">
+                                  <InfoBox
+                                    message={myProfile.name + ' belum menambahkan keahlian.'}
+                                  />
+                                </div>
                               )}
                               <div
                                 className="btn btn-outline-primary"
@@ -1737,19 +1825,18 @@ const AccountMyProfile: React.FC = () => {
                                       </div>
                                     </div>
                                   </form>
-                                  <div className="d-flex flex-row justify-content-end">
-                                    <div
-                                      className="btn btn-outline-primary mr-3"
-                                      onClick={cancelEditSkill}
-                                    >
-                                      Batal
-                                    </div>
-                                    <div
-                                      className="btn btn-primary"
-                                      onClick={confirmEditSkill}
-                                    >
-                                      Simpan
-                                    </div>
+
+                                  <div
+                                    className="btn btn-primary mb-4"
+                                    onClick={confirmEditSkill}
+                                  >
+                                    Simpan
+                                  </div>
+                                  <div
+                                    className="btn btn-outline-primary"
+                                    onClick={cancelEditSkill}
+                                  >
+                                    Batal
                                   </div>
                                 </>
                               )}
@@ -1786,6 +1873,13 @@ const AccountMyProfile: React.FC = () => {
                                   </div>
                                 );
                               })}
+                              {!education.educationHistory && (
+                                <div className="mb-4">
+                                  <InfoBox
+                                    message={myProfile.name + ' belum menambahkan riwayat edukasi.'}
+                                  />
+                                </div>
+                              )}
                               <div
                                 className="btn btn-outline-primary"
                                 onClick={() => {
@@ -1798,11 +1892,6 @@ const AccountMyProfile: React.FC = () => {
                                 Ubah Riwayat Edukasi
                               </div>
                             </>
-                          )}
-                          {education && !education.educationHistory && (
-                            <InfoBox
-                              message={myProfile.name + ' belum menambahkan riwayat edukasi.'}
-                            />
                           )}
                           {editEducation && education && (
                             <>
@@ -2020,22 +2109,103 @@ const AccountMyProfile: React.FC = () => {
                           <div className="card-sm mb-5 mb-lg-0">
                             <InlineRetryError
                               message={errorCVUrl.message}
-                              onRetry={refetchCVUrl}
+                              onRetry={mutateCVUrl}
                             />
                           </div>
                         )}
-                        {cvUrl && cvUrl.cvUrl && (
-                          <iframe
-                            src={cvUrl.cvUrl}
-                            title="CV"
-                            className="w-100"
-                            style={{ height: '60rem' }}
-                          ></iframe>
+                        {!editCV && cvUrl && (
+                          <>
+                            {cvUrl.cvUrl && (
+                              <>
+                                <iframe
+                                  src={cvUrl.cvUrl}
+                                  title="CV"
+                                  className="w-100 mb-4"
+                                  style={{ height: '60rem' }}
+                                ></iframe>
+                                <div
+                                  className="btn btn-outline-primary"
+                                  onClick={() => {
+                                    setEditCV(true);
+                                  }}
+                                >
+                                  Ubah CV (Curriculum Vitae)
+                                </div>
+                              </>
+                            )}
+                            {!cvUrl.cvUrl && (
+                              <div className="card-sm mb-5 mb-lg-0">
+                                <div className="mb-4">
+                                  <InfoBox message={myProfile.name + ' belum mengupload CV.'} />
+                                </div>
+                                <div
+                                  className="btn btn-outline-primary"
+                                  onClick={() => {
+                                    setEditCV(true);
+                                  }}
+                                >
+                                  Ubah CV (Curriculum Vitae)
+                                </div>
+                              </div>
+                            )}
+                          </>
                         )}
-                        {cvUrl && !cvUrl.cvUrl && (
-                          <div className="card-sm mb-5 mb-lg-0">
-                            <InfoBox message={myProfile.name + ' belum mengupload CV.'} />
-                          </div>
+                        {editCV && cvUrl && (
+                          <>
+                            {isLoadingEditCV && <Loader type="inline" />}
+                            {!isLoadingEditCV && (
+                              <>
+                                {errorEditCV && (
+                                  <div className="mb-4">
+                                    <InfoBox
+                                      message={errorEditCV?.message}
+                                      type="danger"
+                                    />
+                                  </div>
+                                )}
+                                {editCVData && (
+                                  <div className="card-sm d-flex flex-row align-items-center justify-content-between mb-4">
+                                    <h4 className="text-primary-dark font-weight-bold">
+                                      {editCVData.data.name}
+                                    </h4>
+                                  </div>
+                                )}
+                                <div
+                                  className="cursor-pointer mb-4"
+                                  onClick={uploadCV}
+                                >
+                                  <div className="card-sm d-flex flex-row align-items-center justify-content-between">
+                                    <h4 className="text-primary-dark font-weight-bold">
+                                      Ubah CV (Curriculum Vitae)
+                                    </h4>
+                                    <div className="text-primary-dark">
+                                      <IconAddCircle />
+                                    </div>
+                                  </div>
+                                </div>
+                                <input
+                                  hidden
+                                  id="selectCV"
+                                  type="file"
+                                  onChange={handleUploadCV}
+                                />
+
+                                <button
+                                  className="btn btn-primary mb-4 w-100"
+                                  onClick={confirmEditCV}
+                                  disabled={!editCVData}
+                                >
+                                  Simpan
+                                </button>
+                                <div
+                                  className="btn btn-outline-primary"
+                                  onClick={cancelEditCV}
+                                >
+                                  Batal
+                                </div>
+                              </>
+                            )}
+                          </>
                         )}
                       </div>
 
@@ -2046,22 +2216,105 @@ const AccountMyProfile: React.FC = () => {
                           <div className="card-sm mb-5 mb-lg-0">
                             <InlineRetryError
                               message={errorPortfolioUrl.message}
-                              onRetry={refetchPortfolioUrl}
+                              onRetry={mutatePortfolioUrl}
                             />
                           </div>
                         )}
-                        {portfolioUrl && portfolioUrl.portfolioUrl && (
-                          <iframe
-                            src={portfolioUrl.portfolioUrl}
-                            title="CV"
-                            className="w-100"
-                            style={{ height: '60rem' }}
-                          ></iframe>
+                        {!editPortfolio && portfolioUrl && (
+                          <>
+                            {portfolioUrl.portfolioUrl && (
+                              <>
+                                <iframe
+                                  src={portfolioUrl.portfolioUrl}
+                                  title="portfolio"
+                                  className="w-100 mb-4"
+                                  style={{ height: '60rem' }}
+                                ></iframe>
+                                <div
+                                  className="btn btn-outline-primary"
+                                  onClick={() => {
+                                    setEditPortfolio(true);
+                                  }}
+                                >
+                                  Ubah Portfolio
+                                </div>
+                              </>
+                            )}
+                            {!portfolioUrl.portfolioUrl && (
+                              <div className="card-sm mb-5 mb-lg-0">
+                                <div className="mb-4">
+                                  <InfoBox
+                                    message={myProfile.name + ' belum mengupload portfolio.'}
+                                  />
+                                </div>
+                                <div
+                                  className="btn btn-outline-primary"
+                                  onClick={() => {
+                                    setEditPortfolio(true);
+                                  }}
+                                >
+                                  Ubah Portfolio
+                                </div>
+                              </div>
+                            )}
+                          </>
                         )}
-                        {portfolioUrl && !portfolioUrl.portfolioUrl && (
-                          <div className="card-sm mb-5 mb-lg-0">
-                            <InfoBox message={myProfile.name + ' belum mengupload portfolio.'} />
-                          </div>
+                        {editPortfolio && portfolioUrl && (
+                          <>
+                            {isLoadingEditPortfolio && <Loader type="inline" />}
+                            {!isLoadingEditPortfolio && (
+                              <>
+                                {errorEditPortfolio && (
+                                  <div className="mb-4">
+                                    <InfoBox
+                                      message={errorEditPortfolio?.message}
+                                      type="danger"
+                                    />
+                                  </div>
+                                )}
+                                {editPortfolioData && (
+                                  <div className="card-sm d-flex flex-row align-items-center justify-content-between mb-4">
+                                    <h4 className="text-primary-dark font-weight-bold">
+                                      {editPortfolioData.data.name}
+                                    </h4>
+                                  </div>
+                                )}
+                                <div
+                                  className="cursor-pointer mb-4"
+                                  onClick={uploadPortfolio}
+                                >
+                                  <div className="card-sm d-flex flex-row align-items-center justify-content-between">
+                                    <h4 className="text-primary-dark font-weight-bold">
+                                      Ubah Portfolio
+                                    </h4>
+                                    <div className="text-primary-dark">
+                                      <IconAddCircle />
+                                    </div>
+                                  </div>
+                                </div>
+                                <input
+                                  hidden
+                                  id="selectPortfolio"
+                                  type="file"
+                                  onChange={handleUploadPortfolio}
+                                />
+
+                                <button
+                                  className="btn btn-primary mb-4 w-100"
+                                  onClick={confirmEditPortfolio}
+                                  disabled={!editPortfolioData}
+                                >
+                                  Simpan
+                                </button>
+                                <div
+                                  className="btn btn-outline-primary"
+                                  onClick={cancelEditPortfolio}
+                                >
+                                  Batal
+                                </div>
+                              </>
+                            )}
+                          </>
                         )}
                       </div>
                     </div>

@@ -1,7 +1,9 @@
 import {
   AccountEditBankDetailInput,
+  AccountEditCVInput,
   AccountEditDescInput,
   AccountEditEducationInput,
+  AccountEditPortfolioInput,
   AccountEditProfileInput,
   AccountEditSkillInput,
   AccountInquiryBankDetailOutput,
@@ -45,8 +47,10 @@ import {
   AccountInquirySkillResponse,
   ApiResponse,
   transformToAccountEditBankDetailRequest,
+  transformToAccountEditCVRequest,
   transformToAccountEditDescRequest,
   transformToAccountEditEducationRequest,
+  transformToAccountEditPortfolioRequest,
   transformToAccountEditProfileRequest,
   transformToAccountEditSkillRequest,
 } from 'services/schemas';
@@ -206,6 +210,44 @@ const AccountService = {
     const response = await axiosInstance.post<ApiResponse<{}>>(
       `/account/edit/educations`,
       requestData,
+    );
+
+    return response.data.output_schema;
+  },
+
+  editCV: async (data: AccountEditCVInput): Promise<{}> => {
+    const requestData = transformToAccountEditCVRequest(data);
+
+    let formData = new FormData();
+    if (requestData.cv) {
+      formData.append('cv', requestData.cv);
+    }
+
+    const response = await axiosInstance.post<ApiResponse<{}>>(`/account/edit/cv`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return response.data.output_schema;
+  },
+
+  editPortfolio: async (data: AccountEditPortfolioInput): Promise<{}> => {
+    const requestData = transformToAccountEditPortfolioRequest(data);
+
+    let formData = new FormData();
+    if (requestData.portfolio) {
+      formData.append('portfolio', requestData.portfolio);
+    }
+
+    const response = await axiosInstance.post<ApiResponse<{}>>(
+      `/account/edit/portfolio`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
     );
 
     return response.data.output_schema;

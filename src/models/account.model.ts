@@ -336,3 +336,11 @@ export interface AccountEditEducationInput {
     graduationYear: string;
   }[];
 }
+
+export interface AccountEditCVInput {
+  cv: File;
+}
+
+export interface AccountEditPortfolioInput {
+  portfolio: File;
+}

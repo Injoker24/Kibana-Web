@@ -1,7 +1,9 @@
 import {
   AccountEditBankDetailInput,
+  AccountEditCVInput,
   AccountEditDescInput,
   AccountEditEducationInput,
+  AccountEditPortfolioInput,
   AccountEditProfileInput,
   AccountEditSkillInput,
 } from 'models';
@@ -199,6 +201,32 @@ export function transformToAccountEditEducationRequest(
         graduation_year: t.graduationYear,
       };
     }),
+  };
+
+  return result;
+}
+
+export interface AccountEditCVRequest {
+  cv: File;
+}
+
+export function transformToAccountEditCVRequest(input: AccountEditCVInput): AccountEditCVRequest {
+  const result: AccountEditCVRequest = {
+    cv: input.cv,
+  };
+
+  return result;
+}
+
+export interface AccountEditPortfolioRequest {
+  portfolio: File;
+}
+
+export function transformToAccountEditPortfolioRequest(
+  input: AccountEditPortfolioInput,
+): AccountEditPortfolioRequest {
+  const result: AccountEditPortfolioRequest = {
+    portfolio: input.portfolio,
   };
 
   return result;
