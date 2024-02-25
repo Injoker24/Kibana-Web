@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { getLocalStorage } from 'utils';
 import { ServiceCategoryList, ServiceDetail, ServiceSearch } from './pages';
 
 interface categoryListStateWrapper {
@@ -18,12 +17,6 @@ interface detailStateWrapper {
 }
 
 const ServiceRouter = () => {
-  const [token, setToken] = useState();
-
-  useEffect(() => {
-    setToken(getLocalStorage('token'));
-  }, []);
-
   return (
     <Switch>
       <Route

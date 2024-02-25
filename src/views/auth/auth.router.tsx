@@ -1,42 +1,42 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { AuthLogin, AuthRegister } from './pages';
-import { getLocalStorage } from 'utils';
+import { AuthLogin, AuthRegister, AuthRegisterFreelancer } from './pages';
+import { ProtectedClientNotFreelancerRoute, PublicRoute } from 'shared/components';
 
 const AuthRouter = () => {
-  const [token, setToken] = useState();
-
-  useEffect(() => {
-    setToken(getLocalStorage('token'));
-  }, []);
-
   return (
     <Switch>
-      {!token && (
-        <Route
-          exact
-          path={'/auth/login'}
-          render={(props) => (
-            <AuthLogin
-              {...props}
-              key={Date.now()}
-            />
-          )}
-        />
-      )}
-      {!token && (
-        <Route
-          exact
-          path={'/auth/register'}
-          render={(props) => (
-            <AuthRegister
-              {...props}
-              key={Date.now()}
-            />
-          )}
-        />
-      )}
+      <Route
+        exact
+        path={'/auth/login'}
+        render={() => (
+          <PublicRoute>
+            <AuthLogin key={Date.now()} />
+          </PublicRoute>
+        )}
+      />
+
+      <Route
+        exact
+        path={'/auth/register'}
+        render={() => (
+          <PublicRoute>
+            <AuthRegister key={Date.now()} />
+          </PublicRoute>
+        )}
+      />
+
+      <Route
+        exact
+        path={'/auth/register/freelancer'}
+        render={() => (
+          <ProtectedClientNotFreelancerRoute>
+            <AuthRegisterFreelancer key={Date.now()} />
+          </ProtectedClientNotFreelancerRoute>
+        )}
+      />
+
       <Route render={() => <Redirect to={`/dashboard`} />} />
     </Switch>
   );

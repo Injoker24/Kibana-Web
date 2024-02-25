@@ -16,19 +16,6 @@ const DashboardRouter = () => {
           />
         )}
       />
-
-      <Route
-        exact
-        path={`/dashboard/test`}
-        render={() => <>Test</>}
-      />
-
-      <Route
-        exact
-        path={`/dashboard/test2`}
-        render={() => <>Test 2</>}
-      />
-
       <Route render={() => <Redirect to={`/dashboard`} />} />
     </Switch>
   );

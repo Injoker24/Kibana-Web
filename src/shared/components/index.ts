@@ -10,6 +10,10 @@ import TitleBanner from './title-banner';
 import InfoBox from './info-box';
 import ProtectedRoute from './protected-route';
 import PopUpConfirm from './pop-up-confirm';
+import ProtectedClientRoute from './protected-client-route';
+import ProtectedFreelancerRoute from './protected-freelancer-route';
+import PublicRoute from './public-route';
+import ProtectedClientNotFreelancerRoute from './protected-client-not-freelancer-route';
 
 export {
   Loader,
@@ -24,4 +28,8 @@ export {
   InfoBox,
   ProtectedRoute,
   PopUpConfirm,
+  ProtectedClientRoute,
+  ProtectedFreelancerRoute,
+  PublicRoute,
+  ProtectedClientNotFreelancerRoute,
 };
