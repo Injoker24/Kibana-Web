@@ -86,3 +86,17 @@ export function transformToAuthRegisterRequest(input: AuthRegisterInput): AuthRe
 
   return result;
 }
+
+export interface AuthRegisterFreelancerInput {
+  cv?: File;
+  portfolio?: File;
+  educationHistory?: {
+    degree: string;
+    major: string;
+    university: string;
+    country: string;
+    graduationYear: string;
+  }[];
+  skills?: string[];
+  description: string;
+}

@@ -1,6 +1,5 @@
 import {
   AccountEditBankDetailInput,
-  AccountEditEducationInput,
   AccountEditProfileInput,
   AccountInquiryBankDetailOutput,
   AccountInquiryCVUrlOutput,

@@ -168,7 +168,6 @@ const TaskSearch: React.FC = ({ stateCategories }: any) => {
   };
 
   const submitFloatingButton = (formData: any) => {
-    console.log(formData);
     if (formData.subCategory) {
       submitSubCategoryFilter(formData);
     }
