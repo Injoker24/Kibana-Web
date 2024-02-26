@@ -3,6 +3,7 @@ import {
   ServiceInquiryDetailSubCategoryResponse,
   ServiceInquiryNewServiceResponse,
   ServiceInquiryServiceDetailResponse,
+  ServiceInquiryServiceHistoryResponse,
   ServiceInquiryServiceListResponse,
 } from 'services/schemas/service.schema';
 import { formatCurrency } from 'utils';
@@ -244,6 +245,64 @@ export function transformToServiceInquiryServiceDetailOutput(
         };
       }),
     },
+  };
+
+  return result;
+}
+
+export interface ServiceInquiryServiceHistoryOutput {
+  services?: {
+    id: string;
+    name: string;
+    tags: string[];
+    dueDate: string;
+    price: number;
+    status: string;
+    deliveryDate?: string;
+    freelancer: {
+      id: string;
+      name: string;
+      profileImageUrl?: string;
+    };
+    averageRating: number;
+    ratingAmount: number;
+    transactionId: string;
+    isReviewed?: boolean;
+    review?: {
+      amount: number;
+    };
+  }[];
+}
+
+export function transformToServiceInquiryServiceHistoryOutput(
+  response: ServiceInquiryServiceHistoryResponse,
+): ServiceInquiryServiceHistoryOutput {
+  const result: ServiceInquiryServiceHistoryOutput = {
+    services: response.services?.map((t) => {
+      return {
+        id: t.id,
+        name: t.name,
+        tags: t.tags,
+        dueDate: t.due_date,
+        price: t.price,
+        status: t.status,
+        deliveryDate: t.delivery_date,
+        freelancer: {
+          id: t.freelancer.id,
+          name: t.freelancer.name,
+          profileImageUrl: t.freelancer.profile_image_url,
+        },
+        averageRating: t.average_rating,
+        ratingAmount: t.rating_amount,
+        transactionId: t.transaction_id,
+        isReviewed: t.is_reviewed,
+        review: t.review
+          ? {
+              amount: t.review?.amount,
+            }
+          : undefined,
+      };
+    }),
   };
 
   return result;

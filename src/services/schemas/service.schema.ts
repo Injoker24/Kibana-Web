@@ -129,3 +129,27 @@ export interface ServiceInquiryServiceDetailResponse {
     }[];
   };
 }
+
+export interface ServiceInquiryServiceHistoryResponse {
+  services?: {
+    id: string;
+    name: string;
+    tags: string[];
+    due_date: string;
+    price: number;
+    status: string;
+    delivery_date?: string;
+    freelancer: {
+      id: string;
+      name: string;
+      profile_image_url?: string;
+    };
+    average_rating: number;
+    rating_amount: number;
+    transaction_id: string;
+    is_reviewed?: boolean;
+    review?: {
+      amount: number;
+    };
+  }[];
+}

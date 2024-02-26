@@ -4,6 +4,7 @@
   padding: 0.25rem 0.75rem;
   font-size: 12px;
   width: fit-content;
+  height: fit-content;
   @include flex-centered();
 }
 
@@ -15,4 +16,19 @@
 .chip-secondary {
   background-color: $secondary-light;
   color: $secondary-dark;
+}
+
+.chip-warning {
+  background-color: $warning;
+  color: $primary-dark;
+}
+
+.chip-success {
+  background-color: $success;
+  color: $secondary-dark;
+}
+
+.chip-danger {
+  background-color: $danger;
+  color: $light;
 }

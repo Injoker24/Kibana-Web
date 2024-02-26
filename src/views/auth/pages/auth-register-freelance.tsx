@@ -7,7 +7,6 @@ import {
   Footer,
   FormInput,
   Header,
-  InlineRetryError,
   Loader,
   PopUpConfirm,
   PopUpError,
@@ -15,7 +14,7 @@ import {
 } from 'shared/components';
 import { useHistory } from 'react-router-dom';
 import { IconAddCircle, IconClose } from 'images';
-import { getLocalStorage, setLocalStorage } from 'utils';
+import { setLocalStorage } from 'utils';
 import { useForm } from 'react-hook-form';
 import { AuthService } from 'services';
 
@@ -143,8 +142,8 @@ const AuthRegisterFreelancer: React.FC = () => {
     ['register-freelancer'],
     async () =>
       await AuthService.registerFreelancer({
-        cv: editCVData.data,
-        portfolio: editPortfolioData.data,
+        cv: editCVData?.data,
+        portfolio: editPortfolioData?.data,
         educationHistory: editEducationData,
         skills: editSkillData,
         description: editDescData,

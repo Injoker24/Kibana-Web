@@ -185,7 +185,16 @@ const DashboardIndex: React.FC = () => {
                           </p>
                         </div>
                       </div>
-                      <div className="col-6 col-md-3 p-0 pr-3">
+                      <div
+                        className="col-6 col-md-3 p-0 pr-3"
+                        onClick={() => {
+                          if (status === 'client') {
+                            history.push({
+                              pathname: '/service/my/history',
+                            });
+                          }
+                        }}
+                      >
                         <div className="dashboard-border-card flex-centered flex-column cursor-pointer h-100">
                           <div className="text-primary-dark">
                             <IconHistoryTaskService />
@@ -195,7 +204,20 @@ const DashboardIndex: React.FC = () => {
                           </p>
                         </div>
                       </div>
-                      <div className="col-6 col-md-3 p-0 pl-3 pl-md-0">
+                      <div
+                        className="col-6 col-md-3 p-0 pl-3 pl-md-0"
+                        onClick={() => {
+                          if (status === 'client') {
+                            history.push({
+                              pathname: '/service/search',
+                            });
+                          } else {
+                            history.push({
+                              pathname: '/task/search',
+                            });
+                          }
+                        }}
+                      >
                         <div className="dashboard-border-card flex-centered flex-column cursor-pointer h-100">
                           <div className="text-primary-dark">
                             <IconSearchTaskService />
