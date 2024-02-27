@@ -1,20 +1,31 @@
 import { ErrorWrapper, ServiceInquiryServiceHistoryOutput } from 'models';
 import React, { useEffect, useState } from 'react';
-import { Row, Tab, Tabs, Image } from 'react-bootstrap';
+import { Row, Tab, Tabs, Image, Form } from 'react-bootstrap';
 
-import { Footer, Header, InfoBox, InlineRetryError, Loader, TitleBanner } from 'shared/components';
+import {
+  Footer,
+  FormInput,
+  Header,
+  InfoBox,
+  InlineRetryError,
+  Loader,
+  TitleBanner,
+} from 'shared/components';
 import { useHistory } from 'react-router-dom';
-import { ServiceService } from 'services';
-import { useQuery } from 'react-query';
+import { ReviewService, ServiceService } from 'services';
+import { useMutation } from 'react-query';
 import { TransactionStatus } from 'enums';
-import { DefaultAvatar, IconStar } from 'images';
+import { DefaultAvatar, IconClose, IconStar } from 'images';
 import { formatCurrency } from 'utils';
+import Popup from 'reactjs-popup';
+import { useForm } from 'react-hook-form';
 
 const ServiceHistory: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
     document.body.scrollTo(0, 0);
+    mutateServiceHistory();
   }, []);
 
   const [activeServiceHistory, setActiveServiceHistory] =
@@ -25,11 +36,10 @@ const ServiceHistory: React.FC = () => {
     useState<ServiceInquiryServiceHistoryOutput>({ services: [] });
 
   const {
-    data: serviceHistory,
     isLoading: isLoadingServiceHistory,
-    refetch: refetchServiceHistory,
+    mutate: mutateServiceHistory,
     error: errorServiceHistory,
-  } = useQuery<ServiceInquiryServiceHistoryOutput, ErrorWrapper>(
+  } = useMutation<ServiceInquiryServiceHistoryOutput, ErrorWrapper>(
     ['inquiry-service-history'],
     async () => await ServiceService.inquiryServiceHistory(),
     {
@@ -66,8 +76,175 @@ const ServiceHistory: React.FC = () => {
     },
   );
 
+  const [modalReview, setModalReview] = useState<boolean>(false);
+
+  const [ratingAmount, setRatingAmount] = useState<number>(0);
+  const [review, setReview] = useState<string>();
+  const [serviceToReview, setServiceToReview] = useState<{ name: string; transactionId: string }>({
+    name: '',
+    transactionId: '',
+  });
+
+  const openModalReview = (name: string, transactionId: string) => {
+    setServiceToReview({
+      name: name,
+      transactionId: transactionId,
+    });
+    setModalReview(true);
+  };
+
+  const {
+    register: registerReview,
+    errors: errorsReview,
+    formState: formStateReview,
+    handleSubmit: handleSubmitReview,
+  } = useForm({
+    mode: 'onChange',
+  });
+
+  const confirmSubmitReview = (formData: any) => {
+    setReview(formData.review);
+    mutateReviewService();
+  };
+
+  const {
+    isLoading: isLoadingReviewService,
+    mutate: mutateReviewService,
+    error: errorReviewService,
+  } = useMutation<{}, ErrorWrapper>(
+    ['review-service'],
+    async () =>
+      await ReviewService.reviewService({
+        transactionId: serviceToReview?.transactionId,
+        star: ratingAmount,
+        description: review,
+      }),
+    {
+      onSuccess: () => {
+        setModalReview(false);
+        setRatingAmount(0);
+        mutateServiceHistory();
+      },
+    },
+  );
+
   return (
     <>
+      {modalReview && (
+        <Popup
+          open={true}
+          closeOnDocumentClick={false}
+          className="popup-review"
+        >
+          {isLoadingReviewService && <Loader type="inline" />}
+          {!isLoadingReviewService && (
+            <>
+              <div className="flex-column">
+                <div className="flex-centered w-100 justify-content-between mb-3">
+                  <h3 className="mb-0">Beri Ulasan</h3>
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setModalReview(false);
+                      setRatingAmount(0);
+                    }}
+                  >
+                    <IconClose />
+                  </div>
+                </div>
+
+                {errorReviewService && (
+                  <div className="mb-4">
+                    <InfoBox
+                      message={errorReviewService?.message}
+                      type="danger"
+                    />
+                  </div>
+                )}
+
+                <h4 className="font-weight-semibold mb-4">{serviceToReview?.name}</h4>
+
+                <div className="flex-centered mb-4">
+                  <div
+                    className={
+                      'cursor-pointer ' + (ratingAmount < 1 ? 'text-muted ' : 'text-warning')
+                    }
+                    onClick={() => {
+                      setRatingAmount(1);
+                    }}
+                  >
+                    <IconStar />
+                  </div>
+                  <div
+                    className={
+                      'cursor-pointer ' + (ratingAmount < 2 ? 'text-muted ' : 'text-warning')
+                    }
+                    onClick={() => {
+                      setRatingAmount(2);
+                    }}
+                  >
+                    <IconStar />
+                  </div>
+                  <div
+                    className={
+                      'cursor-pointer ' + (ratingAmount < 3 ? 'text-muted ' : 'text-warning')
+                    }
+                    onClick={() => {
+                      setRatingAmount(3);
+                    }}
+                  >
+                    <IconStar />
+                  </div>
+                  <div
+                    className={
+                      'cursor-pointer ' + (ratingAmount < 4 ? 'text-muted ' : 'text-warning')
+                    }
+                    onClick={() => {
+                      setRatingAmount(4);
+                    }}
+                  >
+                    <IconStar />
+                  </div>
+                  <div
+                    className={
+                      'cursor-pointer ' + (ratingAmount < 5 ? 'text-muted ' : 'text-warning')
+                    }
+                    onClick={() => {
+                      setRatingAmount(5);
+                    }}
+                  >
+                    <IconStar />
+                  </div>
+                </div>
+
+                <form onSubmit={handleSubmitReview(confirmSubmitReview)}>
+                  <div className="mb-4">
+                    <p className="mb-2">Ceritakan pengalamanmu menggunakan layanan ini!</p>
+                    <FormInput errorMessage={errorsReview?.review?.message}>
+                      <Form.Control
+                        as="textarea"
+                        id="review"
+                        name="review"
+                        className="review-text-area"
+                        isInvalid={formStateReview.touched.review === true && !!errorsReview.review}
+                        ref={registerReview() as string & ((ref: Element | null) => void)}
+                      ></Form.Control>
+                    </FormInput>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="btn btn-primary w-100"
+                    disabled={ratingAmount === 0}
+                  >
+                    Kirim
+                  </button>
+                </form>
+              </div>
+            </>
+          )}
+        </Popup>
+      )}
       <Header />
       <div className="min-layout-height">
         <TitleBanner message={'Riwayat Layanan'} />
@@ -88,7 +265,7 @@ const ServiceHistory: React.FC = () => {
                     {errorServiceHistory && (
                       <InlineRetryError
                         message={errorServiceHistory.message}
-                        onRetry={refetchServiceHistory}
+                        onRetry={mutateServiceHistory}
                       />
                     )}
                     {activeServiceHistory.services?.length !== 0 && (
@@ -262,6 +439,7 @@ const ServiceHistory: React.FC = () => {
                   </div>
                 )}
               </Tab>
+
               <Tab
                 eventKey="completed"
                 title="Selesai"
@@ -272,7 +450,7 @@ const ServiceHistory: React.FC = () => {
                     {errorServiceHistory && (
                       <InlineRetryError
                         message={errorServiceHistory.message}
-                        onRetry={refetchServiceHistory}
+                        onRetry={mutateServiceHistory}
                       />
                     )}
                     {completedServiceHistory.services?.length !== 0 && (
@@ -343,10 +521,33 @@ const ServiceHistory: React.FC = () => {
                                       <div className="chip chip-primary mr-2">{tag}</div>
                                     ))}
                                   </div>
-                                  <div className="col-3 d-flex justify-content-end">
+                                  <div className="col-3 d-flex flex-column align-items-end">
                                     <h3 className="text-primary-dark text-nowrap">
                                       Rp {formatCurrency(item.price)}
                                     </h3>
+                                    {!item.isReviewed && (
+                                      <div
+                                        className="btn btn-outline-primary"
+                                        onClick={() =>
+                                          openModalReview(item.name, item.transactionId)
+                                        }
+                                      >
+                                        Beri Ulasan
+                                      </div>
+                                    )}
+                                    {item.isReviewed && (
+                                      <div className="d-flex flex-row">
+                                        {Array(item.review?.amount)
+                                          .fill(null)
+                                          .map(() => {
+                                            return (
+                                              <div className="text-warning">
+                                                <IconStar />
+                                              </div>
+                                            );
+                                          })}
+                                      </div>
+                                    )}
                                   </div>
                                 </Row>
                               </div>
@@ -395,6 +596,27 @@ const ServiceHistory: React.FC = () => {
                                 <h3 className="text-primary-dark text-nowrap">
                                   Rp {formatCurrency(item.price)}
                                 </h3>
+                                {!item.isReviewed && (
+                                  <div
+                                    className="btn btn-outline-primary"
+                                    onClick={() => openModalReview(item.name, item.transactionId)}
+                                  >
+                                    Beri Ulasan
+                                  </div>
+                                )}
+                                {item.isReviewed && (
+                                  <div className="d-flex flex-row">
+                                    {Array(item.review?.amount)
+                                      .fill(null)
+                                      .map(() => {
+                                        return (
+                                          <div className="text-warning">
+                                            <IconStar />
+                                          </div>
+                                        );
+                                      })}
+                                  </div>
+                                )}
                               </div>
                             </>
                           );
@@ -412,6 +634,7 @@ const ServiceHistory: React.FC = () => {
                   </div>
                 )}
               </Tab>
+
               <Tab
                 eventKey="cancelled"
                 title="Dibatalkan"
@@ -422,7 +645,7 @@ const ServiceHistory: React.FC = () => {
                     {errorServiceHistory && (
                       <InlineRetryError
                         message={errorServiceHistory.message}
-                        onRetry={refetchServiceHistory}
+                        onRetry={mutateServiceHistory}
                       />
                     )}
                     {cancelledServiceHistory.services?.length !== 0 && (

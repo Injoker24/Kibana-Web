@@ -80,3 +80,20 @@
     }
   }
 }
+
+.popup-review-content {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%);
+  border-radius: 2rem;
+  padding: 3rem;
+  border: 0;
+  width: 40rem !important;
+
+  @media only screen and (max-width: 768px) {
+    & {
+      width: 90vw !important;
+    }
+  }
+}
