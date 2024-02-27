@@ -13,7 +13,7 @@ import {
 } from 'shared/components';
 import { useHistory } from 'react-router-dom';
 import { ReviewService, ServiceService } from 'services';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { TransactionStatus } from 'enums';
 import { DefaultAvatar, IconClose, IconStar } from 'images';
 import { formatCurrency } from 'utils';
@@ -25,7 +25,6 @@ const ServiceHistory: React.FC = () => {
 
   useEffect(() => {
     document.body.scrollTo(0, 0);
-    mutateServiceHistory();
   }, []);
 
   const [activeServiceHistory, setActiveServiceHistory] =
@@ -36,10 +35,11 @@ const ServiceHistory: React.FC = () => {
     useState<ServiceInquiryServiceHistoryOutput>({ services: [] });
 
   const {
-    isLoading: isLoadingServiceHistory,
-    mutate: mutateServiceHistory,
+    data: serviceHistory,
+    isFetching: isLoadingServiceHistory,
+    refetch: mutateServiceHistory,
     error: errorServiceHistory,
-  } = useMutation<ServiceInquiryServiceHistoryOutput, ErrorWrapper>(
+  } = useQuery<ServiceInquiryServiceHistoryOutput, ErrorWrapper>(
     ['inquiry-service-history'],
     async () => await ServiceService.inquiryServiceHistory(),
     {
@@ -273,7 +273,7 @@ const ServiceHistory: React.FC = () => {
                         {activeServiceHistory.services?.map((item) => {
                           return (
                             <>
-                              <div className="card-sm mb-4 d-none d-md-block">
+                              <div className="card-sm mb-4 d-none d-md-block cursor-pointer">
                                 <Row className="align-items-center mb-3">
                                   <div className="col-9 d-flex flex-row">
                                     <h4 className="font-weight-semibold mb-0 mr-3">{item.name}</h4>
@@ -361,7 +361,7 @@ const ServiceHistory: React.FC = () => {
                                 </Row>
                               </div>
 
-                              <div className="card-sm mb-4 d-block d-md-none">
+                              <div className="card-sm mb-4 d-block d-md-none cursor-pointer">
                                 <h4 className="font-weight-semibold mb-3">{item.name}</h4>
                                 {item.status === TransactionStatus.DalamProses && (
                                   <div className="chip chip-warning text-nowrap mb-3">
@@ -458,7 +458,7 @@ const ServiceHistory: React.FC = () => {
                         {completedServiceHistory.services?.map((item) => {
                           return (
                             <>
-                              <div className="card-sm mb-4 d-none d-md-block">
+                              <div className="card-sm mb-4 d-none d-md-block cursor-pointer">
                                 <Row className="align-items-center mb-3">
                                   <div className="col-9 d-flex flex-row">
                                     <h4 className="font-weight-semibold mb-0 mr-3">{item.name}</h4>
@@ -552,7 +552,7 @@ const ServiceHistory: React.FC = () => {
                                 </Row>
                               </div>
 
-                              <div className="card-sm mb-4 d-block d-md-none">
+                              <div className="card-sm mb-4 d-block d-md-none cursor-pointer">
                                 <h4 className="font-weight-semibold mb-3">{item.name}</h4>
                                 {item.status === TransactionStatus.Selesai && (
                                   <div className="chip chip-success text-nowrap mb-3">Selesai</div>
@@ -653,7 +653,7 @@ const ServiceHistory: React.FC = () => {
                         {cancelledServiceHistory.services?.map((item) => {
                           return (
                             <>
-                              <div className="card-sm mb-4 d-none d-md-block">
+                              <div className="card-sm mb-4 d-none d-md-block cursor-pointer">
                                 <Row className="align-items-center mb-3">
                                   <div className="col-9 d-flex flex-row">
                                     <h4 className="font-weight-semibold mb-0 mr-3">{item.name}</h4>
@@ -727,7 +727,7 @@ const ServiceHistory: React.FC = () => {
                                 </Row>
                               </div>
 
-                              <div className="card-sm mb-4 d-block d-md-none">
+                              <div className="card-sm mb-4 d-block d-md-none cursor-pointer">
                                 <h4 className="font-weight-semibold mb-3">{item.name}</h4>
                                 {item.status === TransactionStatus.Dibatalkan && (
                                   <div className="chip chip-danger text-nowrap mb-3">
