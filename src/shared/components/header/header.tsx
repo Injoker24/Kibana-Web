@@ -159,7 +159,7 @@ const Header: React.FC = () => {
             )}
             {status === 'client' && (
               <a
-                href="/service/my/history"
+                href="/service/history"
                 className="text-light mb-3"
               >
                 Riwayat Layanan
@@ -303,7 +303,7 @@ const Header: React.FC = () => {
             )}
             {status === 'client' && (
               <a
-                href="/service/my/history"
+                href="/service/history"
                 className="mb-3 text-dark"
               >
                 Riwayat Layanan

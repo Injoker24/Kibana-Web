@@ -44,22 +44,22 @@ const ServiceRouter = () => {
 
       <Route
         exact
+        path={'/service/history'}
+        render={() => (
+          <ProtectedClientRoute>
+            <ServiceHistory key={Date.now()} />
+          </ProtectedClientRoute>
+        )}
+      />
+
+      <Route
+        exact
         path={'/service/:serviceId'}
         render={({ location: { state } }) => (
           <ServiceDetail
             {...(state as detailStateWrapper)}
             key={Date.now()}
           />
-        )}
-      />
-
-      <Route
-        exact
-        path={'/service/my/history'}
-        render={() => (
-          <ProtectedClientRoute>
-            <ServiceHistory key={Date.now()} />
-          </ProtectedClientRoute>
         )}
       />
 

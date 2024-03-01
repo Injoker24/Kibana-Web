@@ -2,6 +2,7 @@ import {
   TaskInquiryCategoryResponse,
   TaskInquiryDetailSubCategoryResponse,
   TaskInquiryNewTaskResponse,
+  TaskInquiryOwnedTaskResponse,
   TaskInquiryTaskDetailResponse,
   TaskInquiryTaskListResponse,
 } from 'services/schemas';
@@ -219,6 +220,64 @@ export function transformToTaskInquiryTaskDetailOutput(
         };
       }),
     },
+  };
+
+  return result;
+}
+
+export interface TaskInquiryOwnedTaskOutput {
+  tasks?: {
+    id: string;
+    name: string;
+    tags: string[];
+    dueDate: string;
+    price: number;
+    status: string;
+    deliveryDate?: string;
+    registeredFreelancerAmount?: number;
+    chosenFreelancer?: {
+      id: string;
+      name: string;
+      profileImageUrl?: string;
+    };
+    transactionId?: string;
+    isReviewed?: boolean;
+    review?: {
+      amount: number;
+    };
+  }[];
+}
+
+export function transformToTaskInquiryOwnedTaskOutput(
+  response: TaskInquiryOwnedTaskResponse,
+): TaskInquiryOwnedTaskOutput {
+  const result: TaskInquiryOwnedTaskOutput = {
+    tasks: response.tasks?.map((t) => {
+      return {
+        id: t.id,
+        name: t.name,
+        tags: t.tags,
+        dueDate: t.due_date,
+        price: t.price,
+        status: t.status,
+        deliveryDate: t.delivery_date,
+        registeredFreelancerAmount: t.registered_freelancer_amount,
+        chWosenFreelancer: t.chosen_freelancer
+          ? {
+              id: t.chosen_freelancer.id,
+              name: t.chosen_freelancer.name,
+              profileImageUrl: t.chosen_freelancer.profile_image_url,
+            }
+          : undefined,
+        transactionId: t.transaction_id,
+        isReviewed: t.is_reviewed,
+        review: t.review
+          ? {
+              amount: t.review?.amount,
+            }
+          : undefined,
+      };
+    }),
   };
 
   return result;

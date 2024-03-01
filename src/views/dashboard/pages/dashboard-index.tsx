@@ -4,6 +4,7 @@ import {
   IconMyTaskService,
   IconSearchTaskService,
   heroIllustration,
+  DefaultAvatar,
 } from 'images';
 import {
   ErrorWrapper,
@@ -144,7 +145,9 @@ const DashboardIndex: React.FC = () => {
                         <div className="d-flex flex-row align-items-center mr-0 mr-xl-3 mb-3 mb-xl-0">
                           <Image
                             className="dashboard-profile-image mr-4"
-                            src={userData.profileImageUrl}
+                            src={
+                              userData.profileImageUrl ? userData.profileImageUrl : DefaultAvatar
+                            }
                             alt={userData.name}
                           />
                           <div>
@@ -175,7 +178,16 @@ const DashboardIndex: React.FC = () => {
                           </p>
                         </div>
                       </div>
-                      <div className="col-6 col-md-3 p-0 pr-md-3 pl-3 pl-md-0 mb-3 mb-md-0">
+                      <div
+                        className="col-6 col-md-3 p-0 pr-md-3 pl-3 pl-md-0 mb-3 mb-md-0"
+                        onClick={() => {
+                          if (status === 'client') {
+                            history.push({
+                              pathname: '/task/owned',
+                            });
+                          }
+                        }}
+                      >
                         <div className="dashboard-border-card flex-centered flex-column cursor-pointer h-100">
                           <div className="text-primary-dark">
                             <IconMyTaskService />
@@ -190,7 +202,7 @@ const DashboardIndex: React.FC = () => {
                         onClick={() => {
                           if (status === 'client') {
                             history.push({
-                              pathname: '/service/my/history',
+                              pathname: '/service/history',
                             });
                           }
                         }}

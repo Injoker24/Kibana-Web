@@ -1,4 +1,8 @@
-import { ErrorWrapper, ServiceInquiryServiceHistoryOutput } from 'models';
+import {
+  ErrorWrapper,
+  ServiceInquiryServiceHistoryOutput,
+  TaskInquiryOwnedTaskOutput,
+} from 'models';
 import React, { useEffect, useState } from 'react';
 import { Row, Tab, Tabs, Image, Form } from 'react-bootstrap';
 
@@ -12,7 +16,7 @@ import {
   TitleBanner,
 } from 'shared/components';
 import { useHistory } from 'react-router-dom';
-import { ReviewService, ServiceService } from 'services';
+import { ReviewService, TaskService } from 'services';
 import { useMutation, useQuery } from 'react-query';
 import { TransactionStatus } from 'enums';
 import { DefaultAvatar, IconClose, IconStar } from 'images';
@@ -20,58 +24,62 @@ import { formatCurrency } from 'utils';
 import Popup from 'reactjs-popup';
 import { useForm } from 'react-hook-form';
 
-const ServiceHistory: React.FC = () => {
+const TaskOwned: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
     document.body.scrollTo(0, 0);
   }, []);
 
-  const [activeServiceHistory, setActiveServiceHistory] =
-    useState<ServiceInquiryServiceHistoryOutput>({ services: [] });
-  const [completedServiceHistory, setCompletedServiceHistory] =
-    useState<ServiceInquiryServiceHistoryOutput>({ services: [] });
-  const [cancelledServiceHistory, setCancelledServiceHistory] =
-    useState<ServiceInquiryServiceHistoryOutput>({ services: [] });
+  const [activeOwnedTask, setActiveOwnedTask] = useState<TaskInquiryOwnedTaskOutput>({ tasks: [] });
+  const [completedOwnedTask, setCompletedOwnedTask] = useState<TaskInquiryOwnedTaskOutput>({
+    tasks: [],
+  });
+  const [cancelledOwnedTask, setCancelledOwnedTask] = useState<TaskInquiryOwnedTaskOutput>({
+    tasks: [],
+  });
 
   const {
-    data: serviceHistory,
-    isFetching: isLoadingServiceHistory,
-    refetch: refetchServiceHistory,
-    error: errorServiceHistory,
-  } = useQuery<ServiceInquiryServiceHistoryOutput, ErrorWrapper>(
-    ['inquiry-service-history'],
-    async () => await ServiceService.inquiryServiceHistory(),
+    data: ownedTask,
+    isFetching: isLoadingOwnedTask,
+    refetch: refetchOwnedTask,
+    error: errorOwnedTask,
+  } = useQuery<TaskInquiryOwnedTaskOutput, ErrorWrapper>(
+    ['inquiry-owned-tasl'],
+    async () => await TaskService.inquiryOwnedTask(),
     {
-      onSuccess: (output: ServiceInquiryServiceHistoryOutput) => {
-        const activeServices = output.services?.filter(
+      onSuccess: (output: TaskInquiryOwnedTaskOutput) => {
+        const activeTasks = output.tasks?.filter(
           (item) =>
+            item.status === TransactionStatus.DalamProsesPencarian ||
             item.status === TransactionStatus.DalamProses ||
             item.status === TransactionStatus.SudahDikirim ||
             item.status === TransactionStatus.DalamProsesPengembalian ||
             item.status === TransactionStatus.DalamInvestigasi,
         );
-        const activeServiceObject = {
-          services: activeServices,
+        const activeTaskObject = {
+          tasks: activeTasks,
         };
-        setActiveServiceHistory(activeServiceObject);
+        setActiveOwnedTask(activeTaskObject);
 
-        const completedServices = output.services?.filter(
+        const completedTasks = output.tasks?.filter(
           (item) => item.status === TransactionStatus.Selesai,
         );
-        const completedServiceObject = {
-          services: completedServices,
+        const completedTaskObject = {
+          tasks: completedTasks,
         };
-        setCompletedServiceHistory(completedServiceObject);
+        setCompletedOwnedTask(completedTaskObject);
 
-        const cancelledServices = output.services?.filter(
+        const cancelledTasks = output.tasks?.filter(
           (item) =>
-            item.status === TransactionStatus.Dibatalkan || item.status === TransactionStatus.Telat,
+            item.status === TransactionStatus.Dibatalkan ||
+            item.status === TransactionStatus.Telat ||
+            item.status === TransactionStatus.TidakMenemukan,
         );
-        const cancelledServiceObject = {
-          services: cancelledServices,
+        const cancelledTaskObject = {
+          tasks: cancelledTasks,
         };
-        setCancelledServiceHistory(cancelledServiceObject);
+        setCancelledOwnedTask(cancelledTaskObject);
       },
     },
   );
@@ -80,16 +88,19 @@ const ServiceHistory: React.FC = () => {
 
   const [ratingAmount, setRatingAmount] = useState<number>(0);
   const [review, setReview] = useState<string>();
-  const [serviceToReview, setServiceToReview] = useState<{ name: string; transactionId: string }>({
+  const [freelancerToReview, setFreelancerToReview] = useState<{
+    name: string;
+    transactionId: string;
+  }>({
     name: '',
     transactionId: '',
   });
 
-  const openModalReview = (e: any, name: string, transactionId: string) => {
+  const openModalReview = (e: any, name?: string, transactionId?: string) => {
     e.stopPropagation();
-    setServiceToReview({
-      name: name,
-      transactionId: transactionId,
+    setFreelancerToReview({
+      name: name ? name : '',
+      transactionId: transactionId ? transactionId : '',
     });
     setModalReview(true);
   };
@@ -105,18 +116,18 @@ const ServiceHistory: React.FC = () => {
 
   const confirmSubmitReview = (formData: any) => {
     setReview(formData.review);
-    mutateReviewService();
+    mutateReviewFreelancer();
   };
 
   const {
-    isLoading: isLoadingReviewService,
-    mutate: mutateReviewService,
-    error: errorReviewService,
+    isLoading: isLoadingReviewFreelancer,
+    mutate: mutateReviewFreelancer,
+    error: errorReviewFreelancer,
   } = useMutation<{}, ErrorWrapper>(
-    ['review-service'],
+    ['review-freelancer'],
     async () =>
-      await ReviewService.reviewService({
-        transactionId: serviceToReview?.transactionId,
+      await ReviewService.reviewFreelancer({
+        transactionId: freelancerToReview?.transactionId,
         star: ratingAmount,
         description: review,
       }),
@@ -124,7 +135,7 @@ const ServiceHistory: React.FC = () => {
       onSuccess: () => {
         setModalReview(false);
         setRatingAmount(0);
-        refetchServiceHistory();
+        refetchOwnedTask();
       },
     },
   );
@@ -137,12 +148,12 @@ const ServiceHistory: React.FC = () => {
           closeOnDocumentClick={false}
           className="popup-review"
         >
-          {isLoadingReviewService && <Loader type="inline" />}
-          {!isLoadingReviewService && (
+          {isLoadingReviewFreelancer && <Loader type="inline" />}
+          {!isLoadingReviewFreelancer && (
             <>
               <div className="flex-column">
                 <div className="flex-centered w-100 justify-content-between mb-3">
-                  <h3 className="mb-0">Beri Ulasan</h3>
+                  <h3 className="mb-0">Beri Ulasan Kepada</h3>
                   <div
                     className="cursor-pointer"
                     onClick={() => {
@@ -154,16 +165,16 @@ const ServiceHistory: React.FC = () => {
                   </div>
                 </div>
 
-                {errorReviewService && (
+                {errorReviewFreelancer && (
                   <div className="mb-4">
                     <InfoBox
-                      message={errorReviewService?.message}
+                      message={errorReviewFreelancer?.message}
                       type="danger"
                     />
                   </div>
                 )}
 
-                <h4 className="font-weight-semibold mb-4">{serviceToReview?.name}</h4>
+                <h4 className="font-weight-semibold mb-4">{freelancerToReview?.name}</h4>
 
                 <div className="flex-centered mb-4">
                   <div
@@ -220,7 +231,7 @@ const ServiceHistory: React.FC = () => {
 
                 <form onSubmit={handleSubmitReview(confirmSubmitReview)}>
                   <div className="mb-4">
-                    <p className="mb-2">Ceritakan pengalamanmu menggunakan layanan ini!</p>
+                    <p className="mb-2">Ceritakan pengalamanmu bekerja dengan freelancer ini!</p>
                     <FormInput errorMessage={errorsReview?.review?.message}>
                       <Form.Control
                         as="textarea"
@@ -248,7 +259,7 @@ const ServiceHistory: React.FC = () => {
       )}
       <Header />
       <div className="min-layout-height">
-        <TitleBanner message={'Riwayat Layanan'} />
+        <TitleBanner message={'Tugas Saya'} />
         <Row className="justify-content-center">
           <div className="col-10">
             <Tabs
@@ -260,18 +271,18 @@ const ServiceHistory: React.FC = () => {
                 eventKey="active"
                 title="Aktif"
               >
-                {isLoadingServiceHistory && <Loader type="inline" />}
-                {!isLoadingServiceHistory && (
+                {isLoadingOwnedTask && <Loader type="inline" />}
+                {!isLoadingOwnedTask && (
                   <div className="mb-5">
-                    {errorServiceHistory && (
+                    {errorOwnedTask && (
                       <InlineRetryError
-                        message={errorServiceHistory.message}
-                        onRetry={refetchServiceHistory}
+                        message={errorOwnedTask.message}
+                        onRetry={refetchOwnedTask}
                       />
                     )}
-                    {activeServiceHistory.services?.length !== 0 && (
+                    {activeOwnedTask.tasks?.length !== 0 && (
                       <>
-                        {activeServiceHistory.services?.map((item) => {
+                        {activeOwnedTask.tasks?.map((item) => {
                           return (
                             <>
                               <div
@@ -281,6 +292,11 @@ const ServiceHistory: React.FC = () => {
                                 <Row className="align-items-center mb-3">
                                   <div className="col-9 d-flex flex-row">
                                     <h4 className="font-weight-semibold mb-0 mr-3">{item.name}</h4>
+                                    {item.status === TransactionStatus.DalamProsesPencarian && (
+                                      <div className="chip chip-warning text-nowrap">
+                                        Dalam Proses Pencarian Freelancer
+                                      </div>
+                                    )}
                                     {item.status === TransactionStatus.DalamProses && (
                                       <div className="chip chip-warning text-nowrap">
                                         Dalam Proses
@@ -302,31 +318,24 @@ const ServiceHistory: React.FC = () => {
                                       </div>
                                     )}
                                   </div>
-                                  <div className="col-3 d-flex flex-column align-items-end">
-                                    <div className="d-flex flex-row align-items-center">
-                                      <Image
-                                        className="service-history-freelancer-profile-image mr-2"
-                                        src={
-                                          item.freelancer.profileImageUrl
-                                            ? item.freelancer.profileImageUrl
-                                            : DefaultAvatar
-                                        }
-                                        alt={item.freelancer.name}
-                                      />
-                                      <small className="text-grey text-nowrap">
-                                        {item.freelancer.name}
-                                      </small>
-                                    </div>
-                                    <div className="d-flex flex-row align-items-center">
-                                      <div className="text-warning mr-1">
-                                        <IconStar />
+                                  {item.chosenFreelancer && (
+                                    <div className="col-3 d-flex flex-column align-items-end">
+                                      <div className="d-flex flex-row align-items-center">
+                                        <Image
+                                          className="owned-task-freelancer-profile-image mr-2"
+                                          src={
+                                            item.chosenFreelancer.profileImageUrl
+                                              ? item.chosenFreelancer.profileImageUrl
+                                              : DefaultAvatar
+                                          }
+                                          alt={item.chosenFreelancer.name}
+                                        />
+                                        <small className="text-grey text-nowrap">
+                                          {item.chosenFreelancer.name}
+                                        </small>
                                       </div>
-                                      <small className="text-grey font-weight-bold">
-                                        {item.averageRating}/5
-                                      </small>
-                                      <small className="text-muted">({item.ratingAmount})</small>
                                     </div>
-                                  </div>
+                                  )}
                                 </Row>
 
                                 <Row className="align-items-center mb-3">
@@ -357,10 +366,18 @@ const ServiceHistory: React.FC = () => {
                                       <div className="chip chip-primary mr-2">{tag}</div>
                                     ))}
                                   </div>
-                                  <div className="col-3 d-flex justify-content-end">
+                                  <div className="col-3 d-flex flex-column align-items-end">
                                     <h3 className="text-primary-dark text-nowrap">
                                       Rp {formatCurrency(item.price)}
                                     </h3>
+                                    {item.registeredFreelancerAmount && (
+                                      <div className="d-flex flex-row align-items-center">
+                                        <h3 className="text-primary-dark mb-0 mr-2">
+                                          {item.registeredFreelancerAmount}
+                                        </h3>
+                                        <p className="text-nowrap">Freelancer Sudah Mendaftar</p>
+                                      </div>
+                                    )}
                                   </div>
                                 </Row>
                               </div>
@@ -370,6 +387,11 @@ const ServiceHistory: React.FC = () => {
                                 onClick={() => console.log('Hi')}
                               >
                                 <h4 className="font-weight-semibold mb-3">{item.name}</h4>
+                                {item.status === TransactionStatus.DalamProsesPencarian && (
+                                  <div className="chip chip-warning text-nowrap mb-3">
+                                    Dalam Proses Pencarian Freelancer
+                                  </div>
+                                )}
                                 {item.status === TransactionStatus.DalamProses && (
                                   <div className="chip chip-warning text-nowrap mb-3">
                                     Dalam Proses
@@ -403,42 +425,45 @@ const ServiceHistory: React.FC = () => {
                                     <div className="chip chip-primary mb-2 mr-2">{tag}</div>
                                   ))}
                                 </div>
-                                <div className="d-flex flex-row align-items-center mb-2">
-                                  <Image
-                                    className="service-history-freelancer-profile-image mr-2"
-                                    src={
-                                      item.freelancer.profileImageUrl
-                                        ? item.freelancer.profileImageUrl
-                                        : DefaultAvatar
-                                    }
-                                    alt={item.freelancer.name}
-                                  />
-                                  <small className="text-grey text-nowrap">
-                                    {item.freelancer.name}
-                                  </small>
-                                </div>
-                                <div className="d-flex flex-row align-items-center mb-3">
-                                  <div className="text-warning mr-1">
-                                    <IconStar />
+                                {item.chosenFreelancer && (
+                                  <div className="d-flex flex-row align-items-center mb-3">
+                                    <Image
+                                      className="owned-task-freelancer-profile-image mr-2"
+                                      src={
+                                        item.chosenFreelancer.profileImageUrl
+                                          ? item.chosenFreelancer.profileImageUrl
+                                          : DefaultAvatar
+                                      }
+                                      alt={item.chosenFreelancer.name}
+                                    />
+                                    <small className="text-grey text-nowrap">
+                                      {item.chosenFreelancer.name}
+                                    </small>
                                   </div>
-                                  <small className="text-grey font-weight-bold">
-                                    {item.averageRating}/5
-                                  </small>
-                                  <small className="text-muted">({item.ratingAmount})</small>
-                                </div>
+                                )}
+
                                 <h3 className="text-primary-dark text-nowrap">
                                   Rp {formatCurrency(item.price)}
                                 </h3>
+
+                                {item.registeredFreelancerAmount && (
+                                  <div className="d-flex flex-row align-items-center">
+                                    <h3 className="text-primary-dark mb-0 mr-2">
+                                      {item.registeredFreelancerAmount}
+                                    </h3>
+                                    <p className="text-nowrap">Freelancer Sudah Mendaftar</p>
+                                  </div>
+                                )}
                               </div>
                             </>
                           );
                         })}
                       </>
                     )}
-                    {activeServiceHistory.services?.length === 0 && (
+                    {activeOwnedTask.tasks?.length === 0 && (
                       <div className="card-sm">
                         <InfoBox
-                          message={'Kamu tidak memiliki riwayat layanan yang aktif.'}
+                          message={'Kamu tidak memiliki tugas yang aktif.'}
                           type="warning"
                         />
                       </div>
@@ -451,18 +476,18 @@ const ServiceHistory: React.FC = () => {
                 eventKey="completed"
                 title="Selesai"
               >
-                {isLoadingServiceHistory && <Loader type="inline" />}
-                {!isLoadingServiceHistory && (
+                {isLoadingOwnedTask && <Loader type="inline" />}
+                {!isLoadingOwnedTask && (
                   <div className="mb-5">
-                    {errorServiceHistory && (
+                    {errorOwnedTask && (
                       <InlineRetryError
-                        message={errorServiceHistory.message}
-                        onRetry={refetchServiceHistory}
+                        message={errorOwnedTask.message}
+                        onRetry={refetchOwnedTask}
                       />
                     )}
-                    {completedServiceHistory.services?.length !== 0 && (
+                    {completedOwnedTask.tasks?.length !== 0 && (
                       <>
-                        {completedServiceHistory.services?.map((item) => {
+                        {completedOwnedTask.tasks?.map((item) => {
                           return (
                             <>
                               <div
@@ -479,26 +504,17 @@ const ServiceHistory: React.FC = () => {
                                   <div className="col-3 d-flex flex-column align-items-end">
                                     <div className="d-flex flex-row align-items-center">
                                       <Image
-                                        className="service-history-freelancer-profile-image mr-2"
+                                        className="owned-task-freelancer-profile-image mr-2"
                                         src={
-                                          item.freelancer.profileImageUrl
-                                            ? item.freelancer.profileImageUrl
+                                          item.chosenFreelancer?.profileImageUrl
+                                            ? item.chosenFreelancer?.profileImageUrl
                                             : DefaultAvatar
                                         }
-                                        alt={item.freelancer.name}
+                                        alt={item.chosenFreelancer?.name}
                                       />
                                       <small className="text-grey text-nowrap">
-                                        {item.freelancer.name}
+                                        {item.chosenFreelancer?.name}
                                       </small>
-                                    </div>
-                                    <div className="d-flex flex-row align-items-center">
-                                      <div className="text-warning mr-1">
-                                        <IconStar />
-                                      </div>
-                                      <small className="text-grey font-weight-bold">
-                                        {item.averageRating}/5
-                                      </small>
-                                      <small className="text-muted">({item.ratingAmount})</small>
                                     </div>
                                   </div>
                                 </Row>
@@ -539,7 +555,11 @@ const ServiceHistory: React.FC = () => {
                                       <div
                                         className="btn btn-outline-primary"
                                         onClick={(e) =>
-                                          openModalReview(e, item.name, item.transactionId)
+                                          openModalReview(
+                                            e,
+                                            item.chosenFreelancer?.name,
+                                            item.transactionId,
+                                          )
                                         }
                                       >
                                         Beri Ulasan
@@ -583,29 +603,21 @@ const ServiceHistory: React.FC = () => {
                                     <div className="chip chip-primary mb-2 mr-2">{tag}</div>
                                   ))}
                                 </div>
-                                <div className="d-flex flex-row align-items-center mb-2">
+                                <div className="d-flex flex-row align-items-center mb-3">
                                   <Image
-                                    className="service-history-freelancer-profile-image mr-2"
+                                    className="owned-task-freelancer-profile-image mr-2"
                                     src={
-                                      item.freelancer.profileImageUrl
-                                        ? item.freelancer.profileImageUrl
+                                      item.chosenFreelancer?.profileImageUrl
+                                        ? item.chosenFreelancer?.profileImageUrl
                                         : DefaultAvatar
                                     }
-                                    alt={item.freelancer.name}
+                                    alt={item.chosenFreelancer?.name}
                                   />
                                   <small className="text-grey text-nowrap">
-                                    {item.freelancer.name}
+                                    {item.chosenFreelancer?.name}
                                   </small>
                                 </div>
-                                <div className="d-flex flex-row align-items-center mb-3">
-                                  <div className="text-warning mr-1">
-                                    <IconStar />
-                                  </div>
-                                  <small className="text-grey font-weight-bold">
-                                    {item.averageRating}/5
-                                  </small>
-                                  <small className="text-muted">({item.ratingAmount})</small>
-                                </div>
+
                                 <h3 className="text-primary-dark text-nowrap">
                                   Rp {formatCurrency(item.price)}
                                 </h3>
@@ -613,7 +625,11 @@ const ServiceHistory: React.FC = () => {
                                   <div
                                     className="btn btn-outline-primary"
                                     onClick={(e) =>
-                                      openModalReview(e, item.name, item.transactionId)
+                                      openModalReview(
+                                        e,
+                                        item.chosenFreelancer?.name,
+                                        item.transactionId,
+                                      )
                                     }
                                   >
                                     Beri Ulasan
@@ -638,10 +654,10 @@ const ServiceHistory: React.FC = () => {
                         })}
                       </>
                     )}
-                    {completedServiceHistory.services?.length === 0 && (
+                    {completedOwnedTask.tasks?.length === 0 && (
                       <div className="card-sm">
                         <InfoBox
-                          message={'Kamu tidak memiliki riwayat layanan yang selesai.'}
+                          message={'Kamu tidak memiliki tugas yang selesai.'}
                           type="warning"
                         />
                       </div>
@@ -654,18 +670,18 @@ const ServiceHistory: React.FC = () => {
                 eventKey="cancelled"
                 title="Dibatalkan"
               >
-                {isLoadingServiceHistory && <Loader type="inline" />}
-                {!isLoadingServiceHistory && (
+                {isLoadingOwnedTask && <Loader type="inline" />}
+                {!isLoadingOwnedTask && (
                   <div className="mb-5">
-                    {errorServiceHistory && (
+                    {errorOwnedTask && (
                       <InlineRetryError
-                        message={errorServiceHistory.message}
-                        onRetry={refetchServiceHistory}
+                        message={errorOwnedTask.message}
+                        onRetry={refetchOwnedTask}
                       />
                     )}
-                    {cancelledServiceHistory.services?.length !== 0 && (
+                    {cancelledOwnedTask.tasks?.length !== 0 && (
                       <>
-                        {cancelledServiceHistory.services?.map((item) => {
+                        {cancelledOwnedTask.tasks?.map((item) => {
                           return (
                             <>
                               <div
@@ -675,6 +691,11 @@ const ServiceHistory: React.FC = () => {
                                 <Row className="align-items-center mb-3">
                                   <div className="col-9 d-flex flex-row">
                                     <h4 className="font-weight-semibold mb-0 mr-3">{item.name}</h4>
+                                    {item.status === TransactionStatus.TidakMenemukan && (
+                                      <div className="chip chip-danger text-nowrap">
+                                        Tidak Menemukan Freelancer
+                                      </div>
+                                    )}
                                     {item.status === TransactionStatus.Dibatalkan && (
                                       <div className="chip chip-danger text-nowrap">Dibatalkan</div>
                                     )}
@@ -682,31 +703,24 @@ const ServiceHistory: React.FC = () => {
                                       <div className="chip chip-danger text-nowrap">Telat</div>
                                     )}
                                   </div>
-                                  <div className="col-3 d-flex flex-column align-items-end">
-                                    <div className="d-flex flex-row align-items-center">
-                                      <Image
-                                        className="service-history-freelancer-profile-image mr-2"
-                                        src={
-                                          item.freelancer.profileImageUrl
-                                            ? item.freelancer.profileImageUrl
-                                            : DefaultAvatar
-                                        }
-                                        alt={item.freelancer.name}
-                                      />
-                                      <small className="text-grey text-nowrap">
-                                        {item.freelancer.name}
-                                      </small>
-                                    </div>
-                                    <div className="d-flex flex-row align-items-center">
-                                      <div className="text-warning mr-1">
-                                        <IconStar />
+                                  {item.chosenFreelancer && (
+                                    <div className="col-3 d-flex flex-column align-items-end">
+                                      <div className="d-flex flex-row align-items-center">
+                                        <Image
+                                          className="owned-task-freelancer-profile-image mr-2"
+                                          src={
+                                            item.chosenFreelancer.profileImageUrl
+                                              ? item.chosenFreelancer.profileImageUrl
+                                              : DefaultAvatar
+                                          }
+                                          alt={item.chosenFreelancer.name}
+                                        />
+                                        <small className="text-grey text-nowrap">
+                                          {item.chosenFreelancer.name}
+                                        </small>
                                       </div>
-                                      <small className="text-grey font-weight-bold">
-                                        {item.averageRating}/5
-                                      </small>
-                                      <small className="text-muted">({item.ratingAmount})</small>
                                     </div>
-                                  </div>
+                                  )}
                                 </Row>
 
                                 <Row className="align-items-center mb-3">
@@ -737,10 +751,18 @@ const ServiceHistory: React.FC = () => {
                                       <div className="chip chip-primary mr-2">{tag}</div>
                                     ))}
                                   </div>
-                                  <div className="col-3 d-flex justify-content-end">
+                                  <div className="col-3 d-flex flex-column align-items-end">
                                     <h3 className="text-primary-dark text-nowrap">
                                       Rp {formatCurrency(item.price)}
                                     </h3>
+                                    {item.registeredFreelancerAmount && (
+                                      <div className="d-flex flex-row align-items-center">
+                                        <h3 className="text-primary-dark mb-0 mr-2">
+                                          {item.registeredFreelancerAmount}
+                                        </h3>
+                                        <p className="text-nowrap">Freelancer Sudah Mendaftar</p>
+                                      </div>
+                                    )}
                                   </div>
                                 </Row>
                               </div>
@@ -750,6 +772,11 @@ const ServiceHistory: React.FC = () => {
                                 onClick={() => console.log('Hi')}
                               >
                                 <h4 className="font-weight-semibold mb-3">{item.name}</h4>
+                                {item.status === TransactionStatus.TidakMenemukan && (
+                                  <div className="chip chip-danger text-nowrap mb-3">
+                                    Tidak Menemukan Freelancer
+                                  </div>
+                                )}
                                 {item.status === TransactionStatus.Dibatalkan && (
                                   <div className="chip chip-danger text-nowrap mb-3">
                                     Dibatalkan
@@ -771,42 +798,45 @@ const ServiceHistory: React.FC = () => {
                                     <div className="chip chip-primary mb-2 mr-2">{tag}</div>
                                   ))}
                                 </div>
-                                <div className="d-flex flex-row align-items-center mb-2">
-                                  <Image
-                                    className="service-history-freelancer-profile-image mr-2"
-                                    src={
-                                      item.freelancer.profileImageUrl
-                                        ? item.freelancer.profileImageUrl
-                                        : DefaultAvatar
-                                    }
-                                    alt={item.freelancer.name}
-                                  />
-                                  <small className="text-grey text-nowrap">
-                                    {item.freelancer.name}
-                                  </small>
-                                </div>
-                                <div className="d-flex flex-row align-items-center mb-3">
-                                  <div className="text-warning mr-1">
-                                    <IconStar />
+                                {item.chosenFreelancer && (
+                                  <div className="d-flex flex-row align-items-center mb-3">
+                                    <Image
+                                      className="owned-task-freelancer-profile-image mr-2"
+                                      src={
+                                        item.chosenFreelancer.profileImageUrl
+                                          ? item.chosenFreelancer.profileImageUrl
+                                          : DefaultAvatar
+                                      }
+                                      alt={item.chosenFreelancer.name}
+                                    />
+                                    <small className="text-grey text-nowrap">
+                                      {item.chosenFreelancer.name}
+                                    </small>
                                   </div>
-                                  <small className="text-grey font-weight-bold">
-                                    {item.averageRating}/5
-                                  </small>
-                                  <small className="text-muted">({item.ratingAmount})</small>
-                                </div>
+                                )}
+
                                 <h3 className="text-primary-dark text-nowrap">
                                   Rp {formatCurrency(item.price)}
                                 </h3>
+
+                                {item.registeredFreelancerAmount && (
+                                  <div className="d-flex flex-row align-items-center">
+                                    <h3 className="text-primary-dark mb-0 mr-2">
+                                      {item.registeredFreelancerAmount}
+                                    </h3>
+                                    <p className="text-nowrap">Freelancer Sudah Mendaftar</p>
+                                  </div>
+                                )}
                               </div>
                             </>
                           );
                         })}
                       </>
                     )}
-                    {cancelledServiceHistory.services?.length === 0 && (
+                    {cancelledOwnedTask.tasks?.length === 0 && (
                       <div className="card-sm">
                         <InfoBox
-                          message={'Kamu tidak memiliki riwayat layanan yang dibatalkan.'}
+                          message={'Kamu tidak memiliki tugas yang dibatalkan.'}
                           type="warning"
                         />
                       </div>
@@ -823,4 +853,4 @@ const ServiceHistory: React.FC = () => {
   );
 };
 
-export default ServiceHistory;
+export default TaskOwned;
