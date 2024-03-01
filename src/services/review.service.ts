@@ -1,7 +1,12 @@
-import { ReviewReviewFreelancerInput, ReviewReviewServiceInput } from 'models';
+import {
+  ReviewReviewClientInput,
+  ReviewReviewFreelancerInput,
+  ReviewReviewServiceInput,
+} from 'models';
 
 import {
   ApiResponse,
+  transformToReviewReviewClientRequest,
   transformToReviewReviewFreelancerRequest,
   transformToReviewReviewServiceRequest,
 } from 'services/schemas';
@@ -19,6 +24,13 @@ const ReviewService = {
   reviewFreelancer: async (data: ReviewReviewFreelancerInput): Promise<{}> => {
     const requestData = transformToReviewReviewFreelancerRequest(data);
     const response = await axiosInstance.post<ApiResponse<{}>>(`/review/freelancer`, requestData);
+
+    return response.data.output_schema;
+  },
+
+  reviewClient: async (data: ReviewReviewClientInput): Promise<{}> => {
+    const requestData = transformToReviewReviewClientRequest(data);
+    const response = await axiosInstance.post<ApiResponse<{}>>(`/review/client`, requestData);
 
     return response.data.output_schema;
   },

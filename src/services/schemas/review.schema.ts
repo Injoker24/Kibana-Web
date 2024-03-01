@@ -1,4 +1,8 @@
-import { ReviewReviewFreelancerInput, ReviewReviewServiceInput } from 'models';
+import {
+  ReviewReviewClientInput,
+  ReviewReviewFreelancerInput,
+  ReviewReviewServiceInput,
+} from 'models';
 
 export interface ReviewReviewServiceRequest {
   transaction_id: string;
@@ -28,6 +32,24 @@ export function transformToReviewReviewFreelancerRequest(
   input: ReviewReviewFreelancerInput,
 ): ReviewReviewFreelancerRequest {
   const result: ReviewReviewFreelancerRequest = {
+    transaction_id: input.transactionId,
+    star: input.star,
+    description: input.description,
+  };
+
+  return result;
+}
+
+export interface ReviewReviewClientRequest {
+  transaction_id: string;
+  star: number;
+  description?: string;
+}
+
+export function transformToReviewReviewClientRequest(
+  input: ReviewReviewClientInput,
+): ReviewReviewClientRequest {
+  const result: ReviewReviewClientRequest = {
     transaction_id: input.transactionId,
     star: input.star,
     description: input.description,

@@ -4,6 +4,7 @@ import {
   TaskInquiryNewTaskOutput,
   TaskInquiryOwnedTaskOutput,
   TaskInquiryTaskDetailOutput,
+  TaskInquiryTaskHistoryOutput,
   TaskInquiryTaskListInput,
   TaskInquiryTaskListOutput,
   transformToTaskInquiryCategoryOutput,
@@ -11,6 +12,7 @@ import {
   transformToTaskInquiryNewTaskOutput,
   transformToTaskInquiryOwnedTaskOutput,
   transformToTaskInquiryTaskDetailOutput,
+  transformToTaskInquiryTaskHistoryOutput,
   transformToTaskInquiryTaskListOutput,
 } from 'models';
 
@@ -21,6 +23,7 @@ import {
   TaskInquiryNewTaskResponse,
   TaskInquiryOwnedTaskResponse,
   TaskInquiryTaskDetailResponse,
+  TaskInquiryTaskHistoryResponse,
   TaskInquiryTaskListResponse,
   transformToTaskInquiryTaskListRequest,
 } from 'services/schemas';
@@ -82,6 +85,14 @@ const TaskService = {
     );
 
     return transformToTaskInquiryOwnedTaskOutput(response.data.output_schema);
+  },
+
+  inquiryTaskHistory: async (): Promise<TaskInquiryTaskHistoryOutput> => {
+    const response = await axiosInstance.get<ApiResponse<TaskInquiryTaskHistoryResponse>>(
+      `/task/history`,
+    );
+
+    return transformToTaskInquiryTaskHistoryOutput(response.data.output_schema);
   },
 };
 

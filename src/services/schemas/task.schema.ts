@@ -133,3 +133,26 @@ export interface TaskInquiryOwnedTaskResponse {
     };
   }[];
 }
+
+export interface TaskInquiryTaskHistoryResponse {
+  tasks?: {
+    id: string;
+    name: string;
+    tags: string[];
+    due_date: string;
+    price: number;
+    status: string;
+    delivery_date?: string;
+    registered_freelancer_amount?: number;
+    client?: {
+      id: string;
+      name: string;
+      profile_image_url?: string;
+    };
+    transaction_id?: string;
+    is_reviewed?: boolean;
+    review?: {
+      amount: number;
+    };
+  }[];
+}

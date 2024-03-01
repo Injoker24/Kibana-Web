@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { TaskCategoryList, TaskSearch, TaskDetail, TaskOwned } from './pages';
-import { ProtectedClientRoute } from 'shared/components';
+import { TaskCategoryList, TaskSearch, TaskDetail, TaskOwned, TaskHistory } from './pages';
+import { ProtectedClientRoute, ProtectedFreelancerRoute } from 'shared/components';
 
 interface categoryListStateWrapper {
   stateName: string;
@@ -49,6 +49,16 @@ const TaskRouter = () => {
           <ProtectedClientRoute>
             <TaskOwned key={Date.now()} />
           </ProtectedClientRoute>
+        )}
+      />
+
+      <Route
+        exact
+        path={'/task/history'}
+        render={() => (
+          <ProtectedFreelancerRoute>
+            <TaskHistory key={Date.now()} />
+          </ProtectedFreelancerRoute>
         )}
       />
 

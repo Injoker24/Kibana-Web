@@ -1,0 +1,79 @@
+.service-category-image {
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  width: 10rem;
+  height: 10rem;
+}
+
+.service-list-image {
+  border-top-right-radius: 1rem;
+  border-top-left-radius: 1rem;
+  width: 100%;
+}
+
+.freelancer-profile-image {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 10rem;
+}
+
+.footer-contact-image {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 10rem;
+}
+
+.service-detail-image {
+  width: 27.5rem;
+  height: 20rem;
+  border-radius: 1rem;
+
+  @media only screen and (max-width: 576px) {
+    & {
+      width: 19rem;
+      height: 15rem;
+    }
+  }
+}
+
+.service-detail-freelancer-profile-image {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 10rem;
+}
+
+.dashboard-profile-image {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 10rem;
+}
+
+.dashboard-border-card {
+  border: 1px solid $muted;
+  border-radius: 1rem;
+  padding: 1.25rem 0.5rem;
+}
+
+.my-profile-freelancer-profile-image {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 10rem;
+}
+
+.service-history-freelancer-profile-image {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 10rem;
+}
+
+.owned-task-freelancer-profile-image {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 10rem;
+}
+
+.task-history-freelancer-profile-image {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 10rem;
+}

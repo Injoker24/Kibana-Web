@@ -1,4 +1,4 @@
-import { ErrorWrapper, TaskInquiryOwnedTaskOutput } from 'models';
+import { ErrorWrapper, TaskInquiryTaskHistoryOutput } from 'models';
 import React, { useEffect, useState } from 'react';
 import { Row, Tab, Tabs, Image, Form } from 'react-bootstrap';
 
@@ -20,31 +20,33 @@ import { formatCurrency } from 'utils';
 import Popup from 'reactjs-popup';
 import { useForm } from 'react-hook-form';
 
-const TaskOwned: React.FC = () => {
+const TaskHistory: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
     document.body.scrollTo(0, 0);
   }, []);
 
-  const [activeOwnedTask, setActiveOwnedTask] = useState<TaskInquiryOwnedTaskOutput>({ tasks: [] });
-  const [completedOwnedTask, setCompletedOwnedTask] = useState<TaskInquiryOwnedTaskOutput>({
+  const [activeTaskHistory, setActiveTaskHistory] = useState<TaskInquiryTaskHistoryOutput>({
     tasks: [],
   });
-  const [cancelledOwnedTask, setCancelledOwnedTask] = useState<TaskInquiryOwnedTaskOutput>({
+  const [completedTaskHistory, setCompletedTaskHistory] = useState<TaskInquiryTaskHistoryOutput>({
+    tasks: [],
+  });
+  const [cancelledTaskHistory, setCancelledTaskHistory] = useState<TaskInquiryTaskHistoryOutput>({
     tasks: [],
   });
 
   const {
-    data: ownedTask,
-    isFetching: isLoadingOwnedTask,
-    refetch: refetchOwnedTask,
-    error: errorOwnedTask,
-  } = useQuery<TaskInquiryOwnedTaskOutput, ErrorWrapper>(
-    ['inquiry-owned-task'],
-    async () => await TaskService.inquiryOwnedTask(),
+    data: taskHistory,
+    isFetching: isLoadingTaskHistory,
+    refetch: refetchTaskHistory,
+    error: errorTaskHistory,
+  } = useQuery<TaskInquiryTaskHistoryOutput, ErrorWrapper>(
+    ['inquiry-task-history'],
+    async () => await TaskService.inquiryTaskHistory(),
     {
-      onSuccess: (output: TaskInquiryOwnedTaskOutput) => {
+      onSuccess: (output: TaskInquiryTaskHistoryOutput) => {
         const activeTasks = output.tasks?.filter(
           (item) =>
             item.status === TransactionStatus.DalamProsesPencarian ||
@@ -56,7 +58,7 @@ const TaskOwned: React.FC = () => {
         const activeTaskObject = {
           tasks: activeTasks,
         };
-        setActiveOwnedTask(activeTaskObject);
+        setActiveTaskHistory(activeTaskObject);
 
         const completedTasks = output.tasks?.filter(
           (item) => item.status === TransactionStatus.Selesai,
@@ -64,18 +66,18 @@ const TaskOwned: React.FC = () => {
         const completedTaskObject = {
           tasks: completedTasks,
         };
-        setCompletedOwnedTask(completedTaskObject);
+        setCompletedTaskHistory(completedTaskObject);
 
         const cancelledTasks = output.tasks?.filter(
           (item) =>
             item.status === TransactionStatus.Dibatalkan ||
             item.status === TransactionStatus.Telat ||
-            item.status === TransactionStatus.TidakMenemukan,
+            item.status === TransactionStatus.TidakDipilih,
         );
         const cancelledTaskObject = {
           tasks: cancelledTasks,
         };
-        setCancelledOwnedTask(cancelledTaskObject);
+        setCancelledTaskHistory(cancelledTaskObject);
       },
     },
   );
@@ -84,7 +86,7 @@ const TaskOwned: React.FC = () => {
 
   const [ratingAmount, setRatingAmount] = useState<number>(0);
   const [review, setReview] = useState<string>();
-  const [freelancerToReview, setFreelancerToReview] = useState<{
+  const [clientToReview, setClientToReview] = useState<{
     name: string;
     transactionId: string;
   }>({
@@ -94,7 +96,7 @@ const TaskOwned: React.FC = () => {
 
   const openModalReview = (e: any, name?: string, transactionId?: string) => {
     e.stopPropagation();
-    setFreelancerToReview({
+    setClientToReview({
       name: name ? name : '',
       transactionId: transactionId ? transactionId : '',
     });
@@ -112,18 +114,18 @@ const TaskOwned: React.FC = () => {
 
   const confirmSubmitReview = (formData: any) => {
     setReview(formData.review);
-    mutateReviewFreelancer();
+    mutateReviewClient();
   };
 
   const {
-    isLoading: isLoadingReviewFreelancer,
-    mutate: mutateReviewFreelancer,
-    error: errorReviewFreelancer,
+    isLoading: isLoadingReviewClient,
+    mutate: mutateReviewClient,
+    error: errorReviewClient,
   } = useMutation<{}, ErrorWrapper>(
-    ['review-freelancer'],
+    ['review-client'],
     async () =>
-      await ReviewService.reviewFreelancer({
-        transactionId: freelancerToReview?.transactionId,
+      await ReviewService.reviewClient({
+        transactionId: clientToReview?.transactionId,
         star: ratingAmount,
         description: review,
       }),
@@ -131,7 +133,7 @@ const TaskOwned: React.FC = () => {
       onSuccess: () => {
         setModalReview(false);
         setRatingAmount(0);
-        refetchOwnedTask();
+        refetchTaskHistory();
       },
     },
   );
@@ -144,8 +146,8 @@ const TaskOwned: React.FC = () => {
           closeOnDocumentClick={false}
           className="popup-review"
         >
-          {isLoadingReviewFreelancer && <Loader type="inline" />}
-          {!isLoadingReviewFreelancer && (
+          {isLoadingReviewClient && <Loader type="inline" />}
+          {!isLoadingReviewClient && (
             <>
               <div className="flex-column">
                 <div className="flex-centered w-100 justify-content-between mb-3">
@@ -161,16 +163,16 @@ const TaskOwned: React.FC = () => {
                   </div>
                 </div>
 
-                {errorReviewFreelancer && (
+                {errorReviewClient && (
                   <div className="mb-4">
                     <InfoBox
-                      message={errorReviewFreelancer?.message}
+                      message={errorReviewClient?.message}
                       type="danger"
                     />
                   </div>
                 )}
 
-                <h4 className="font-weight-semibold mb-4">{freelancerToReview?.name}</h4>
+                <h4 className="font-weight-semibold mb-4">{clientToReview?.name}</h4>
 
                 <div className="flex-centered mb-4">
                   <div
@@ -227,7 +229,7 @@ const TaskOwned: React.FC = () => {
 
                 <form onSubmit={handleSubmitReview(confirmSubmitReview)}>
                   <div className="mb-4">
-                    <p className="mb-2">Ceritakan pengalamanmu bekerja dengan freelancer ini!</p>
+                    <p className="mb-2">Ceritakan pengalamanmu bekerja dengan klien ini!</p>
                     <FormInput errorMessage={errorsReview?.review?.message}>
                       <Form.Control
                         as="textarea"
@@ -255,7 +257,7 @@ const TaskOwned: React.FC = () => {
       )}
       <Header />
       <div className="min-layout-height">
-        <TitleBanner message={'Tugas Saya'} />
+        <TitleBanner message={'Riwayat Tugas'} />
         <Row className="justify-content-center">
           <div className="col-10">
             <Tabs
@@ -267,18 +269,18 @@ const TaskOwned: React.FC = () => {
                 eventKey="active"
                 title="Aktif"
               >
-                {isLoadingOwnedTask && <Loader type="inline" />}
-                {!isLoadingOwnedTask && (
+                {isLoadingTaskHistory && <Loader type="inline" />}
+                {!isLoadingTaskHistory && (
                   <div className="mb-5">
-                    {errorOwnedTask && (
+                    {errorTaskHistory && (
                       <InlineRetryError
-                        message={errorOwnedTask.message}
-                        onRetry={refetchOwnedTask}
+                        message={errorTaskHistory.message}
+                        onRetry={refetchTaskHistory}
                       />
                     )}
-                    {activeOwnedTask.tasks?.length !== 0 && (
+                    {activeTaskHistory.tasks?.length !== 0 && (
                       <>
-                        {activeOwnedTask.tasks?.map((item) => {
+                        {activeTaskHistory.tasks?.map((item) => {
                           return (
                             <>
                               <div
@@ -290,7 +292,7 @@ const TaskOwned: React.FC = () => {
                                     <h4 className="font-weight-semibold mb-0 mr-3">{item.name}</h4>
                                     {item.status === TransactionStatus.DalamProsesPencarian && (
                                       <div className="chip chip-warning text-nowrap">
-                                        Dalam Proses Pencarian Freelancer
+                                        Dalam Proses Pemilihan
                                       </div>
                                     )}
                                     {item.status === TransactionStatus.DalamProses && (
@@ -314,20 +316,20 @@ const TaskOwned: React.FC = () => {
                                       </div>
                                     )}
                                   </div>
-                                  {item.chosenFreelancer && (
+                                  {item.client && (
                                     <div className="col-3 d-flex flex-column align-items-end">
                                       <div className="d-flex flex-row align-items-center">
                                         <Image
-                                          className="owned-task-freelancer-profile-image mr-2"
+                                          className="task-history-freelancer-profile-image mr-2"
                                           src={
-                                            item.chosenFreelancer.profileImageUrl
-                                              ? item.chosenFreelancer.profileImageUrl
+                                            item.client.profileImageUrl
+                                              ? item.client.profileImageUrl
                                               : DefaultAvatar
                                           }
-                                          alt={item.chosenFreelancer.name}
+                                          alt={item.client.name}
                                         />
                                         <small className="text-grey text-nowrap">
-                                          {item.chosenFreelancer.name}
+                                          {item.client.name}
                                         </small>
                                       </div>
                                     </div>
@@ -385,7 +387,7 @@ const TaskOwned: React.FC = () => {
                                 <h4 className="font-weight-semibold mb-3">{item.name}</h4>
                                 {item.status === TransactionStatus.DalamProsesPencarian && (
                                   <div className="chip chip-warning text-nowrap mb-3">
-                                    Dalam Proses Pencarian Freelancer
+                                    Dalam Proses Pemilihan
                                   </div>
                                 )}
                                 {item.status === TransactionStatus.DalamProses && (
@@ -421,19 +423,19 @@ const TaskOwned: React.FC = () => {
                                     <div className="chip chip-primary mb-2 mr-2">{tag}</div>
                                   ))}
                                 </div>
-                                {item.chosenFreelancer && (
+                                {item.client && (
                                   <div className="d-flex flex-row align-items-center mb-3">
                                     <Image
-                                      className="owned-task-freelancer-profile-image mr-2"
+                                      className="task-history-freelancer-profile-image mr-2"
                                       src={
-                                        item.chosenFreelancer.profileImageUrl
-                                          ? item.chosenFreelancer.profileImageUrl
+                                        item.client.profileImageUrl
+                                          ? item.client.profileImageUrl
                                           : DefaultAvatar
                                       }
-                                      alt={item.chosenFreelancer.name}
+                                      alt={item.client.name}
                                     />
                                     <small className="text-grey text-nowrap">
-                                      {item.chosenFreelancer.name}
+                                      {item.client.name}
                                     </small>
                                   </div>
                                 )}
@@ -456,10 +458,10 @@ const TaskOwned: React.FC = () => {
                         })}
                       </>
                     )}
-                    {activeOwnedTask.tasks?.length === 0 && (
+                    {activeTaskHistory.tasks?.length === 0 && (
                       <div className="card-sm">
                         <InfoBox
-                          message={'Kamu tidak memiliki tugas yang aktif.'}
+                          message={'Kamu tidak memiliki riwayat tugas yang aktif.'}
                           type="warning"
                         />
                       </div>
@@ -472,18 +474,18 @@ const TaskOwned: React.FC = () => {
                 eventKey="completed"
                 title="Selesai"
               >
-                {isLoadingOwnedTask && <Loader type="inline" />}
-                {!isLoadingOwnedTask && (
+                {isLoadingTaskHistory && <Loader type="inline" />}
+                {!isLoadingTaskHistory && (
                   <div className="mb-5">
-                    {errorOwnedTask && (
+                    {errorTaskHistory && (
                       <InlineRetryError
-                        message={errorOwnedTask.message}
-                        onRetry={refetchOwnedTask}
+                        message={errorTaskHistory.message}
+                        onRetry={refetchTaskHistory}
                       />
                     )}
-                    {completedOwnedTask.tasks?.length !== 0 && (
+                    {cancelledTaskHistory.tasks?.length !== 0 && (
                       <>
-                        {completedOwnedTask.tasks?.map((item) => {
+                        {completedTaskHistory.tasks?.map((item) => {
                           return (
                             <>
                               <div
@@ -500,16 +502,16 @@ const TaskOwned: React.FC = () => {
                                   <div className="col-3 d-flex flex-column align-items-end">
                                     <div className="d-flex flex-row align-items-center">
                                       <Image
-                                        className="owned-task-freelancer-profile-image mr-2"
+                                        className="task-history-freelancer-profile-image mr-2"
                                         src={
-                                          item.chosenFreelancer?.profileImageUrl
-                                            ? item.chosenFreelancer?.profileImageUrl
+                                          item.client?.profileImageUrl
+                                            ? item.client?.profileImageUrl
                                             : DefaultAvatar
                                         }
-                                        alt={item.chosenFreelancer?.name}
+                                        alt={item.client?.name}
                                       />
                                       <small className="text-grey text-nowrap">
-                                        {item.chosenFreelancer?.name}
+                                        {item.client?.name}
                                       </small>
                                     </div>
                                   </div>
@@ -551,14 +553,10 @@ const TaskOwned: React.FC = () => {
                                       <div
                                         className="btn btn-outline-primary"
                                         onClick={(e) =>
-                                          openModalReview(
-                                            e,
-                                            item.chosenFreelancer?.name,
-                                            item.transactionId,
-                                          )
+                                          openModalReview(e, item.client?.name, item.transactionId)
                                         }
                                       >
-                                        Beri Ulasan
+                                        Beri Ulasan pada Klien
                                       </div>
                                     )}
                                     {item.isReviewed && (
@@ -601,16 +599,16 @@ const TaskOwned: React.FC = () => {
                                 </div>
                                 <div className="d-flex flex-row align-items-center mb-3">
                                   <Image
-                                    className="owned-task-freelancer-profile-image mr-2"
+                                    className="task-history-freelancer-profile-image mr-2"
                                     src={
-                                      item.chosenFreelancer?.profileImageUrl
-                                        ? item.chosenFreelancer?.profileImageUrl
+                                      item.client?.profileImageUrl
+                                        ? item.client?.profileImageUrl
                                         : DefaultAvatar
                                     }
-                                    alt={item.chosenFreelancer?.name}
+                                    alt={item.client?.name}
                                   />
                                   <small className="text-grey text-nowrap">
-                                    {item.chosenFreelancer?.name}
+                                    {item.client?.name}
                                   </small>
                                 </div>
 
@@ -621,14 +619,10 @@ const TaskOwned: React.FC = () => {
                                   <div
                                     className="btn btn-outline-primary"
                                     onClick={(e) =>
-                                      openModalReview(
-                                        e,
-                                        item.chosenFreelancer?.name,
-                                        item.transactionId,
-                                      )
+                                      openModalReview(e, item.client?.name, item.transactionId)
                                     }
                                   >
-                                    Beri Ulasan
+                                    Beri Ulasan pada Klien
                                   </div>
                                 )}
                                 {item.isReviewed && (
@@ -650,10 +644,10 @@ const TaskOwned: React.FC = () => {
                         })}
                       </>
                     )}
-                    {completedOwnedTask.tasks?.length === 0 && (
+                    {completedTaskHistory.tasks?.length === 0 && (
                       <div className="card-sm">
                         <InfoBox
-                          message={'Kamu tidak memiliki tugas yang selesai.'}
+                          message={'Kamu tidak memiliki riwayat tugas yang selesai.'}
                           type="warning"
                         />
                       </div>
@@ -666,18 +660,18 @@ const TaskOwned: React.FC = () => {
                 eventKey="cancelled"
                 title="Dibatalkan"
               >
-                {isLoadingOwnedTask && <Loader type="inline" />}
-                {!isLoadingOwnedTask && (
+                {isLoadingTaskHistory && <Loader type="inline" />}
+                {!isLoadingTaskHistory && (
                   <div className="mb-5">
-                    {errorOwnedTask && (
+                    {errorTaskHistory && (
                       <InlineRetryError
-                        message={errorOwnedTask.message}
-                        onRetry={refetchOwnedTask}
+                        message={errorTaskHistory.message}
+                        onRetry={refetchTaskHistory}
                       />
                     )}
-                    {cancelledOwnedTask.tasks?.length !== 0 && (
+                    {cancelledTaskHistory.tasks?.length !== 0 && (
                       <>
-                        {cancelledOwnedTask.tasks?.map((item) => {
+                        {cancelledTaskHistory.tasks?.map((item) => {
                           return (
                             <>
                               <div
@@ -687,9 +681,9 @@ const TaskOwned: React.FC = () => {
                                 <Row className="align-items-center mb-3">
                                   <div className="col-9 d-flex flex-row">
                                     <h4 className="font-weight-semibold mb-0 mr-3">{item.name}</h4>
-                                    {item.status === TransactionStatus.TidakMenemukan && (
+                                    {item.status === TransactionStatus.TidakDipilih && (
                                       <div className="chip chip-danger text-nowrap">
-                                        Tidak Menemukan Freelancer
+                                        Tidak Terpilih Klien
                                       </div>
                                     )}
                                     {item.status === TransactionStatus.Dibatalkan && (
@@ -699,20 +693,20 @@ const TaskOwned: React.FC = () => {
                                       <div className="chip chip-danger text-nowrap">Telat</div>
                                     )}
                                   </div>
-                                  {item.chosenFreelancer && (
+                                  {item.client && (
                                     <div className="col-3 d-flex flex-column align-items-end">
                                       <div className="d-flex flex-row align-items-center">
                                         <Image
-                                          className="owned-task-freelancer-profile-image mr-2"
+                                          className="task-history-freelancer-profile-image mr-2"
                                           src={
-                                            item.chosenFreelancer.profileImageUrl
-                                              ? item.chosenFreelancer.profileImageUrl
+                                            item.client.profileImageUrl
+                                              ? item.client.profileImageUrl
                                               : DefaultAvatar
                                           }
-                                          alt={item.chosenFreelancer.name}
+                                          alt={item.client.name}
                                         />
                                         <small className="text-grey text-nowrap">
-                                          {item.chosenFreelancer.name}
+                                          {item.client.name}
                                         </small>
                                       </div>
                                     </div>
@@ -768,9 +762,9 @@ const TaskOwned: React.FC = () => {
                                 onClick={() => console.log('Hi')}
                               >
                                 <h4 className="font-weight-semibold mb-3">{item.name}</h4>
-                                {item.status === TransactionStatus.TidakMenemukan && (
+                                {item.status === TransactionStatus.TidakDipilih && (
                                   <div className="chip chip-danger text-nowrap mb-3">
-                                    Tidak Menemukan Freelancer
+                                    Tidak Terpilih Klien
                                   </div>
                                 )}
                                 {item.status === TransactionStatus.Dibatalkan && (
@@ -794,19 +788,19 @@ const TaskOwned: React.FC = () => {
                                     <div className="chip chip-primary mb-2 mr-2">{tag}</div>
                                   ))}
                                 </div>
-                                {item.chosenFreelancer && (
+                                {item.client && (
                                   <div className="d-flex flex-row align-items-center mb-3">
                                     <Image
-                                      className="owned-task-freelancer-profile-image mr-2"
+                                      className="task-history-freelancer-profile-image mr-2"
                                       src={
-                                        item.chosenFreelancer.profileImageUrl
-                                          ? item.chosenFreelancer.profileImageUrl
+                                        item.client.profileImageUrl
+                                          ? item.client.profileImageUrl
                                           : DefaultAvatar
                                       }
-                                      alt={item.chosenFreelancer.name}
+                                      alt={item.client.name}
                                     />
                                     <small className="text-grey text-nowrap">
-                                      {item.chosenFreelancer.name}
+                                      {item.client.name}
                                     </small>
                                   </div>
                                 )}
@@ -829,10 +823,10 @@ const TaskOwned: React.FC = () => {
                         })}
                       </>
                     )}
-                    {cancelledOwnedTask.tasks?.length === 0 && (
+                    {cancelledTaskHistory.tasks?.length === 0 && (
                       <div className="card-sm">
                         <InfoBox
-                          message={'Kamu tidak memiliki tugas yang dibatalkan.'}
+                          message={'Kamu tidak memiliki riwayat tugas yang dibatalkan.'}
                           type="warning"
                         />
                       </div>
@@ -849,4 +843,4 @@ const TaskOwned: React.FC = () => {
   );
 };
 
-export default TaskOwned;
+export default TaskHistory;

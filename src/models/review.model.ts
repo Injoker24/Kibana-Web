@@ -9,3 +9,9 @@ export interface ReviewReviewFreelancerInput {
   star: number;
   description?: string;
 }
+
+export interface ReviewReviewClientInput {
+  transactionId: string;
+  star: number;
+  description?: string;
+}
