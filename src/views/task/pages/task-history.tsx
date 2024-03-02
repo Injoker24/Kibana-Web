@@ -151,7 +151,7 @@ const TaskHistory: React.FC = () => {
             <>
               <div className="flex-column">
                 <div className="flex-centered w-100 justify-content-between mb-3">
-                  <h3 className="mb-0">Beri Ulasan Kepada</h3>
+                  <h3 className="mb-0">Beri ulasan kepada</h3>
                   <div
                     className="cursor-pointer"
                     onClick={() => {

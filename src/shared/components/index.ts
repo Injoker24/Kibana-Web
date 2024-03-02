@@ -14,6 +14,7 @@ import ProtectedClientRoute from './protected-client-route';
 import ProtectedFreelancerRoute from './protected-freelancer-route';
 import PublicRoute from './public-route';
 import ProtectedClientNotFreelancerRoute from './protected-client-not-freelancer-route';
+import PopUpSuccess from './pop-up-success';
 
 export {
   Loader,
@@ -32,4 +33,5 @@ export {
   ProtectedFreelancerRoute,
   PublicRoute,
   ProtectedClientNotFreelancerRoute,
+  PopUpSuccess,
 };

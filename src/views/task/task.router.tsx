@@ -1,7 +1,14 @@
 import React from 'react';
 
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { TaskCategoryList, TaskSearch, TaskDetail, TaskOwned, TaskHistory } from './pages';
+import {
+  TaskCategoryList,
+  TaskSearch,
+  TaskDetail,
+  TaskOwned,
+  TaskHistory,
+  TaskOwnedDetail,
+} from './pages';
 import { ProtectedClientRoute, ProtectedFreelancerRoute } from 'shared/components';
 
 interface categoryListStateWrapper {
@@ -15,6 +22,10 @@ interface searchStateWrapper {
 
 interface detailStateWrapper {
   prevPath: string;
+}
+
+interface ownedTaskDetailStateWrapper {
+  transactionId?: string;
 }
 
 const TaskRouter = () => {
@@ -48,6 +59,19 @@ const TaskRouter = () => {
         render={() => (
           <ProtectedClientRoute>
             <TaskOwned key={Date.now()} />
+          </ProtectedClientRoute>
+        )}
+      />
+
+      <Route
+        exact
+        path={'/task/owned/:taskId'}
+        render={({ location: { state } }) => (
+          <ProtectedClientRoute>
+            <TaskOwnedDetail
+              {...(state as ownedTaskDetailStateWrapper)}
+              key={Date.now()}
+            />
           </ProtectedClientRoute>
         )}
       />

@@ -149,7 +149,7 @@ const TaskOwned: React.FC = () => {
             <>
               <div className="flex-column">
                 <div className="flex-centered w-100 justify-content-between mb-3">
-                  <h3 className="mb-0">Beri Ulasan Kepada</h3>
+                  <h3 className="mb-0">Beri ulasan kepada</h3>
                   <div
                     className="cursor-pointer"
                     onClick={() => {
@@ -283,7 +283,14 @@ const TaskOwned: React.FC = () => {
                             <>
                               <div
                                 className="card-sm mb-4 d-none d-md-block cursor-pointer"
-                                onClick={() => console.log('Hi')}
+                                onClick={() => {
+                                  history.push({
+                                    pathname: '/task/owned/' + item.id,
+                                    state: {
+                                      transactionId: item.transactionId,
+                                    },
+                                  });
+                                }}
                               >
                                 <Row className="align-items-center mb-3">
                                   <div className="col-9 d-flex flex-row">
@@ -380,7 +387,14 @@ const TaskOwned: React.FC = () => {
 
                               <div
                                 className="card-sm mb-4 d-block d-md-none cursor-pointer"
-                                onClick={() => console.log('Hi')}
+                                onClick={() => {
+                                  history.push({
+                                    pathname: '/task/owned/' + item.id,
+                                    state: {
+                                      transactionId: item.transactionId,
+                                    },
+                                  });
+                                }}
                               >
                                 <h4 className="font-weight-semibold mb-3">{item.name}</h4>
                                 {item.status === TransactionStatus.DalamProsesPencarian && (
@@ -488,7 +502,14 @@ const TaskOwned: React.FC = () => {
                             <>
                               <div
                                 className="card-sm mb-4 d-none d-md-block cursor-pointer"
-                                onClick={() => console.log('Hi')}
+                                onClick={() => {
+                                  history.push({
+                                    pathname: '/task/owned/' + item.id,
+                                    state: {
+                                      transactionId: item.transactionId,
+                                    },
+                                  });
+                                }}
                               >
                                 <Row className="align-items-center mb-3">
                                   <div className="col-9 d-flex flex-row">
@@ -580,7 +601,14 @@ const TaskOwned: React.FC = () => {
 
                               <div
                                 className="card-sm mb-4 d-block d-md-none cursor-pointer"
-                                onClick={() => console.log('Hi')}
+                                onClick={() => {
+                                  history.push({
+                                    pathname: '/task/owned/' + item.id,
+                                    state: {
+                                      transactionId: item.transactionId,
+                                    },
+                                  });
+                                }}
                               >
                                 <h4 className="font-weight-semibold mb-3">{item.name}</h4>
                                 {item.status === TransactionStatus.Selesai && (
@@ -682,7 +710,14 @@ const TaskOwned: React.FC = () => {
                             <>
                               <div
                                 className="card-sm mb-4 d-none d-md-block cursor-pointer"
-                                onClick={() => console.log('Hi')}
+                                onClick={() => {
+                                  history.push({
+                                    pathname: '/task/owned/' + item.id,
+                                    state: {
+                                      transactionId: item.transactionId,
+                                    },
+                                  });
+                                }}
                               >
                                 <Row className="align-items-center mb-3">
                                   <div className="col-9 d-flex flex-row">
@@ -765,7 +800,14 @@ const TaskOwned: React.FC = () => {
 
                               <div
                                 className="card-sm mb-4 d-block d-md-none cursor-pointer"
-                                onClick={() => console.log('Hi')}
+                                onClick={() => {
+                                  history.push({
+                                    pathname: '/task/owned/' + item.id,
+                                    state: {
+                                      transactionId: item.transactionId,
+                                    },
+                                  });
+                                }}
                               >
                                 <h4 className="font-weight-semibold mb-3">{item.name}</h4>
                                 {item.status === TransactionStatus.TidakMenemukan && (

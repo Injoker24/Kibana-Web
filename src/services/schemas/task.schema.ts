@@ -156,3 +156,27 @@ export interface TaskInquiryTaskHistoryResponse {
     };
   }[];
 }
+
+export interface TaskInquiryOwnedTaskDetailResponse {
+  task_detail: {
+    id: string;
+    name: string;
+    tags: string[];
+    due_date: string;
+    price: number;
+    status: string;
+    difficulty: string;
+  };
+}
+
+export interface TaskInquiryRegisteredFreelancerListResponse {
+  choose_due_date?: string;
+  registered_freelancer?: {
+    id: string;
+    name: string;
+    profile_image_url?: string;
+    description: string;
+    portfolio_url?: string;
+    cv_url?: string;
+  }[];
+}

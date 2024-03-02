@@ -151,6 +151,7 @@ const AuthRegisterFreelancer: React.FC = () => {
     {
       onSuccess: () => {
         setLocalStorage('status', 'freelancer');
+        setLocalStorage('isFreelancer', 'true');
         history.push({
           pathname: '/dashboard',
         });

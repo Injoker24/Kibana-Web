@@ -29,7 +29,7 @@ import {
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { DefaultAvatar, IconChevronLeft, IconStar } from 'images';
 
-const AccountOtherProfile: React.FC = ({ status, prevPath }: any) => {
+const AccountOtherProfile: React.FC = ({ status, prevPath, transactionId }: any) => {
   const params = useParams<{ userId: string }>();
   const history = useHistory();
   const location = useLocation();
@@ -148,7 +148,16 @@ const AccountOtherProfile: React.FC = ({ status, prevPath }: any) => {
             <div
               className="text-primary-dark flex-centered justify-content-start cursor-pointer mb-4"
               onClick={() => {
-                history.push(prevPath ? prevPath : '/dashboard');
+                if (prevPath) {
+                  history.push({
+                    pathname: prevPath,
+                    state: {
+                      transactionId: transactionId,
+                    },
+                  });
+                } else {
+                  history.push('/dashboard');
+                }
               }}
             >
               <div className="mr-3">

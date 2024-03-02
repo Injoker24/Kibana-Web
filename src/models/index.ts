@@ -4,3 +4,4 @@ export * from './service.model';
 export * from './task.model';
 export * from './account.model';
 export * from './review.model';
+export * from './transaction.model';

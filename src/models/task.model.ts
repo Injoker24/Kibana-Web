@@ -2,7 +2,9 @@ import {
   TaskInquiryCategoryResponse,
   TaskInquiryDetailSubCategoryResponse,
   TaskInquiryNewTaskResponse,
+  TaskInquiryOwnedTaskDetailResponse,
   TaskInquiryOwnedTaskResponse,
+  TaskInquiryRegisteredFreelancerListResponse,
   TaskInquiryTaskDetailResponse,
   TaskInquiryTaskHistoryResponse,
   TaskInquiryTaskListResponse,
@@ -335,6 +337,68 @@ export function transformToTaskInquiryTaskHistoryOutput(
               amount: t.review?.amount,
             }
           : undefined,
+      };
+    }),
+  };
+
+  return result;
+}
+
+export interface TaskInquiryOwnedTaskDetailOutput {
+  taskDetail: {
+    id: string;
+    name: string;
+    tags: string[];
+    dueDate: string;
+    price: number;
+    status: string;
+    difficulty: string;
+  };
+}
+
+export function transformToTaskInquiryOwnedTaskDetailOutput(
+  response: TaskInquiryOwnedTaskDetailResponse,
+): TaskInquiryOwnedTaskDetailOutput {
+  const result: TaskInquiryOwnedTaskDetailOutput = {
+    taskDetail: {
+      id: response.task_detail.id,
+      name: response.task_detail.name,
+      tags: response.task_detail.tags,
+      dueDate: response.task_detail.due_date,
+      price: response.task_detail.price,
+      status: response.task_detail.status,
+      difficulty: response.task_detail.difficulty,
+    },
+  };
+
+  return result;
+}
+
+export interface TaskInquiryRegisteredFreelancerListOutput {
+  chooseDueDate?: string;
+  registeredFreelancer?: {
+    id: string;
+    name: string;
+    profileImageUrl?: string;
+    description: string;
+    portfolioUrl?: string;
+    cvUrl?: string;
+  }[];
+}
+
+export function transformToTaskInquiryRegisteredFreelancerListOutput(
+  response: TaskInquiryRegisteredFreelancerListResponse,
+): TaskInquiryRegisteredFreelancerListOutput {
+  const result: TaskInquiryRegisteredFreelancerListOutput = {
+    chooseDueDate: response.choose_due_date,
+    registeredFreelancer: response.registered_freelancer?.map((t) => {
+      return {
+        id: t.id,
+        name: t.name,
+        profileImageUrl: t.profile_image_url,
+        description: t.description,
+        portfolioUrl: t.portfolio_url,
+        cvUrl: t.cv_url,
       };
     }),
   };

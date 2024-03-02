@@ -7,6 +7,7 @@ import { ProtectedRoute } from 'shared/components';
 interface otherProfileStateWrapper {
   status: string;
   prevPath: string;
+  transactionId?: string;
 }
 
 const AccountRouter = () => {

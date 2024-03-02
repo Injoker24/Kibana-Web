@@ -2,7 +2,9 @@ import {
   TaskInquiryCategoryOutput,
   TaskInquiryDetailSubCategoryOutput,
   TaskInquiryNewTaskOutput,
+  TaskInquiryOwnedTaskDetailOutput,
   TaskInquiryOwnedTaskOutput,
+  TaskInquiryRegisteredFreelancerListOutput,
   TaskInquiryTaskDetailOutput,
   TaskInquiryTaskHistoryOutput,
   TaskInquiryTaskListInput,
@@ -10,7 +12,9 @@ import {
   transformToTaskInquiryCategoryOutput,
   transformToTaskInquiryDetailSubCategoryOutput,
   transformToTaskInquiryNewTaskOutput,
+  transformToTaskInquiryOwnedTaskDetailOutput,
   transformToTaskInquiryOwnedTaskOutput,
+  transformToTaskInquiryRegisteredFreelancerListOutput,
   transformToTaskInquiryTaskDetailOutput,
   transformToTaskInquiryTaskHistoryOutput,
   transformToTaskInquiryTaskListOutput,
@@ -21,7 +25,9 @@ import {
   TaskInquiryCategoryResponse,
   TaskInquiryDetailSubCategoryResponse,
   TaskInquiryNewTaskResponse,
+  TaskInquiryOwnedTaskDetailResponse,
   TaskInquiryOwnedTaskResponse,
+  TaskInquiryRegisteredFreelancerListResponse,
   TaskInquiryTaskDetailResponse,
   TaskInquiryTaskHistoryResponse,
   TaskInquiryTaskListResponse,
@@ -93,6 +99,30 @@ const TaskService = {
     );
 
     return transformToTaskInquiryTaskHistoryOutput(response.data.output_schema);
+  },
+
+  inquiryOwnedTaskDetail: async (taskId: string): Promise<TaskInquiryOwnedTaskDetailOutput> => {
+    const response = await axiosInstance.get<ApiResponse<TaskInquiryOwnedTaskDetailResponse>>(
+      `/task/owned/${taskId}`,
+    );
+
+    return transformToTaskInquiryOwnedTaskDetailOutput(response.data.output_schema);
+  },
+
+  inquiryRegisteredFreelancerList: async (
+    taskId: string,
+  ): Promise<TaskInquiryRegisteredFreelancerListOutput> => {
+    const response = await axiosInstance.get<
+      ApiResponse<TaskInquiryRegisteredFreelancerListResponse>
+    >(`/task/${taskId}/freelancer-list`);
+
+    return transformToTaskInquiryRegisteredFreelancerListOutput(response.data.output_schema);
+  },
+
+  deleteTask: async (taskId: string): Promise<{}> => {
+    const response = await axiosInstance.put<ApiResponse<{}>>(`/task/${taskId}/delete`);
+
+    return response.data.output_schema;
   },
 };
 
