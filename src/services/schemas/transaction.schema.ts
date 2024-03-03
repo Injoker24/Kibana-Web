@@ -25,3 +25,24 @@ export interface TransactionInquiryDetailClientTaskResponse {
     };
   };
 }
+
+export interface TransactionInquiryClientInvoiceResponse {
+  ref_no: string;
+  client_name: string;
+  freelancer_name: string;
+  payment_date: string;
+  task: {
+    name: string;
+    price: string;
+    duration?: number;
+    revision_count?: number;
+    additional_data?: {
+      title: string;
+    }[];
+  };
+  fee: {
+    percentage: number;
+    amount: number;
+  };
+  total_price: number;
+}

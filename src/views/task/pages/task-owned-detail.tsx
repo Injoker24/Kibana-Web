@@ -18,10 +18,11 @@ import {
   ErrorWrapper,
   TaskInquiryOwnedTaskDetailOutput,
   TaskInquiryRegisteredFreelancerListOutput,
+  TransactionInquiryClientInvoiceOutput,
   TransactionInquiryDetailClientTaskOutput,
 } from 'models';
 import { TaskService } from 'services';
-import { DefaultAvatar, IconChevronLeft, IconClose } from 'images';
+import { DefaultAvatar, IconChevronLeft, IconClose, logoDark, logoDarkLg } from 'images';
 import { TransactionStatus } from 'enums';
 import { formatCurrency } from 'utils';
 import TransactionService from 'services/transaction.service';
@@ -155,6 +156,20 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
       onSuccess: (response) => {
         setTransactionStatus(response.transactionDetail.status);
       },
+    },
+  );
+
+  const {
+    data: clientInvoice,
+    isLoading: isLoadingClientInvoice,
+    isFetching: isFetchingClientInvoice,
+    refetch: refetchClientInvoice,
+    error: errorClientInvoice,
+  } = useQuery<TransactionInquiryClientInvoiceOutput, ErrorWrapper>(
+    ['inquiry-client-invoice', transactionId],
+    async () => await TransactionService.inquiryClientInvoice(transactionId),
+    {
+      enabled: !!transactionId,
     },
   );
   // #endregion
@@ -647,10 +662,8 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
                     )}
                   </>
                 )}
-                {(isLoadingTransactionDetail || isFetchingTransactionDetail) && (
-                  <Loader type="inline" />
-                )}
-                {!(isLoadingTransactionDetail || isFetchingTransactionDetail) && (
+                {(isLoadingClientInvoice || isFetchingClientInvoice) && <Loader type="inline" />}
+                {!(isLoadingClientInvoice || isFetchingClientInvoice) && (
                   <>
                     {errorTransactionDetail && (
                       <InlineRetryError
@@ -658,8 +671,97 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
                         onRetry={refetchTaskDetail}
                       />
                     )}
-                    {transactionStatus !== TransactionStatus.DalamProsesPencarian &&
-                      transactionStatus !== TransactionStatus.TidakMenemukan && <></>}
+                    {clientInvoice && (
+                      <div className="card-sm mb-5 invoice-container">
+                        <Row className="align-items-center mb-4 mb-lg-5">
+                          <div className="col-12 col-lg-6 mb-4 mb-lg-0">
+                            <Image
+                              className="flex-centered d-lg-block d-none"
+                              src={logoDarkLg}
+                              alt="logo"
+                            />
+                            <Image
+                              className="flex-centered d-block d-lg-none"
+                              src={logoDark}
+                              alt="logo"
+                            />
+                          </div>
+                          <div className="text-lg-right col-12 col-lg-6">
+                            <p>Nomor Pemesanan</p>
+                            <p className="font-weight-bold">{clientInvoice.refNo}</p>
+                          </div>
+                        </Row>
+                        <Row className="mb-4">
+                          <div className="col-12">
+                            <h3 className="mb-0">Bukti Pembayaran</h3>
+                          </div>
+                        </Row>
+                        <Row className="mb-3">
+                          <div className="col-12 col-lg-6">
+                            <Row>
+                              <h4 className="font-weight-semibold col-12 col-lg-4">Klien</h4>
+                              <p className="col-12 col-lg-8">{clientInvoice.clientName}</p>
+                            </Row>
+                          </div>
+                        </Row>
+                        <Row className="mb-4">
+                          <div className="col-12">
+                            <Row>
+                              <div className="col-12 col-lg-6 mb-3 mb-lg-0">
+                                <Row>
+                                  <h4 className="font-weight-semibold col-12 col-lg-4">
+                                    Freelancer
+                                  </h4>
+                                  <p className="col-12 col-lg-8">{clientInvoice.freelancerName}</p>
+                                </Row>
+                              </div>
+                              <div className="col-12 col-lg-6">
+                                <Row>
+                                  <h4 className="font-weight-semibold col-12 col-lg-5 text-lg-right">
+                                    Tanggal Pemesanan
+                                  </h4>
+                                  <p className="col-12 col-lg-7 text-lg-right">
+                                    {clientInvoice.paymentDate}
+                                  </p>
+                                </Row>
+                              </div>
+                            </Row>
+                          </div>
+                        </Row>
+                        <hr />
+                        <Row className="my-4">
+                          <div className="col-12 col-lg-10 mb-3 mb-lg-0">
+                            <h4 className="font-weight-semibold">Tugas</h4>
+                            <p className="font-weight-bold">{clientInvoice.task.name}</p>
+                          </div>
+                          <div className="col-12 col-lg-2">
+                            <h4 className="font-weight-semibold">Harga</h4>
+                            <p>Rp {formatCurrency(clientInvoice.task.price)}</p>
+                          </div>
+                        </Row>
+                        <hr />
+                        <Row className="my-4">
+                          <div className="col-12 col-lg-10">
+                            <h4 className="font-weight-semibold">
+                              Fee Platform ({clientInvoice.fee.percentage}%)
+                            </h4>
+                          </div>
+                          <div className="col-12 col-lg-2">
+                            <p>Rp {formatCurrency(clientInvoice.fee.amount)}</p>
+                          </div>
+                        </Row>
+                        <Row>
+                          <div className="col-12 col-lg-10">
+                            <h4 className="font-weight-semibold">Total</h4>
+                          </div>
+                          <div className="col-12 col-lg-2">
+                            <p className="font-weight-bold">
+                              Rp {formatCurrency(clientInvoice.totalPrice)}
+                            </p>
+                          </div>
+                        </Row>
+                      </div>
+                    )}
                   </>
                 )}
               </Tab>

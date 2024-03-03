@@ -1,9 +1,15 @@
 import {
+  TransactionInquiryClientInvoiceOutput,
   TransactionInquiryDetailClientTaskOutput,
+  transformToTransactionInquiryClientInvoiceOutput,
   transformToTransactionInquiryDetailClientTaskOutput,
 } from 'models';
 import { axiosInstance } from 'setup';
-import { ApiResponse, TransactionInquiryDetailClientTaskResponse } from './schemas';
+import {
+  ApiResponse,
+  TransactionInquiryClientInvoiceResponse,
+  TransactionInquiryDetailClientTaskResponse,
+} from './schemas';
 
 const TransactionService = {
   inquiryClientTaskTransactionDetail: async (
@@ -14,6 +20,16 @@ const TransactionService = {
     >(`/transaction/task/client/${transactionId}`);
 
     return transformToTransactionInquiryDetailClientTaskOutput(response.data.output_schema);
+  },
+
+  inquiryClientInvoice: async (
+    transactionId: string,
+  ): Promise<TransactionInquiryClientInvoiceOutput> => {
+    const response = await axiosInstance.get<ApiResponse<TransactionInquiryClientInvoiceResponse>>(
+      `/transaction/invoice/${transactionId}`,
+    );
+
+    return transformToTransactionInquiryClientInvoiceOutput(response.data.output_schema);
   },
 };
 

@@ -1,4 +1,7 @@
-import { TransactionInquiryDetailClientTaskResponse } from 'services/schemas';
+import {
+  TransactionInquiryClientInvoiceResponse,
+  TransactionInquiryDetailClientTaskResponse,
+} from 'services/schemas';
 
 export interface TransactionInquiryDetailClientTaskOutput {
   transactionDetail: {
@@ -59,6 +62,56 @@ export function transformToTransactionInquiryDetailClientTaskOutput(
           }
         : undefined,
     },
+  };
+
+  return result;
+}
+
+export interface TransactionInquiryClientInvoiceOutput {
+  refNo: string;
+  clientName: string;
+  freelancerName: string;
+  paymentDate: string;
+  task: {
+    name: string;
+    price: string;
+    duration?: number;
+    revisionCount?: number;
+    additionalData?: {
+      title: string;
+    }[];
+  };
+  fee: {
+    percentage: number;
+    amount: number;
+  };
+  totalPrice: number;
+}
+
+export function transformToTransactionInquiryClientInvoiceOutput(
+  response: TransactionInquiryClientInvoiceResponse,
+): TransactionInquiryClientInvoiceOutput {
+  const result: TransactionInquiryClientInvoiceOutput = {
+    refNo: response.ref_no,
+    clientName: response.client_name,
+    freelancerName: response.freelancer_name,
+    paymentDate: response.payment_date,
+    task: {
+      name: response.task.name,
+      price: response.task.price,
+      duration: response.task.duration,
+      revisionCount: response.task.revision_count,
+      additionalData: response.task.additional_data?.map((t) => {
+        return {
+          title: t.title,
+        };
+      }),
+    },
+    fee: {
+      percentage: response.fee.percentage,
+      amount: response.fee.amount,
+    },
+    totalPrice: response.total_price,
   };
 
   return result;

@@ -27,6 +27,7 @@ import logoInstagram from './logo/logo-instagram.svg';
 import logoLinkedIn from './logo/logo-linked-in.svg';
 import logoWhatsapp from './logo/logo-whatsapp.svg';
 import logoYoutube from './logo/logo-youtube.svg';
+import logoDarkLg from './logo/logo-dark-lg.svg';
 
 import heroIllustration from './hero-illustration.svg';
 import searchIllustration from './search-illustration.svg';
@@ -68,6 +69,7 @@ export {
   logoYoutube,
   heroIllustration,
   searchIllustration,
+  logoDarkLg,
   IconMyTaskService,
   IconCreateTaskService,
   IconHistoryTaskService,
