@@ -1,4 +1,5 @@
 import {
+  TransactionInquiryClientActivityResponse,
   TransactionInquiryClientInvoiceResponse,
   TransactionInquiryDetailClientTaskResponse,
 } from 'services/schemas';
@@ -112,6 +113,56 @@ export function transformToTransactionInquiryClientInvoiceOutput(
       amount: response.fee.amount,
     },
     totalPrice: response.total_price,
+  };
+
+  return result;
+}
+
+export interface TransactionInquiryClientActivityOutput {
+  activity: {
+    timestamp: string;
+    code: string;
+    title: string;
+    description?: string;
+    files?: {
+      id: string;
+      fileName: string;
+    }[];
+    responseDeadline?: string;
+    deadlineExtension?: string;
+    buttons?: {
+      code: string;
+      name: string;
+    }[];
+  }[];
+}
+
+export function transformToTransactionInquiryClientActivityOutput(
+  response: TransactionInquiryClientActivityResponse,
+): TransactionInquiryClientActivityOutput {
+  const result: TransactionInquiryClientActivityOutput = {
+    activity: response.activity.map((t) => {
+      return {
+        timestamp: t.timestamp,
+        code: t.code,
+        title: t.title,
+        description: t.description,
+        files: t.files?.map((file) => {
+          return {
+            id: file.id,
+            fileName: file.file_name,
+          };
+        }),
+        responseDeadline: t.response_deadline,
+        deadlineExtension: t.deadline_extension,
+        buttons: t.buttons?.map((button) => {
+          return {
+            code: button.code,
+            name: button.name,
+          };
+        }),
+      };
+    }),
   };
 
   return result;

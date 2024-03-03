@@ -1,12 +1,15 @@
 import {
+  TransactionInquiryClientActivityOutput,
   TransactionInquiryClientInvoiceOutput,
   TransactionInquiryDetailClientTaskOutput,
+  transformToTransactionInquiryClientActivityOutput,
   transformToTransactionInquiryClientInvoiceOutput,
   transformToTransactionInquiryDetailClientTaskOutput,
 } from 'models';
 import { axiosInstance } from 'setup';
 import {
   ApiResponse,
+  TransactionInquiryClientActivityResponse,
   TransactionInquiryClientInvoiceResponse,
   TransactionInquiryDetailClientTaskResponse,
 } from './schemas';
@@ -30,6 +33,16 @@ const TransactionService = {
     );
 
     return transformToTransactionInquiryClientInvoiceOutput(response.data.output_schema);
+  },
+
+  inquiryClientActivity: async (
+    transactionId: string,
+  ): Promise<TransactionInquiryClientActivityOutput> => {
+    const response = await axiosInstance.get<ApiResponse<TransactionInquiryClientActivityResponse>>(
+      `/transaction/${transactionId}/client/activity`,
+    );
+
+    return transformToTransactionInquiryClientActivityOutput(response.data.output_schema);
   },
 };
 

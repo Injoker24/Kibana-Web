@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Tab, Tabs, Image } from 'react-bootstrap';
+import { Row, Tab, Tabs, Image, Form } from 'react-bootstrap';
 
 import {
   Footer,
+  FormInput,
   Header,
   InfoBox,
   InlineRetryError,
@@ -11,6 +12,7 @@ import {
   PopUpError,
   PopUpSuccess,
   TitleBanner,
+  TransactionActivity,
 } from 'shared/components';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-query';
@@ -18,14 +20,17 @@ import {
   ErrorWrapper,
   TaskInquiryOwnedTaskDetailOutput,
   TaskInquiryRegisteredFreelancerListOutput,
+  TransactionInquiryClientActivityOutput,
   TransactionInquiryClientInvoiceOutput,
   TransactionInquiryDetailClientTaskOutput,
 } from 'models';
-import { TaskService } from 'services';
-import { DefaultAvatar, IconChevronLeft, IconClose, logoDark, logoDarkLg } from 'images';
+import { ReviewService, TaskService } from 'services';
+import { DefaultAvatar, IconChevronLeft, IconClose, IconStar, logoDark, logoDarkLg } from 'images';
 import { TransactionStatus } from 'enums';
 import { formatCurrency } from 'utils';
 import TransactionService from 'services/transaction.service';
+import { useForm } from 'react-hook-form';
+import Popup from 'reactjs-popup';
 
 const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
   const params = useParams<{ taskId: string }>();
@@ -155,6 +160,7 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
       enabled: !!transactionId,
       onSuccess: (response) => {
         setTransactionStatus(response.transactionDetail.status);
+        mutateClientActivity();
       },
     },
   );
@@ -172,6 +178,70 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
       enabled: !!transactionId,
     },
   );
+
+  const {
+    data: clientActivity,
+    isLoading: isLoadingClientActivity,
+    mutate: mutateClientActivity,
+    error: errorClientActivity,
+  } = useMutation<TransactionInquiryClientActivityOutput, ErrorWrapper>(
+    ['inquiry-client-activity', transactionId],
+    async () => await TransactionService.inquiryClientActivity(transactionId),
+  );
+
+  const [modalReview, setModalReview] = useState<boolean>(false);
+  const [ratingAmount, setRatingAmount] = useState<number>(0);
+  const [review, setReview] = useState<string>();
+  const [freelancerToReview, setFreelancerToReview] = useState<{
+    name: string;
+    transactionId: string;
+  }>({
+    name: '',
+    transactionId: '',
+  });
+
+  const openModalReview = (name: string, transactionId: string) => {
+    setFreelancerToReview({
+      name: name ? name : '',
+      transactionId: transactionId ? transactionId : '',
+    });
+    setModalReview(true);
+  };
+
+  const {
+    register: registerReview,
+    errors: errorsReview,
+    formState: formStateReview,
+    handleSubmit: handleSubmitReview,
+  } = useForm({
+    mode: 'onChange',
+  });
+
+  const confirmSubmitReview = (formData: any) => {
+    setReview(formData.review);
+    mutateReviewFreelancer();
+  };
+
+  const {
+    isLoading: isLoadingReviewFreelancer,
+    mutate: mutateReviewFreelancer,
+    error: errorReviewFreelancer,
+  } = useMutation<{}, ErrorWrapper>(
+    ['review-freelancer'],
+    async () =>
+      await ReviewService.reviewFreelancer({
+        transactionId: freelancerToReview?.transactionId,
+        star: ratingAmount,
+        description: review,
+      }),
+    {
+      onSuccess: () => {
+        setModalReview(false);
+        setRatingAmount(0);
+        refetchTransactionDetail();
+      },
+    },
+  );
   // #endregion
 
   const openFreelancerProfile = (id: string) => {
@@ -187,6 +257,121 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
 
   return (
     <>
+      {modalReview && (
+        <Popup
+          open={true}
+          closeOnDocumentClick={false}
+          className="popup-review"
+        >
+          {isLoadingReviewFreelancer && <Loader type="inline" />}
+          {!isLoadingReviewFreelancer && (
+            <>
+              <div className="flex-column">
+                <div className="flex-centered w-100 justify-content-between mb-3">
+                  <h3 className="mb-0">Beri ulasan kepada</h3>
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setModalReview(false);
+                      setRatingAmount(0);
+                    }}
+                  >
+                    <IconClose />
+                  </div>
+                </div>
+
+                {errorReviewFreelancer && (
+                  <div className="mb-4">
+                    <InfoBox
+                      message={errorReviewFreelancer?.message}
+                      type="danger"
+                    />
+                  </div>
+                )}
+
+                <h4 className="font-weight-semibold mb-4">{freelancerToReview?.name}</h4>
+
+                <div className="flex-centered mb-4">
+                  <div
+                    className={
+                      'cursor-pointer ' + (ratingAmount < 1 ? 'text-muted ' : 'text-warning')
+                    }
+                    onClick={() => {
+                      setRatingAmount(1);
+                    }}
+                  >
+                    <IconStar />
+                  </div>
+                  <div
+                    className={
+                      'cursor-pointer ' + (ratingAmount < 2 ? 'text-muted ' : 'text-warning')
+                    }
+                    onClick={() => {
+                      setRatingAmount(2);
+                    }}
+                  >
+                    <IconStar />
+                  </div>
+                  <div
+                    className={
+                      'cursor-pointer ' + (ratingAmount < 3 ? 'text-muted ' : 'text-warning')
+                    }
+                    onClick={() => {
+                      setRatingAmount(3);
+                    }}
+                  >
+                    <IconStar />
+                  </div>
+                  <div
+                    className={
+                      'cursor-pointer ' + (ratingAmount < 4 ? 'text-muted ' : 'text-warning')
+                    }
+                    onClick={() => {
+                      setRatingAmount(4);
+                    }}
+                  >
+                    <IconStar />
+                  </div>
+                  <div
+                    className={
+                      'cursor-pointer ' + (ratingAmount < 5 ? 'text-muted ' : 'text-warning')
+                    }
+                    onClick={() => {
+                      setRatingAmount(5);
+                    }}
+                  >
+                    <IconStar />
+                  </div>
+                </div>
+
+                <form onSubmit={handleSubmitReview(confirmSubmitReview)}>
+                  <div className="mb-4">
+                    <p className="mb-2">Ceritakan pengalamanmu bekerja dengan freelancer ini!</p>
+                    <FormInput errorMessage={errorsReview?.review?.message}>
+                      <Form.Control
+                        as="textarea"
+                        id="review"
+                        name="review"
+                        className="review-text-area"
+                        isInvalid={formStateReview.touched.review === true && !!errorsReview.review}
+                        ref={registerReview() as string & ((ref: Element | null) => void)}
+                      ></Form.Control>
+                    </FormInput>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="btn btn-primary w-100"
+                    disabled={ratingAmount === 0}
+                  >
+                    Kirim
+                  </button>
+                </form>
+              </div>
+            </>
+          )}
+        </Popup>
+      )}
       {modalDeleteTask && (
         <PopUpConfirm
           title="Hapus tugas"
@@ -507,7 +692,34 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
                       <Row>
                         <div className="col-12 col-xl-8 order-last order-xl-first">
                           {transactionStatus !== TransactionStatus.DalamProsesPencarian &&
-                            transactionStatus !== TransactionStatus.TidakMenemukan && <></>}
+                            transactionStatus !== TransactionStatus.TidakMenemukan && (
+                              <>
+                                {isLoadingClientActivity && <Loader type="inline" />}
+                                {!isLoadingClientActivity && (
+                                  <>
+                                    {errorClientActivity && (
+                                      <InlineRetryError
+                                        message={errorClientActivity.message}
+                                        onRetry={mutateClientActivity}
+                                      />
+                                    )}
+                                    {clientActivity && (
+                                      <div className="mb-5">
+                                        {clientActivity.activity.map((activity) => {
+                                          return (
+                                            <TransactionActivity
+                                              userType="client"
+                                              projectType="task"
+                                              activity={activity}
+                                            />
+                                          );
+                                        })}
+                                      </div>
+                                    )}
+                                  </>
+                                )}
+                              </>
+                            )}
                         </div>
                         <div className="col-12 col-xl-4">
                           {transactionStatus !== TransactionStatus.DalamProsesPencarian &&
@@ -578,9 +790,11 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
                                       transactionDetail.transactionDetail.taskDetail.price,
                                     )}
                                   </h3>
-                                  {!transactionDetail.transactionDetail.hasReturned && (
-                                    <div className="btn btn-danger">Ajukan Pengembalian</div>
-                                  )}
+                                  {!transactionDetail.transactionDetail.hasReturned &&
+                                    (transactionStatus === TransactionStatus.DalamProses ||
+                                      transactionStatus === TransactionStatus.SudahDikirim) && (
+                                      <div className="btn btn-danger">Ajukan Pengembalian</div>
+                                    )}
                                 </div>
                                 <div className="mb-5">
                                   <h4 className="font-weight-semibold mb-3">Freelancer terpilih</h4>
@@ -622,6 +836,50 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
                                     </div>
                                   </div>
                                 </div>
+                                {transactionStatus === TransactionStatus.Selesai &&
+                                  !transactionDetail.transactionDetail.isReviewed && (
+                                    <div
+                                      className="btn btn-outline-primary mb-5"
+                                      onClick={() => {
+                                        openModalReview(
+                                          transactionDetail.transactionDetail.chosenFreelancer.name,
+                                          transactionId,
+                                        );
+                                      }}
+                                    >
+                                      Beri Ulasan
+                                    </div>
+                                  )}
+                                {transactionStatus === TransactionStatus.Selesai &&
+                                  transactionDetail.transactionDetail.isReviewed && (
+                                    <div className="mb-5">
+                                      <h4 className="font-weight-semibold">Ulasan anda </h4>
+                                      <div className="card-sm">
+                                        <div className="d-flex flex-row mb-4">
+                                          {Array(transactionDetail.transactionDetail.review?.amount)
+                                            .fill(null)
+                                            .map(() => {
+                                              return (
+                                                <div className="text-warning">
+                                                  <IconStar />
+                                                </div>
+                                              );
+                                            })}
+                                        </div>
+                                        {transactionDetail.transactionDetail.review
+                                          ?.description && (
+                                          <p>
+                                            {
+                                              transactionDetail.transactionDetail.review
+                                                ?.description
+                                            }
+                                          </p>
+                                        )}
+                                        {!transactionDetail.transactionDetail.review
+                                          ?.description && <p>Tidak ada deskripsi.</p>}
+                                      </div>
+                                    </div>
+                                  )}
                               </>
                             )}
                         </div>
@@ -665,10 +923,10 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
                 {(isLoadingClientInvoice || isFetchingClientInvoice) && <Loader type="inline" />}
                 {!(isLoadingClientInvoice || isFetchingClientInvoice) && (
                   <>
-                    {errorTransactionDetail && (
+                    {errorClientInvoice && (
                       <InlineRetryError
-                        message={errorTransactionDetail.message}
-                        onRetry={refetchTaskDetail}
+                        message={errorClientInvoice.message}
+                        onRetry={refetchClientInvoice}
                       />
                     )}
                     {clientInvoice && (

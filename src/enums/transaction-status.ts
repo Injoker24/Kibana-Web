@@ -10,3 +10,36 @@ export enum TransactionStatus {
   DalamInvestigasi = '9',
   TidakDipilih = '10',
 }
+
+export enum TransactionActivityEnum {
+  MembuatPesanan = '1',
+  MenambahkanFilePendukungDeskripsi = '2',
+  MenambahkanFilePendukung = '3',
+  MengirimPesan = '4',
+  MengirimHasil = '5',
+  Pengembalian = '6',
+  MembatalkanPengembalian = '7',
+  MenolakPengembalian = '8',
+  MenerimaPengembalian = '9',
+  Pembatalan = '10',
+  MembatalkanPembatalan = '11',
+  MenolakPembatalan = '12',
+  MenerimaPembatalan = '13',
+  MemintaRevisi = '14',
+  MenyelesaikanPesanan = '15',
+  MenghubungiAdmin = '16',
+  Telat = '17',
+  PesananDibatalkan = '18',
+}
+
+export enum TransactionActivityButtonsEnum {
+  MintaRevisi = '1',
+  SelesaikanPesanan = '2',
+  TolakPengembalian = '3',
+  TerimaPengembalian = '4',
+  BatalkanPengembalian = '5',
+  TolakPembatalan = '6',
+  TerimaPembatalan = '7',
+  BatalkanPembatalan = '8',
+  HubungiAdmin = '9',
+}

@@ -46,3 +46,22 @@ export interface TransactionInquiryClientInvoiceResponse {
   };
   total_price: number;
 }
+
+export interface TransactionInquiryClientActivityResponse {
+  activity: {
+    timestamp: string;
+    code: string;
+    title: string;
+    description?: string;
+    files?: {
+      id: string;
+      file_name: string;
+    }[];
+    response_deadline?: string;
+    deadline_extension?: string;
+    buttons?: {
+      code: string;
+      name: string;
+    }[];
+  }[];
+}
