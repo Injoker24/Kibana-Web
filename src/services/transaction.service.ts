@@ -1,4 +1,6 @@
 import {
+  TransactionAskReturnInput,
+  TransactionAskRevisionInput,
   TransactionInquiryClientActivityOutput,
   TransactionInquiryClientInvoiceOutput,
   TransactionInquiryDetailClientTaskOutput,
@@ -12,6 +14,8 @@ import {
   TransactionInquiryClientActivityResponse,
   TransactionInquiryClientInvoiceResponse,
   TransactionInquiryDetailClientTaskResponse,
+  transformToTransactionAskReturnRequest,
+  transformToTransactionAskRevisionRequest,
 } from './schemas';
 
 const TransactionService = {
@@ -43,6 +47,26 @@ const TransactionService = {
     );
 
     return transformToTransactionInquiryClientActivityOutput(response.data.output_schema);
+  },
+
+  askReturn: async (data: TransactionAskReturnInput): Promise<{}> => {
+    const requestData = transformToTransactionAskReturnRequest(data);
+    const response = await axiosInstance.post<ApiResponse<{}>>(
+      `/transaction/ask-return`,
+      requestData,
+    );
+
+    return response.data.output_schema;
+  },
+
+  askRevision: async (data: TransactionAskRevisionInput): Promise<{}> => {
+    const requestData = transformToTransactionAskRevisionRequest(data);
+    const response = await axiosInstance.post<ApiResponse<{}>>(
+      `/transaction/ask-revision`,
+      requestData,
+    );
+
+    return response.data.output_schema;
   },
 };
 

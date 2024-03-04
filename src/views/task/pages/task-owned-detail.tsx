@@ -242,6 +242,48 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
       },
     },
   );
+
+  const [modalReturn, setModalReturn] = useState<boolean>(false);
+  const [returnMessage, setReturnMessage] = useState<string>('');
+
+  const openModalReturn = () => {
+    setModalReturn(true);
+  };
+
+  const {
+    register: registerReturn,
+    errors: errorsReturn,
+    formState: formStateReturn,
+    handleSubmit: handleSubmitReturn,
+    formState: { isValid: isValidReturn },
+  } = useForm({
+    mode: 'onChange',
+  });
+
+  const confirmSubmitReturn = (formData: any) => {
+    setReturnMessage(formData.returnMessage);
+    mutateAskReturn();
+  };
+
+  const {
+    isLoading: isLoadingAskReturn,
+    mutate: mutateAskReturn,
+    error: errorAskReturn,
+  } = useMutation<{}, ErrorWrapper>(
+    ['ask-return'],
+    async () =>
+      await TransactionService.askReturn({
+        transactionId: transactionId,
+        message: returnMessage,
+      }),
+    {
+      onSuccess: () => {
+        setModalReturn(false);
+        setReturnMessage('');
+        refetchTransactionDetail();
+      },
+    },
+  );
   // #endregion
 
   const openFreelancerProfile = (id: string) => {
@@ -397,6 +439,98 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
           onCancel={cancelChooseFreelancer}
           onSubmit={confirmChooseFreelancer}
         />
+      )}
+      {modalReturn && (
+        <Popup
+          open={true}
+          closeOnDocumentClick={false}
+          className="popup-activity"
+        >
+          {isLoadingAskReturn && <Loader type="inline" />}
+          {!isLoadingAskReturn && (
+            <>
+              <div className="flex-column">
+                <div className="flex-centered w-100 justify-content-between mb-3">
+                  <h3 className="mb-0">Ajukan pengembalian</h3>
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setModalReturn(false);
+                      setReturnMessage('');
+                    }}
+                  >
+                    <IconClose />
+                  </div>
+                </div>
+
+                {errorAskReturn && (
+                  <div className="mb-4">
+                    <InfoBox
+                      message={errorAskReturn?.message}
+                      type="danger"
+                    />
+                  </div>
+                )}
+
+                <div className="mb-4">
+                  <InfoBox
+                    message={`Anda hanya dapat mengajukan pengembalian <b>1 kali</b> saja!`}
+                    type="warning"
+                  />
+                </div>
+
+                <form onSubmit={handleSubmitReturn(confirmSubmitReturn)}>
+                  <div className="mb-4">
+                    <p className="mb-2">Berikan alasan kamu membatalkan pesanan ini!</p>
+                    <FormInput errorMessage={errorsReturn?.returnMessage?.message}>
+                      <Form.Control
+                        as="textarea"
+                        id="returnMessage"
+                        name="returnMessage"
+                        className="activity-popup-text-area"
+                        isInvalid={
+                          formStateReturn.touched.returnMessage === true &&
+                          !!errorsReturn.returnMessage
+                        }
+                        ref={
+                          registerReturn({
+                            required: {
+                              value: true,
+                              message: 'Pesan tidak boleh kosong.',
+                            },
+                          }) as string & ((ref: Element | null) => void)
+                        }
+                      ></Form.Control>
+                    </FormInput>
+                  </div>
+
+                  <Row>
+                    <div className="col-12 col-md-6">
+                      <div
+                        className="btn btn-outline-primary"
+                        onClick={() => {
+                          setModalReturn(false);
+                          setReturnMessage('');
+                        }}
+                      >
+                        Kembali
+                      </div>
+                    </div>
+                    <div className="col-12 col-md-6 mb-3 mb-md-0 order-first order-md-last">
+                      <button
+                        type="submit"
+                        className="btn btn-danger w-100"
+                        disabled={!isValidReturn}
+                      >
+                        Lanjut
+                      </button>
+                    </div>
+                  </Row>
+                </form>
+              </div>
+            </>
+          )}
+        </Popup>
       )}
       <Header />
       <div className="min-layout-height">
@@ -711,6 +845,8 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
                                               userType="client"
                                               projectType="task"
                                               activity={activity}
+                                              transactionId={transactionId}
+                                              refetchTransaction={refetchTransactionDetail}
                                             />
                                           );
                                         })}
@@ -793,7 +929,12 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
                                   {!transactionDetail.transactionDetail.hasReturned &&
                                     (transactionStatus === TransactionStatus.DalamProses ||
                                       transactionStatus === TransactionStatus.SudahDikirim) && (
-                                      <div className="btn btn-danger">Ajukan Pengembalian</div>
+                                      <div
+                                        className="btn btn-danger"
+                                        onClick={openModalReturn}
+                                      >
+                                        Ajukan Pengembalian
+                                      </div>
                                     )}
                                 </div>
                                 <div className="mb-5">
@@ -946,7 +1087,7 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
                           </div>
                           <div className="text-lg-right col-12 col-lg-6">
                             <p>Nomor Pemesanan</p>
-                            <p className="font-weight-bold">{clientInvoice.refNo}</p>
+                            <p className="font-weight-bold">#{clientInvoice.refNo.toUpperCase()}</p>
                           </div>
                         </Row>
                         <Row className="mb-4">
@@ -990,11 +1131,11 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
                         <Row className="my-4">
                           <div className="col-12 col-lg-10 mb-3 mb-lg-0">
                             <h4 className="font-weight-semibold">Tugas</h4>
-                            <p className="font-weight-bold">{clientInvoice.task.name}</p>
+                            <p className="font-weight-bold">{clientInvoice.project.name}</p>
                           </div>
                           <div className="col-12 col-lg-2">
                             <h4 className="font-weight-semibold">Harga</h4>
-                            <p>Rp {formatCurrency(clientInvoice.task.price)}</p>
+                            <p>Rp {formatCurrency(clientInvoice.project.price)}</p>
                           </div>
                         </Row>
                         <hr />

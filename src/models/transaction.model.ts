@@ -73,7 +73,7 @@ export interface TransactionInquiryClientInvoiceOutput {
   clientName: string;
   freelancerName: string;
   paymentDate: string;
-  task: {
+  project: {
     name: string;
     price: string;
     duration?: number;
@@ -97,12 +97,12 @@ export function transformToTransactionInquiryClientInvoiceOutput(
     clientName: response.client_name,
     freelancerName: response.freelancer_name,
     paymentDate: response.payment_date,
-    task: {
-      name: response.task.name,
-      price: response.task.price,
-      duration: response.task.duration,
-      revisionCount: response.task.revision_count,
-      additionalData: response.task.additional_data?.map((t) => {
+    project: {
+      name: response.project.name,
+      price: response.project.price,
+      duration: response.project.duration,
+      revisionCount: response.project.revision_count,
+      additionalData: response.project.additional_data?.map((t) => {
         return {
           title: t.title,
         };
@@ -166,4 +166,14 @@ export function transformToTransactionInquiryClientActivityOutput(
   };
 
   return result;
+}
+
+export interface TransactionAskReturnInput {
+  transactionId: string;
+  message: string;
+}
+
+export interface TransactionAskRevisionInput {
+  transactionId: string;
+  message: string;
 }

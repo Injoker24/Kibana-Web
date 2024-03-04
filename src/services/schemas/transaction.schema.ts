@@ -1,3 +1,5 @@
+import { TransactionAskReturnInput, TransactionAskRevisionInput } from 'models';
+
 export interface TransactionInquiryDetailClientTaskResponse {
   transaction_detail: {
     id: string;
@@ -31,7 +33,7 @@ export interface TransactionInquiryClientInvoiceResponse {
   client_name: string;
   freelancer_name: string;
   payment_date: string;
-  task: {
+  project: {
     name: string;
     price: string;
     duration?: number;
@@ -64,4 +66,36 @@ export interface TransactionInquiryClientActivityResponse {
       name: string;
     }[];
   }[];
+}
+
+export interface TransactionAskReturnRequest {
+  transaction_id: string;
+  message: string;
+}
+
+export function transformToTransactionAskReturnRequest(
+  input: TransactionAskReturnInput,
+): TransactionAskReturnRequest {
+  const result: TransactionAskReturnRequest = {
+    transaction_id: input.transactionId,
+    message: input.message,
+  };
+
+  return result;
+}
+
+export interface TransactionAskRevisionRequest {
+  transaction_id: string;
+  message: string;
+}
+
+export function transformToTransactionAskRevisionRequest(
+  input: TransactionAskRevisionInput,
+): TransactionAskRevisionRequest {
+  const result: TransactionAskRevisionRequest = {
+    transaction_id: input.transactionId,
+    message: input.message,
+  };
+
+  return result;
 }
