@@ -85,6 +85,120 @@ const TransactionActivity: React.FC<Props> = ({
   );
   // #endregion
 
+  // #region Complete
+  const [modalComplete, setModalComplete] = useState<boolean>(false);
+
+  const openModalComplete = () => {
+    setModalComplete(true);
+  };
+
+  const {
+    isLoading: isLoadingComplete,
+    mutate: mutateComplete,
+    error: errorComplete,
+  } = useMutation<{}, ErrorWrapper>(
+    ['complete'],
+    async () =>
+      await TransactionService.complete({
+        transactionId: transactionId,
+      }),
+    {
+      onSuccess: () => {
+        setModalComplete(false);
+        refetchTransaction();
+      },
+    },
+  );
+  // #endregion
+
+  // #region Cancel Return
+  const [modalCancelReturn, setModalCancelReturn] = useState<boolean>(false);
+
+  const openModalCancelReturn = () => {
+    setModalCancelReturn(true);
+  };
+
+  const {
+    isLoading: isLoadingCancelReturn,
+    mutate: mutateCancelReturn,
+    error: errorCancelReturn,
+  } = useMutation<{}, ErrorWrapper>(
+    ['cancel-return'],
+    async () =>
+      await TransactionService.cancelReturn({
+        transactionId: transactionId,
+      }),
+    {
+      onSuccess: () => {
+        setModalCancelReturn(false);
+        refetchTransaction();
+      },
+    },
+  );
+  // #endregion
+
+  // #region Call Admin
+  const [modalCallAdmin, setModalCallAdmin] = useState<boolean>(false);
+
+  const openModalCallAdmin = () => {
+    setModalCallAdmin(true);
+  };
+
+  const {
+    isLoading: isLoadingCallAdmin,
+    mutate: mutateCallAdmin,
+    error: errorCallAdmin,
+  } = useMutation<{}, ErrorWrapper>(
+    ['call-admin'],
+    async () =>
+      await TransactionService.callAdmin({
+        transactionId: transactionId,
+      }),
+    {
+      onSuccess: () => {
+        setModalCallAdmin(false);
+        refetchTransaction();
+      },
+    },
+  );
+  // #endregion
+
+  // #region Manage Cancellation
+  const [modalAcceptCancellation, setModalAcceptCancellation] = useState<boolean>(false);
+  const [modalRejectCancellation, setModalRejectCancellation] = useState<boolean>(false);
+  const [manageCancellationType, setManageCancellationType] = useState<string>('');
+
+  const openModalAcceptCancellation = () => {
+    setModalAcceptCancellation(true);
+    setManageCancellationType('ACCEPT');
+  };
+
+  const openModalRejectCancellation = () => {
+    setModalRejectCancellation(true);
+    setManageCancellationType('REJECT');
+  };
+
+  const {
+    isLoading: isLoadingManageCancellation,
+    mutate: mutateManageCancellation,
+    error: errorManageCancellation,
+  } = useMutation<{}, ErrorWrapper>(
+    ['manage-cancellation'],
+    async () =>
+      await TransactionService.manageCancellation({
+        transactionId: transactionId,
+        type: manageCancellationType,
+      }),
+    {
+      onSuccess: () => {
+        setModalAcceptCancellation(false);
+        setModalRejectCancellation(false);
+        refetchTransaction();
+      },
+    },
+  );
+  // #endregion
+
   return (
     <>
       {modalRevision && (
@@ -167,6 +281,341 @@ const TransactionActivity: React.FC<Props> = ({
                     </div>
                   </Row>
                 </form>
+              </div>
+            </>
+          )}
+        </Popup>
+      )}
+      {modalComplete && (
+        <Popup
+          open={true}
+          closeOnDocumentClick={false}
+          className="popup-activity"
+        >
+          {isLoadingComplete && <Loader type="inline" />}
+          {!isLoadingComplete && (
+            <>
+              <div className="flex-column">
+                <div className="flex-centered w-100 justify-content-between mb-3">
+                  <h3 className="mb-0">Selesaikan pesanan</h3>
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setModalComplete(false);
+                    }}
+                  >
+                    <IconClose />
+                  </div>
+                </div>
+
+                {errorComplete && (
+                  <div className="mb-4">
+                    <InfoBox
+                      message={errorComplete?.message}
+                      type="danger"
+                    />
+                  </div>
+                )}
+
+                <div className="mb-4">
+                  <InfoBox
+                    message={
+                      'Dengan menyelesaikan pesanan, dana akan diteruskan kepada freelancer!'
+                    }
+                    type="warning"
+                  />
+                </div>
+
+                <Row>
+                  <div className="col-12 col-md-6">
+                    <div
+                      className="btn btn-outline-primary"
+                      onClick={() => {
+                        setModalComplete(false);
+                      }}
+                    >
+                      Kembali
+                    </div>
+                  </div>
+                  <div className="col-12 col-md-6 mb-3 mb-md-0 order-first order-md-last">
+                    <div
+                      className="btn btn-primary"
+                      onClick={() => {
+                        mutateComplete();
+                      }}
+                    >
+                      Lanjut
+                    </div>
+                  </div>
+                </Row>
+              </div>
+            </>
+          )}
+        </Popup>
+      )}
+      {modalCancelReturn && (
+        <Popup
+          open={true}
+          closeOnDocumentClick={false}
+          className="popup-activity"
+        >
+          {isLoadingCancelReturn && <Loader type="inline" />}
+          {!isLoadingCancelReturn && (
+            <>
+              <div className="flex-column">
+                <div className="flex-centered w-100 justify-content-between mb-3">
+                  <h3 className="mb-0">Batalkan ajuan pengembalian</h3>
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setModalCancelReturn(false);
+                    }}
+                  >
+                    <IconClose />
+                  </div>
+                </div>
+
+                {errorCancelReturn && (
+                  <div className="mb-4">
+                    <InfoBox
+                      message={errorCancelReturn?.message}
+                      type="danger"
+                    />
+                  </div>
+                )}
+
+                <div className="mb-4">
+                  <InfoBox
+                    message={`Kamu hanya dapat mengajukan pengembalian <b>1 kali</b> saja!`}
+                    type="warning"
+                  />
+                </div>
+
+                <Row>
+                  <div className="col-12 col-md-6">
+                    <div
+                      className="btn btn-outline-primary"
+                      onClick={() => {
+                        setModalCancelReturn(false);
+                      }}
+                    >
+                      Kembali
+                    </div>
+                  </div>
+                  <div className="col-12 col-md-6 mb-3 mb-md-0 order-first order-md-last">
+                    <div
+                      className="btn btn-primary"
+                      onClick={() => {
+                        mutateCancelReturn();
+                      }}
+                    >
+                      Lanjut
+                    </div>
+                  </div>
+                </Row>
+              </div>
+            </>
+          )}
+        </Popup>
+      )}
+      {modalCallAdmin && (
+        <Popup
+          open={true}
+          closeOnDocumentClick={false}
+          className="popup-activity"
+        >
+          {isLoadingCallAdmin && <Loader type="inline" />}
+          {!isLoadingCallAdmin && (
+            <>
+              <div className="flex-column">
+                <div className="flex-centered w-100 justify-content-between mb-3">
+                  <h3 className="mb-0">Hubungi admin</h3>
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setModalCallAdmin(false);
+                    }}
+                  >
+                    <IconClose />
+                  </div>
+                </div>
+
+                {errorCallAdmin && (
+                  <div className="mb-4">
+                    <InfoBox
+                      message={errorCallAdmin?.message}
+                      type="danger"
+                    />
+                  </div>
+                )}
+
+                <div className="mb-4">
+                  <InfoBox
+                    message={
+                      'Admin akan menentukan langkah terbaik untuk merampungkan ketidaksetujuan!'
+                    }
+                    type="warning"
+                  />
+                </div>
+
+                <Row>
+                  <div className="col-12 col-md-6">
+                    <div
+                      className="btn btn-outline-primary"
+                      onClick={() => {
+                        setModalCallAdmin(false);
+                      }}
+                    >
+                      Kembali
+                    </div>
+                  </div>
+                  <div className="col-12 col-md-6 mb-3 mb-md-0 order-first order-md-last">
+                    <div
+                      className="btn btn-primary"
+                      onClick={() => {
+                        mutateCallAdmin();
+                      }}
+                    >
+                      Lanjut
+                    </div>
+                  </div>
+                </Row>
+              </div>
+            </>
+          )}
+        </Popup>
+      )}
+      {modalAcceptCancellation && (
+        <Popup
+          open={true}
+          closeOnDocumentClick={false}
+          className="popup-activity"
+        >
+          {isLoadingManageCancellation && <Loader type="inline" />}
+          {!isLoadingManageCancellation && (
+            <>
+              <div className="flex-column">
+                <div className="flex-centered w-100 justify-content-between mb-3">
+                  <h3 className="mb-0">Terima permintaan pembatalan</h3>
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setModalAcceptCancellation(false);
+                      setManageCancellationType('');
+                    }}
+                  >
+                    <IconClose />
+                  </div>
+                </div>
+
+                {errorManageCancellation && (
+                  <div className="mb-4">
+                    <InfoBox
+                      message={errorManageCancellation?.message}
+                      type="danger"
+                    />
+                  </div>
+                )}
+
+                <div className="mb-4">
+                  <InfoBox
+                    message={'Pesanan akan dibatalkan dan dana akan dikembalikan!'}
+                    type="warning"
+                  />
+                </div>
+
+                <Row>
+                  <div className="col-12 col-md-6">
+                    <div
+                      className="btn btn-outline-primary"
+                      onClick={() => {
+                        setModalAcceptCancellation(false);
+                        setManageCancellationType('');
+                      }}
+                    >
+                      Kembali
+                    </div>
+                  </div>
+                  <div className="col-12 col-md-6 mb-3 mb-md-0 order-first order-md-last">
+                    <div
+                      className="btn btn-primary"
+                      onClick={() => {
+                        mutateManageCancellation();
+                      }}
+                    >
+                      Lanjut
+                    </div>
+                  </div>
+                </Row>
+              </div>
+            </>
+          )}
+        </Popup>
+      )}
+      {modalRejectCancellation && (
+        <Popup
+          open={true}
+          closeOnDocumentClick={false}
+          className="popup-activity"
+        >
+          {isLoadingManageCancellation && <Loader type="inline" />}
+          {!isLoadingManageCancellation && (
+            <>
+              <div className="flex-column">
+                <div className="flex-centered w-100 justify-content-between mb-3">
+                  <h3 className="mb-0">Tolak permintaan pembatalan</h3>
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setModalRejectCancellation(false);
+                      setManageCancellationType('');
+                    }}
+                  >
+                    <IconClose />
+                  </div>
+                </div>
+
+                {errorManageCancellation && (
+                  <div className="mb-4">
+                    <InfoBox
+                      message={errorManageCancellation?.message}
+                      type="danger"
+                    />
+                  </div>
+                )}
+
+                <div className="mb-4">
+                  <InfoBox
+                    message={
+                      'Freelancer dapat memilih untuk menghubungi admin atau membatalkan ajuan pembatalan!'
+                    }
+                    type="warning"
+                  />
+                </div>
+
+                <Row>
+                  <div className="col-12 col-md-6">
+                    <div
+                      className="btn btn-outline-primary"
+                      onClick={() => {
+                        setModalRejectCancellation(false);
+                        setManageCancellationType('');
+                      }}
+                    >
+                      Kembali
+                    </div>
+                  </div>
+                  <div className="col-12 col-md-6 mb-3 mb-md-0 order-first order-md-last">
+                    <div
+                      className="btn btn-primary"
+                      onClick={() => {
+                        mutateManageCancellation();
+                      }}
+                    >
+                      Lanjut
+                    </div>
+                  </div>
+                </Row>
               </div>
             </>
           )}
@@ -303,7 +752,12 @@ const TransactionActivity: React.FC<Props> = ({
               return (
                 <div className="col-12 col-md-6 mb-4 mb-md-0">
                   {button.code === TransactionActivityButtonsEnum.SelesaikanPesanan && (
-                    <div className="btn btn-primary">{button.name}</div>
+                    <div
+                      className="btn btn-primary"
+                      onClick={openModalComplete}
+                    >
+                      {button.name}
+                    </div>
                   )}
                   {button.code === TransactionActivityButtonsEnum.MintaRevisi && (
                     <div
@@ -314,16 +768,36 @@ const TransactionActivity: React.FC<Props> = ({
                     </div>
                   )}
                   {button.code === TransactionActivityButtonsEnum.BatalkanPengembalian && (
-                    <div className="btn btn-primary">{button.name}</div>
+                    <div
+                      className="btn btn-primary"
+                      onClick={openModalCancelReturn}
+                    >
+                      {button.name}
+                    </div>
                   )}
                   {button.code === TransactionActivityButtonsEnum.HubungiAdmin && (
-                    <div className="btn btn-outline-primary">{button.name}</div>
+                    <div
+                      className="btn btn-outline-primary"
+                      onClick={openModalCallAdmin}
+                    >
+                      {button.name}
+                    </div>
                   )}
                   {button.code === TransactionActivityButtonsEnum.TolakPembatalan && (
-                    <div className="btn btn-danger">{button.name}</div>
+                    <div
+                      className="btn btn-danger"
+                      onClick={openModalRejectCancellation}
+                    >
+                      {button.name}
+                    </div>
                   )}
                   {button.code === TransactionActivityButtonsEnum.TerimaPembatalan && (
-                    <div className="btn btn-primary">{button.name}</div>
+                    <div
+                      className="btn btn-primary"
+                      onClick={openModalAcceptCancellation}
+                    >
+                      {button.name}
+                    </div>
                   )}
                 </div>
               );

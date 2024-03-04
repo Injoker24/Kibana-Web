@@ -177,3 +177,20 @@ export interface TransactionAskRevisionInput {
   transactionId: string;
   message: string;
 }
+
+export interface TransactionCompleteInput {
+  transactionId: string;
+}
+
+export interface TransactionCancelReturnInput {
+  transactionId: string;
+}
+
+export interface TransactionCallAdminInput {
+  transactionId: string;
+}
+
+export interface TransactionManageCancellationInput {
+  transactionId: string;
+  type: string;
+}

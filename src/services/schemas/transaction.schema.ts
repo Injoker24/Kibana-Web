@@ -1,4 +1,11 @@
-import { TransactionAskReturnInput, TransactionAskRevisionInput } from 'models';
+import {
+  TransactionAskReturnInput,
+  TransactionAskRevisionInput,
+  TransactionCallAdminInput,
+  TransactionCancelReturnInput,
+  TransactionCompleteInput,
+  TransactionManageCancellationInput,
+} from 'models';
 
 export interface TransactionInquiryDetailClientTaskResponse {
   transaction_detail: {
@@ -95,6 +102,64 @@ export function transformToTransactionAskRevisionRequest(
   const result: TransactionAskRevisionRequest = {
     transaction_id: input.transactionId,
     message: input.message,
+  };
+
+  return result;
+}
+
+export interface TransactionCompleteRequest {
+  transaction_id: string;
+}
+
+export function transformToTransactionCompleteRequest(
+  input: TransactionCompleteInput,
+): TransactionCompleteRequest {
+  const result: TransactionCompleteRequest = {
+    transaction_id: input.transactionId,
+  };
+
+  return result;
+}
+
+export interface TransactionCancelReturnRequest {
+  transaction_id: string;
+}
+
+export function transformToTransactionCancelReturnRequest(
+  input: TransactionCancelReturnInput,
+): TransactionCancelReturnRequest {
+  const result: TransactionCancelReturnRequest = {
+    transaction_id: input.transactionId,
+  };
+
+  return result;
+}
+
+export interface TransactionCallAdminRequest {
+  transaction_id: string;
+}
+
+export function transformToTransactionCallAdminRequest(
+  input: TransactionCallAdminInput,
+): TransactionCallAdminRequest {
+  const result: TransactionCallAdminRequest = {
+    transaction_id: input.transactionId,
+  };
+
+  return result;
+}
+
+export interface TransactionManageCancellationRequest {
+  transaction_id: string;
+  type: string;
+}
+
+export function transformToTransactionManageCancellationRequest(
+  input: TransactionManageCancellationInput,
+): TransactionManageCancellationRequest {
+  const result: TransactionManageCancellationRequest = {
+    transaction_id: input.transactionId,
+    type: input.type,
   };
 
   return result;

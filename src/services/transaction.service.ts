@@ -1,9 +1,13 @@
 import {
   TransactionAskReturnInput,
   TransactionAskRevisionInput,
+  TransactionCallAdminInput,
+  TransactionCancelReturnInput,
+  TransactionCompleteInput,
   TransactionInquiryClientActivityOutput,
   TransactionInquiryClientInvoiceOutput,
   TransactionInquiryDetailClientTaskOutput,
+  TransactionManageCancellationInput,
   transformToTransactionInquiryClientActivityOutput,
   transformToTransactionInquiryClientInvoiceOutput,
   transformToTransactionInquiryDetailClientTaskOutput,
@@ -16,6 +20,10 @@ import {
   TransactionInquiryDetailClientTaskResponse,
   transformToTransactionAskReturnRequest,
   transformToTransactionAskRevisionRequest,
+  transformToTransactionCallAdminRequest,
+  transformToTransactionCancelReturnRequest,
+  transformToTransactionCompleteRequest,
+  transformToTransactionManageCancellationRequest,
 } from './schemas';
 
 const TransactionService = {
@@ -63,6 +71,43 @@ const TransactionService = {
     const requestData = transformToTransactionAskRevisionRequest(data);
     const response = await axiosInstance.post<ApiResponse<{}>>(
       `/transaction/ask-revision`,
+      requestData,
+    );
+
+    return response.data.output_schema;
+  },
+
+  complete: async (data: TransactionCompleteInput): Promise<{}> => {
+    const requestData = transformToTransactionCompleteRequest(data);
+    const response = await axiosInstance.put<ApiResponse<{}>>(`/transaction/complete`, requestData);
+
+    return response.data.output_schema;
+  },
+
+  cancelReturn: async (data: TransactionCancelReturnInput): Promise<{}> => {
+    const requestData = transformToTransactionCancelReturnRequest(data);
+    const response = await axiosInstance.put<ApiResponse<{}>>(
+      `/transaction/cancel-return`,
+      requestData,
+    );
+
+    return response.data.output_schema;
+  },
+
+  callAdmin: async (data: TransactionCallAdminInput): Promise<{}> => {
+    const requestData = transformToTransactionCallAdminRequest(data);
+    const response = await axiosInstance.put<ApiResponse<{}>>(
+      `/transaction/call-admin`,
+      requestData,
+    );
+
+    return response.data.output_schema;
+  },
+
+  manageCancellation: async (data: TransactionManageCancellationInput): Promise<{}> => {
+    const requestData = transformToTransactionManageCancellationRequest(data);
+    const response = await axiosInstance.post<ApiResponse<{}>>(
+      `/transaction/manage-cancellation`,
       requestData,
     );
 
