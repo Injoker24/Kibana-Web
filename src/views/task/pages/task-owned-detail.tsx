@@ -25,7 +25,15 @@ import {
   TransactionInquiryDetailClientTaskOutput,
 } from 'models';
 import { ReviewService, TaskService } from 'services';
-import { DefaultAvatar, IconChevronLeft, IconClose, IconStar, logoDark, logoDarkLg } from 'images';
+import {
+  DefaultAvatar,
+  IconAddCircle,
+  IconChevronLeft,
+  IconClose,
+  IconStar,
+  logoDark,
+  logoDarkLg,
+} from 'images';
 import { TransactionStatus } from 'enums';
 import { formatCurrency } from 'utils';
 import TransactionService from 'services/transaction.service';
@@ -284,6 +292,81 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
       },
     },
   );
+
+  const [activityMessage, setActivityMessage] = useState<string>('');
+
+  const {
+    register: registerMessage,
+    errors: errorsMessage,
+    formState: formStateMessage,
+    handleSubmit: handleSubmitMessage,
+    formState: { isValid: isValidMessage },
+  } = useForm({
+    mode: 'onChange',
+  });
+
+  const confirmSubmitMessage = (formData: any) => {
+    setActivityMessage(formData.activityMessage);
+    mutateSendMessage();
+  };
+
+  const {
+    isLoading: isLoadingSendMessage,
+    mutate: mutateSendMessage,
+    error: errorSendMessage,
+  } = useMutation<{}, ErrorWrapper>(
+    ['send-message'],
+    async () =>
+      await TransactionService.sendMessage({
+        transactionId: transactionId,
+        message: activityMessage,
+      }),
+    {
+      onSuccess: () => {
+        setActivityMessage('');
+        refetchTransactionDetail();
+      },
+    },
+  );
+
+  const [addFileData, setAddFileData] = useState<any>();
+
+  const confirmAddFile = () => {
+    mutateAddFile();
+  };
+
+  const handleUploadAddFile = (e: any) => {
+    if (e.target.files.length !== 0) {
+      const addFile = {
+        preview: URL.createObjectURL(e.target.files[0]),
+        data: e.target.files[0],
+      };
+      setAddFileData(addFile);
+    }
+  };
+
+  const uploadAddFile = () => {
+    document.getElementById('selectAddFile')?.click();
+  };
+
+  const {
+    isLoading: isLoadingAddFile,
+    mutate: mutateAddFile,
+    error: errorAddFile,
+  } = useMutation<{}, ErrorWrapper>(
+    ['send-additional-file'],
+    async () =>
+      await TransactionService.sendAdditionalFile({
+        additionalFile: addFileData.data,
+        transactionId: transactionId,
+      }),
+    {
+      onSuccess: () => {
+        setAddFileData(null);
+        refetchTransactionDetail();
+      },
+    },
+  );
   // #endregion
 
   const openFreelancerProfile = (id: string) => {
@@ -424,6 +507,10 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
       )}
       {isLoadingDeleteTask && <Loader type="fixed" />}
       {errorDeleteTask && <PopUpError message={errorDeleteTask.message} />}
+      {isLoadingSendMessage && <Loader type="fixed" />}
+      {errorSendMessage && <PopUpError message={errorSendMessage.message} />}
+      {isLoadingAddFile && <Loader type="fixed" />}
+      {errorAddFile && <PopUpError message={errorAddFile.message} />}
       {successDeleteTask && (
         <PopUpSuccess
           message={'Berhasil menghapus tugas!'}
@@ -838,19 +925,116 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
                                       />
                                     )}
                                     {clientActivity && (
-                                      <div className="mb-5">
-                                        {clientActivity.activity.map((activity) => {
-                                          return (
-                                            <TransactionActivity
-                                              userType="client"
-                                              projectType="task"
-                                              activity={activity}
-                                              transactionId={transactionId}
-                                              refetchTransaction={refetchTransactionDetail}
+                                      <>
+                                        <div className="mb-5">
+                                          {clientActivity.activity.map((activity) => {
+                                            return (
+                                              <TransactionActivity
+                                                userType="client"
+                                                projectType="task"
+                                                activity={activity}
+                                                transactionId={transactionId}
+                                                refetchTransaction={refetchTransactionDetail}
+                                              />
+                                            );
+                                          })}
+                                        </div>
+                                        {transactionStatus === TransactionStatus.DalamProses && (
+                                          <div className="mb-5">
+                                            {addFileData && (
+                                              <div className="card-sm d-flex flex-row align-items-center justify-content-between mb-4">
+                                                <h4 className="text-primary-dark font-weight-bold mb-0">
+                                                  {addFileData.data.name}
+                                                </h4>
+                                              </div>
+                                            )}
+                                            <div
+                                              className="cursor-pointer mb-4"
+                                              onClick={uploadAddFile}
+                                            >
+                                              <div className="card-sm d-flex flex-row align-items-center justify-content-between">
+                                                <h4 className="text-primary-dark font-weight-bold mb-0 mr-2">
+                                                  Tambahkan File Pendukung
+                                                </h4>
+                                                <div className="text-primary-dark">
+                                                  <IconAddCircle />
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <input
+                                              hidden
+                                              id="selectAddFile"
+                                              type="file"
+                                              onChange={handleUploadAddFile}
                                             />
-                                          );
-                                        })}
-                                      </div>
+                                            <Row className="justify-content-end">
+                                              <div className="col-12 col-md-6">
+                                                <button
+                                                  className="btn btn-primary w-100"
+                                                  onClick={confirmAddFile}
+                                                  disabled={!addFileData}
+                                                >
+                                                  Kirim
+                                                </button>
+                                              </div>
+                                            </Row>
+                                          </div>
+                                        )}
+                                        {(transactionStatus ===
+                                          TransactionStatus.DalamInvestigasi ||
+                                          transactionStatus === TransactionStatus.DalamProses ||
+                                          transactionStatus ===
+                                            TransactionStatus.DalamProsesPengembalian ||
+                                          transactionStatus === TransactionStatus.SudahDikirim) && (
+                                          <div className="mb-5">
+                                            <h4 className="font-weight-semibold mb-4">
+                                              Kirim Pesan
+                                            </h4>
+                                            <form
+                                              onSubmit={handleSubmitMessage(confirmSubmitMessage)}
+                                            >
+                                              <div className="mb-4">
+                                                <FormInput
+                                                  errorMessage={
+                                                    errorsMessage?.activityMessage?.message
+                                                  }
+                                                >
+                                                  <Form.Control
+                                                    as="textarea"
+                                                    id="activityMessage"
+                                                    name="activityMessage"
+                                                    className="activity-message-text-area"
+                                                    isInvalid={
+                                                      formStateMessage.touched.activityMessage ===
+                                                        true && !!errorsMessage.activityMessage
+                                                    }
+                                                    ref={
+                                                      registerMessage({
+                                                        required: {
+                                                          value: true,
+                                                          message: 'Pesan tidak boleh kosong.',
+                                                        },
+                                                      }) as string & ((ref: Element | null) => void)
+                                                    }
+                                                  ></Form.Control>
+                                                </FormInput>
+                                              </div>
+
+                                              <Row className="justify-content-end">
+                                                <div className="col-12 col-md-6">
+                                                  <button
+                                                    type="submit"
+                                                    className="btn btn-primary w-100"
+                                                    disabled={!isValidMessage}
+                                                  >
+                                                    Kirim
+                                                  </button>
+                                                </div>
+                                              </Row>
+                                            </form>
+                                          </div>
+                                        )}
+                                      </>
                                     )}
                                   </>
                                 )}

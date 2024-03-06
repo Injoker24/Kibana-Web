@@ -2164,7 +2164,7 @@ const AccountMyProfile: React.FC = () => {
                                 )}
                                 {editCVData && (
                                   <div className="card-sm d-flex flex-row align-items-center justify-content-between mb-4">
-                                    <h4 className="text-primary-dark font-weight-bold">
+                                    <h4 className="text-primary-dark font-weight-bold mb-0">
                                       {editCVData.data.name}
                                     </h4>
                                   </div>
@@ -2174,7 +2174,7 @@ const AccountMyProfile: React.FC = () => {
                                   onClick={uploadCV}
                                 >
                                   <div className="card-sm d-flex flex-row align-items-center justify-content-between">
-                                    <h4 className="text-primary-dark font-weight-bold">
+                                    <h4 className="text-primary-dark font-weight-bold mb-0 mr-2">
                                       Ubah CV (Curriculum Vitae)
                                     </h4>
                                     <div className="text-primary-dark">
@@ -2273,7 +2273,7 @@ const AccountMyProfile: React.FC = () => {
                                 )}
                                 {editPortfolioData && (
                                   <div className="card-sm d-flex flex-row align-items-center justify-content-between mb-4">
-                                    <h4 className="text-primary-dark font-weight-bold">
+                                    <h4 className="text-primary-dark font-weight-bold mb-0">
                                       {editPortfolioData.data.name}
                                     </h4>
                                   </div>
@@ -2283,7 +2283,7 @@ const AccountMyProfile: React.FC = () => {
                                   onClick={uploadPortfolio}
                                 >
                                   <div className="card-sm d-flex flex-row align-items-center justify-content-between">
-                                    <h4 className="text-primary-dark font-weight-bold">
+                                    <h4 className="text-primary-dark font-weight-bold mb-0 mr-2">
                                       Ubah Portfolio
                                     </h4>
                                     <div className="text-primary-dark">

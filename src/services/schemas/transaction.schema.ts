@@ -5,6 +5,8 @@ import {
   TransactionCancelReturnInput,
   TransactionCompleteInput,
   TransactionManageCancellationInput,
+  TransactionSendAdditionalFileInput,
+  TransactionSendMessageInput,
 } from 'models';
 
 export interface TransactionInquiryDetailClientTaskResponse {
@@ -160,6 +162,38 @@ export function transformToTransactionManageCancellationRequest(
   const result: TransactionManageCancellationRequest = {
     transaction_id: input.transactionId,
     type: input.type,
+  };
+
+  return result;
+}
+
+export interface TransactionSendMessageRequest {
+  transaction_id: string;
+  message: string;
+}
+
+export function transformToTransactionSendMessageRequest(
+  input: TransactionSendMessageInput,
+): TransactionSendMessageRequest {
+  const result: TransactionSendMessageRequest = {
+    transaction_id: input.transactionId,
+    message: input.message,
+  };
+
+  return result;
+}
+
+export interface TransactionSendAdditionalFileRequest {
+  additional_file?: File;
+  transaction_id: string;
+}
+
+export function transformToTransactionSendAdditionalFileRequest(
+  input: TransactionSendAdditionalFileInput,
+): TransactionSendAdditionalFileRequest {
+  const result: TransactionSendAdditionalFileRequest = {
+    additional_file: input.additionalFile,
+    transaction_id: input.transactionId,
   };
 
   return result;

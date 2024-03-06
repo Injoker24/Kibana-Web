@@ -8,6 +8,8 @@ import {
   TransactionInquiryClientInvoiceOutput,
   TransactionInquiryDetailClientTaskOutput,
   TransactionManageCancellationInput,
+  TransactionSendAdditionalFileInput,
+  TransactionSendMessageInput,
   transformToTransactionInquiryClientActivityOutput,
   transformToTransactionInquiryClientInvoiceOutput,
   transformToTransactionInquiryDetailClientTaskOutput,
@@ -24,6 +26,8 @@ import {
   transformToTransactionCancelReturnRequest,
   transformToTransactionCompleteRequest,
   transformToTransactionManageCancellationRequest,
+  transformToTransactionSendAdditionalFileRequest,
+  transformToTransactionSendMessageRequest,
 } from './schemas';
 
 const TransactionService = {
@@ -110,6 +114,38 @@ const TransactionService = {
       `/transaction/manage-cancellation`,
       requestData,
     );
+
+    return response.data.output_schema;
+  },
+
+  sendMessage: async (data: TransactionSendMessageInput): Promise<{}> => {
+    const requestData = transformToTransactionSendMessageRequest(data);
+    const response = await axiosInstance.post<ApiResponse<{}>>(
+      `/transaction/send-message`,
+      requestData,
+    );
+
+    return response.data.output_schema;
+  },
+
+  sendAdditionalFile: async (data: TransactionSendAdditionalFileInput): Promise<{}> => {
+    const requestData = transformToTransactionSendAdditionalFileRequest(data);
+
+    let formData = new FormData();
+    if (requestData.additional_file) {
+      formData.append('additional_file', requestData.additional_file);
+    }
+
+    const blob = new Blob([JSON.stringify(requestData)], {
+      type: 'application/json',
+    });
+    formData.append('data', blob);
+
+    const response = await axiosInstance.post<ApiResponse<{}>>(`/transaction/send-file`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
 
     return response.data.output_schema;
   },

@@ -194,3 +194,13 @@ export interface TransactionManageCancellationInput {
   transactionId: string;
   type: string;
 }
+
+export interface TransactionSendMessageInput {
+  transactionId: string;
+  message: string;
+}
+
+export interface TransactionSendAdditionalFileInput {
+  additionalFile?: File;
+  transactionId: string;
+}
