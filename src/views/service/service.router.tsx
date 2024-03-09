@@ -6,9 +6,10 @@ import {
   ServiceDetail,
   ServiceHistory,
   ServiceHistoryDetail,
+  ServiceOwned,
   ServiceSearch,
 } from './pages';
-import { ProtectedClientRoute } from 'shared/components';
+import { ProtectedClientRoute, ProtectedFreelancerRoute } from 'shared/components';
 
 interface categoryListStateWrapper {
   stateName: string;
@@ -45,6 +46,16 @@ const ServiceRouter = () => {
             {...(state as searchStateWrapper)}
             key={Date.now()}
           />
+        )}
+      />
+
+      <Route
+        exact
+        path={'/service/owned'}
+        render={() => (
+          <ProtectedFreelancerRoute>
+            <ServiceOwned key={Date.now()} />
+          </ProtectedFreelancerRoute>
         )}
       />
 

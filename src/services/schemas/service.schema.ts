@@ -153,3 +153,18 @@ export interface ServiceInquiryServiceHistoryResponse {
     };
   }[];
 }
+
+export interface ServiceInquiryOwnedServiceResponse {
+  services?: {
+    id: string;
+    name: string;
+    working_time: number;
+    tags: string[];
+    image_url: string;
+    price: number;
+    average_rating: number;
+    rating_amount: number;
+    in_progress_transaction_amount: number;
+    is_active: boolean;
+  }[];
+}

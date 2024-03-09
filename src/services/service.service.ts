@@ -2,6 +2,7 @@ import {
   ServiceInquiryCategoryOutput,
   ServiceInquiryDetailSubCategoryOutput,
   ServiceInquiryNewServiceOutput,
+  ServiceInquiryOwnedServiceOutput,
   ServiceInquiryServiceDetailOutput,
   ServiceInquiryServiceHistoryOutput,
   ServiceInquiryServiceListInput,
@@ -9,6 +10,7 @@ import {
   transformToServiceInquiryCategoryOutput,
   transformToServiceInquiryDetailSubCategoryOutput,
   transformToServiceInquiryNewServiceOutput,
+  transformToServiceInquiryOwnedServiceOutput,
   transformToServiceInquiryServiceDetailOutput,
   transformToServiceInquiryServiceHistoryOutput,
   transformToServiceInquiryServiceListOutput,
@@ -18,6 +20,7 @@ import {
   ServiceInquiryCategoryResponse,
   ServiceInquiryDetailSubCategoryResponse,
   ServiceInquiryNewServiceResponse,
+  ServiceInquiryOwnedServiceResponse,
   ServiceInquiryServiceDetailResponse,
   ServiceInquiryServiceHistoryResponse,
   ServiceInquiryServiceListResponse,
@@ -84,6 +87,14 @@ const ServiceService = {
     );
 
     return transformToServiceInquiryServiceHistoryOutput(response.data.output_schema);
+  },
+
+  inquiryOwnedService: async (): Promise<ServiceInquiryOwnedServiceOutput> => {
+    const response = await axiosInstance.get<ApiResponse<ServiceInquiryOwnedServiceResponse>>(
+      `/service/owned`,
+    );
+
+    return transformToServiceInquiryOwnedServiceOutput(response.data.output_schema);
   },
 };
 

@@ -185,6 +185,10 @@ const DashboardIndex: React.FC = () => {
                             history.push({
                               pathname: '/task/owned',
                             });
+                          } else if (status === 'freelancer') {
+                            history.push({
+                              pathname: '/service/owned',
+                            });
                           }
                         }}
                       >

@@ -2,6 +2,7 @@ import {
   ServiceInquiryCategoryResponse,
   ServiceInquiryDetailSubCategoryResponse,
   ServiceInquiryNewServiceResponse,
+  ServiceInquiryOwnedServiceResponse,
   ServiceInquiryServiceDetailResponse,
   ServiceInquiryServiceHistoryResponse,
   ServiceInquiryServiceListResponse,
@@ -301,6 +302,44 @@ export function transformToServiceInquiryServiceHistoryOutput(
               amount: t.review?.amount,
             }
           : undefined,
+      };
+    }),
+  };
+
+  return result;
+}
+
+export interface ServiceInquiryOwnedServiceOutput {
+  services?: {
+    id: string;
+    name: string;
+    workingTime: number;
+    tags: string[];
+    imageUrl: string;
+    price: number;
+    averageRating: number;
+    ratingAmount: number;
+    inProgressTransactionAmount: number;
+    isActive: boolean;
+  }[];
+}
+
+export function transformToServiceInquiryOwnedServiceOutput(
+  response: ServiceInquiryOwnedServiceResponse,
+): ServiceInquiryOwnedServiceOutput {
+  const result: ServiceInquiryOwnedServiceOutput = {
+    services: response.services?.map((t) => {
+      return {
+        id: t.id,
+        name: t.name,
+        workingTime: t.working_time,
+        tags: t.tags,
+        imageUrl: t.image_url,
+        price: t.price,
+        averageRating: t.average_rating,
+        ratingAmount: t.rating_amount,
+        inProgressTransactionAmount: t.in_progress_transaction_amount,
+        isActive: t.is_active,
       };
     }),
   };
