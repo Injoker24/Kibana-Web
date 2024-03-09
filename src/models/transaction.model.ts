@@ -1,6 +1,7 @@
 import {
   TransactionInquiryClientActivityResponse,
   TransactionInquiryClientInvoiceResponse,
+  TransactionInquiryDetailClientServiceResponse,
   TransactionInquiryDetailClientTaskResponse,
 } from 'services/schemas';
 
@@ -203,4 +204,70 @@ export interface TransactionSendMessageInput {
 export interface TransactionSendAdditionalFileInput {
   additionalFile?: File;
   transactionId: string;
+}
+
+export interface TransactionInquiryDetailClientServiceOutput {
+  transactionDetail: {
+    id: string;
+    serviceDetail: {
+      id: string;
+      name: string;
+      tags: string[];
+      dueDate: string;
+      price: string;
+    };
+    status: string;
+    deliveryDate?: string;
+    hasReturned: boolean;
+    freelancer: {
+      id: string;
+      name: string;
+      profileImageUrl?: string;
+      description: string;
+    };
+    ratingAmount: number;
+    averageRating: number;
+    isReviewed?: boolean;
+    review?: {
+      amount: number;
+      description?: string;
+    };
+  };
+}
+
+export function transformToTransactionInquiryDetailClientServiceOutput(
+  response: TransactionInquiryDetailClientServiceResponse,
+): TransactionInquiryDetailClientServiceOutput {
+  const result: TransactionInquiryDetailClientServiceOutput = {
+    transactionDetail: {
+      id: response.transaction_detail.id,
+      serviceDetail: {
+        id: response.transaction_detail.service_detail.id,
+        name: response.transaction_detail.service_detail.name,
+        tags: response.transaction_detail.service_detail.tags,
+        dueDate: response.transaction_detail.service_detail.due_date,
+        price: response.transaction_detail.service_detail.price,
+      },
+      status: response.transaction_detail.status,
+      deliveryDate: response.transaction_detail.delivery_date,
+      hasReturned: response.transaction_detail.has_returned,
+      freelancer: {
+        id: response.transaction_detail.freelancer.id,
+        name: response.transaction_detail.freelancer.name,
+        profileImageUrl: response.transaction_detail.freelancer.profile_image_url,
+        description: response.transaction_detail.freelancer.description,
+      },
+      averageRating: response.transaction_detail.average_rating,
+      ratingAmount: response.transaction_detail.rating_amount,
+      isReviewed: response.transaction_detail.is_reviewed,
+      review: response.transaction_detail.review
+        ? {
+            amount: response.transaction_detail.review.amount,
+            description: response.transaction_detail.review.description,
+          }
+        : undefined,
+    },
+  };
+
+  return result;
 }

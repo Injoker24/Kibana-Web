@@ -276,7 +276,11 @@ const ServiceHistory: React.FC = () => {
                             <>
                               <div
                                 className="card-sm mb-4 d-none d-md-block cursor-pointer"
-                                onClick={() => console.log('Hi')}
+                                onClick={() => {
+                                  history.push({
+                                    pathname: '/service/history/' + item.transactionId,
+                                  });
+                                }}
                               >
                                 <Row className="align-items-center mb-3">
                                   <div className="col-9 d-flex flex-row">
@@ -367,7 +371,11 @@ const ServiceHistory: React.FC = () => {
 
                               <div
                                 className="card-sm mb-4 d-block d-md-none cursor-pointer"
-                                onClick={() => console.log('Hi')}
+                                onClick={() => {
+                                  history.push({
+                                    pathname: '/service/history/' + item.transactionId,
+                                  });
+                                }}
                               >
                                 <h4 className="font-weight-semibold mb-3">{item.name}</h4>
                                 {item.status === TransactionStatus.DalamProses && (
@@ -467,7 +475,11 @@ const ServiceHistory: React.FC = () => {
                             <>
                               <div
                                 className="card-sm mb-4 d-none d-md-block cursor-pointer"
-                                onClick={() => console.log('Hi')}
+                                onClick={() => {
+                                  history.push({
+                                    pathname: '/service/history/' + item.transactionId,
+                                  });
+                                }}
                               >
                                 <Row className="align-items-center mb-3">
                                   <div className="col-9 d-flex flex-row">
@@ -564,7 +576,11 @@ const ServiceHistory: React.FC = () => {
 
                               <div
                                 className="card-sm mb-4 d-block d-md-none cursor-pointer"
-                                onClick={() => console.log('Hi')}
+                                onClick={() => {
+                                  history.push({
+                                    pathname: '/service/history/' + item.transactionId,
+                                  });
+                                }}
                               >
                                 <h4 className="font-weight-semibold mb-3">{item.name}</h4>
                                 {item.status === TransactionStatus.Selesai && (
@@ -670,7 +686,11 @@ const ServiceHistory: React.FC = () => {
                             <>
                               <div
                                 className="card-sm mb-4 d-none d-md-block cursor-pointer"
-                                onClick={() => console.log('Hi')}
+                                onClick={() => {
+                                  history.push({
+                                    pathname: '/service/history/' + item.transactionId,
+                                  });
+                                }}
                               >
                                 <Row className="align-items-center mb-3">
                                   <div className="col-9 d-flex flex-row">
@@ -747,7 +767,11 @@ const ServiceHistory: React.FC = () => {
 
                               <div
                                 className="card-sm mb-4 d-block d-md-none cursor-pointer"
-                                onClick={() => console.log('Hi')}
+                                onClick={() => {
+                                  history.push({
+                                    pathname: '/service/history/' + item.transactionId,
+                                  });
+                                }}
                               >
                                 <h4 className="font-weight-semibold mb-3">{item.name}</h4>
                                 {item.status === TransactionStatus.Dibatalkan && (

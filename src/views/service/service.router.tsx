@@ -1,7 +1,13 @@
 import React from 'react';
 
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { ServiceCategoryList, ServiceDetail, ServiceHistory, ServiceSearch } from './pages';
+import {
+  ServiceCategoryList,
+  ServiceDetail,
+  ServiceHistory,
+  ServiceHistoryDetail,
+  ServiceSearch,
+} from './pages';
 import { ProtectedClientRoute } from 'shared/components';
 
 interface categoryListStateWrapper {
@@ -48,6 +54,16 @@ const ServiceRouter = () => {
         render={() => (
           <ProtectedClientRoute>
             <ServiceHistory key={Date.now()} />
+          </ProtectedClientRoute>
+        )}
+      />
+
+      <Route
+        exact
+        path={'/service/history/:transactionId'}
+        render={() => (
+          <ProtectedClientRoute>
+            <ServiceHistoryDetail key={Date.now()} />
           </ProtectedClientRoute>
         )}
       />

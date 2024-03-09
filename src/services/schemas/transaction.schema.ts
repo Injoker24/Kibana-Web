@@ -198,3 +198,32 @@ export function transformToTransactionSendAdditionalFileRequest(
 
   return result;
 }
+
+export interface TransactionInquiryDetailClientServiceResponse {
+  transaction_detail: {
+    id: string;
+    service_detail: {
+      id: string;
+      name: string;
+      tags: string[];
+      due_date: string;
+      price: string;
+    };
+    status: string;
+    delivery_date?: string;
+    has_returned: boolean;
+    freelancer: {
+      id: string;
+      name: string;
+      profile_image_url?: string;
+      description: string;
+    };
+    rating_amount: number;
+    average_rating: number;
+    is_reviewed?: boolean;
+    review?: {
+      amount: number;
+      description?: string;
+    };
+  };
+}

@@ -6,12 +6,14 @@ import {
   TransactionCompleteInput,
   TransactionInquiryClientActivityOutput,
   TransactionInquiryClientInvoiceOutput,
+  TransactionInquiryDetailClientServiceOutput,
   TransactionInquiryDetailClientTaskOutput,
   TransactionManageCancellationInput,
   TransactionSendAdditionalFileInput,
   TransactionSendMessageInput,
   transformToTransactionInquiryClientActivityOutput,
   transformToTransactionInquiryClientInvoiceOutput,
+  transformToTransactionInquiryDetailClientServiceOutput,
   transformToTransactionInquiryDetailClientTaskOutput,
 } from 'models';
 import { axiosInstance } from 'setup';
@@ -19,6 +21,7 @@ import {
   ApiResponse,
   TransactionInquiryClientActivityResponse,
   TransactionInquiryClientInvoiceResponse,
+  TransactionInquiryDetailClientServiceResponse,
   TransactionInquiryDetailClientTaskResponse,
   transformToTransactionAskReturnRequest,
   transformToTransactionAskRevisionRequest,
@@ -148,6 +151,16 @@ const TransactionService = {
     });
 
     return response.data.output_schema;
+  },
+
+  inquiryClientServiceTransactionDetail: async (
+    transactionId: string,
+  ): Promise<TransactionInquiryDetailClientServiceOutput> => {
+    const response = await axiosInstance.get<
+      ApiResponse<TransactionInquiryDetailClientServiceResponse>
+    >(`/transaction/service/client/${transactionId}`);
+
+    return transformToTransactionInquiryDetailClientServiceOutput(response.data.output_schema);
   },
 };
 

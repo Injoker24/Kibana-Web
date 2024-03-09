@@ -651,6 +651,17 @@ const TransactionActivity: React.FC<Props> = ({
             </>
           )}
 
+        {activity.deadlineExtension &&
+          activity.code === TransactionActivityEnum.MemintaRevisi &&
+          userType === 'client' &&
+          projectType === 'service' && (
+            <div style={{ paddingBottom: '32px' }}>
+              <InfoBox
+                message={`Deadline pengerjaan diperpanjang menjadi <span class="font-weight-bold text-primary-dark">(${activity.deadlineExtension})</span>.`}
+              />
+            </div>
+          )}
+
         {activity.description && (
           <p
             className="text-grey"
@@ -699,6 +710,17 @@ const TransactionActivity: React.FC<Props> = ({
             <div style={{ paddingBottom: '32px' }}>
               <InfoBox
                 message={`Selesaikan pesanan dalam waktu 2x24 jam <span class="font-weight-bold text-primary-dark">(${activity.responseDeadline})</span> atau pesanan akan otomatis dianggap selesai. Jika revisi diminta, maka deadline tetap tidak akan diperpanjang.`}
+              />
+            </div>
+          )}
+
+        {activity.responseDeadline &&
+          activity.code === TransactionActivityEnum.MengirimHasil &&
+          userType === 'client' &&
+          projectType === 'service' && (
+            <div style={{ paddingBottom: '32px' }}>
+              <InfoBox
+                message={`Selesaikan pesanan dalam waktu 2x24 jam <span class="font-weight-bold text-primary-dark">(${activity.responseDeadline})</span> atau pesanan akan otomatis dianggap selesai. Jika revisi diminta, maka deadline akan diperpanjang sesuai durasi sebelumnya.`}
               />
             </div>
           )}
