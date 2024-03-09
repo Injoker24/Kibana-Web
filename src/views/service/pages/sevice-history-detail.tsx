@@ -864,9 +864,21 @@ const ServiceHistoryDetail: React.FC = () => {
                         </Row>
                         <hr />
                         <Row className="my-4">
-                          <div className="col-12 col-lg-10 mb-3 mb-lg-0">
-                            <h4 className="font-weight-semibold">Tugas</h4>
+                          <div className="col-12 col-lg-8 mb-3 mb-lg-0">
+                            <h4 className="font-weight-semibold">Layanan</h4>
                             <p className="font-weight-bold">{clientInvoice.project.name}</p>
+                            <p className="text-grey">
+                              Jumlah Revisi: {clientInvoice.project.revisionCount}
+                            </p>
+                            <div>
+                              {clientInvoice.project.additionalData?.map((data) => (
+                                <p className="text-grey">- {data.title}</p>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="col-12 col-lg-2 mb-3 mb-lg-0">
+                            <h4 className="font-weight-semibold">Durasi</h4>
+                            <p>{clientInvoice.project.duration} hari</p>
                           </div>
                           <div className="col-12 col-lg-2">
                             <h4 className="font-weight-semibold">Harga</h4>
