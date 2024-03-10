@@ -278,7 +278,7 @@ const TaskHistory: React.FC = () => {
                         onRetry={refetchTaskHistory}
                       />
                     )}
-                    {activeTaskHistory.tasks?.length !== 0 && (
+                    {!errorTaskHistory && activeTaskHistory.tasks?.length !== 0 && (
                       <>
                         {activeTaskHistory.tasks?.map((item) => {
                           return (
@@ -458,7 +458,7 @@ const TaskHistory: React.FC = () => {
                         })}
                       </>
                     )}
-                    {activeTaskHistory.tasks?.length === 0 && (
+                    {!errorTaskHistory && activeTaskHistory.tasks?.length === 0 && (
                       <div className="card-sm">
                         <InfoBox
                           message={'Kamu tidak memiliki riwayat tugas yang aktif.'}
@@ -483,7 +483,7 @@ const TaskHistory: React.FC = () => {
                         onRetry={refetchTaskHistory}
                       />
                     )}
-                    {cancelledTaskHistory.tasks?.length !== 0 && (
+                    {!errorTaskHistory && completedTaskHistory.tasks?.length !== 0 && (
                       <>
                         {completedTaskHistory.tasks?.map((item) => {
                           return (
@@ -644,7 +644,7 @@ const TaskHistory: React.FC = () => {
                         })}
                       </>
                     )}
-                    {completedTaskHistory.tasks?.length === 0 && (
+                    {!errorTaskHistory && completedTaskHistory.tasks?.length === 0 && (
                       <div className="card-sm">
                         <InfoBox
                           message={'Kamu tidak memiliki riwayat tugas yang selesai.'}
@@ -669,7 +669,7 @@ const TaskHistory: React.FC = () => {
                         onRetry={refetchTaskHistory}
                       />
                     )}
-                    {cancelledTaskHistory.tasks?.length !== 0 && (
+                    {!errorTaskHistory && cancelledTaskHistory.tasks?.length !== 0 && (
                       <>
                         {cancelledTaskHistory.tasks?.map((item) => {
                           return (
@@ -823,7 +823,7 @@ const TaskHistory: React.FC = () => {
                         })}
                       </>
                     )}
-                    {cancelledTaskHistory.tasks?.length === 0 && (
+                    {!errorTaskHistory && cancelledTaskHistory.tasks?.length === 0 && (
                       <div className="card-sm">
                         <InfoBox
                           message={'Kamu tidak memiliki riwayat tugas yang dibatalkan.'}

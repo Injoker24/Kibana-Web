@@ -1077,7 +1077,7 @@ const AccountMyProfile: React.FC = () => {
                               <hr />
                               <div
                                 className="overflow-auto"
-                                style={clientReview.reviewList ? { height: '70rem' } : {}}
+                                style={clientReview.reviewList ? { maxHeight: '40rem' } : {}}
                               >
                                 {clientReview.reviewList?.map((review) => {
                                   return (

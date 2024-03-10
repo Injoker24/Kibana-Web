@@ -2,6 +2,8 @@ import {
   ServiceInquiryCategoryResponse,
   ServiceInquiryDetailSubCategoryResponse,
   ServiceInquiryNewServiceResponse,
+  ServiceInquiryOrdersResponse,
+  ServiceInquiryOwnedServiceDetailResponse,
   ServiceInquiryOwnedServiceResponse,
   ServiceInquiryServiceDetailResponse,
   ServiceInquiryServiceHistoryResponse,
@@ -340,6 +342,102 @@ export function transformToServiceInquiryOwnedServiceOutput(
         ratingAmount: t.rating_amount,
         inProgressTransactionAmount: t.in_progress_transaction_amount,
         isActive: t.is_active,
+      };
+    }),
+  };
+
+  return result;
+}
+
+export interface ServiceInquiryOwnedServiceDetailOutput {
+  serviceDetail: {
+    id: string;
+    name: string;
+    workingTime: number;
+    tags: string[];
+    price: number;
+    isActive: boolean;
+  };
+  review: {
+    averageRating: number;
+    ratingAmount: number;
+    reviewList?: {
+      name: string;
+      star: number;
+      description: string;
+      timestamp: string;
+    }[];
+  };
+}
+
+export function transformToServiceInquiryOwnedServiceDetailOutput(
+  response: ServiceInquiryOwnedServiceDetailResponse,
+): ServiceInquiryOwnedServiceDetailOutput {
+  const result: ServiceInquiryOwnedServiceDetailOutput = {
+    serviceDetail: {
+      id: response.service_detail.id,
+      name: response.service_detail.name,
+      workingTime: response.service_detail.working_time,
+      tags: response.service_detail.tags,
+      price: response.service_detail.price,
+      isActive: response.service_detail.is_active,
+    },
+    review: {
+      averageRating: response.review.average_rating,
+      ratingAmount: response.review.rating_amount,
+      reviewList: response.review.review_list?.map((t) => {
+        return {
+          name: t.name,
+          star: t.star,
+          description: t.description,
+          timestamp: t.timestamp,
+        };
+      }),
+    },
+  };
+
+  return result;
+}
+
+export interface ServiceInquiryOrdersOutput {
+  transactions?: {
+    id: string;
+    status: string;
+    dueDate: string;
+    deliveryDate?: string;
+    client: {
+      id: string;
+      name: string;
+      profileImageUrl?: string;
+    };
+    isReviewed?: boolean;
+    review?: {
+      amount: number;
+    };
+  }[];
+}
+
+export function transformToServiceInquiryOrdersOutput(
+  response: ServiceInquiryOrdersResponse,
+): ServiceInquiryOrdersOutput {
+  const result: ServiceInquiryOrdersOutput = {
+    transactions: response.transactions?.map((t) => {
+      return {
+        id: t.id,
+        status: t.status,
+        dueDate: t.due_date,
+        deliveryDate: t.delivery_date,
+        client: {
+          id: t.client.id,
+          name: t.client.name,
+          profileImageUrl: t.client.profile_image_url,
+        },
+        isReviewed: t.is_reviewed,
+        review: t.review
+          ? {
+              amount: t.review?.amount,
+            }
+          : undefined,
       };
     }),
   };

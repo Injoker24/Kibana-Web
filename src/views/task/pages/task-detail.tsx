@@ -244,7 +244,7 @@ const TaskDetail: React.FC = ({ prevPath }: any) => {
                         <hr />
                         <div
                           className="overflow-auto"
-                          style={taskDetail.review.reviewList ? { height: '70rem' } : {}}
+                          style={taskDetail.review.reviewList ? { maxHeight: '40rem' } : {}}
                         >
                           {taskDetail.review.reviewList?.map((review) => {
                             return (

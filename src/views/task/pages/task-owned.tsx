@@ -276,7 +276,7 @@ const TaskOwned: React.FC = () => {
                         onRetry={refetchOwnedTask}
                       />
                     )}
-                    {activeOwnedTask.tasks?.length !== 0 && (
+                    {!errorOwnedTask && activeOwnedTask.tasks?.length !== 0 && (
                       <>
                         {activeOwnedTask.tasks?.map((item) => {
                           return (
@@ -470,7 +470,7 @@ const TaskOwned: React.FC = () => {
                         })}
                       </>
                     )}
-                    {activeOwnedTask.tasks?.length === 0 && (
+                    {!errorOwnedTask && activeOwnedTask.tasks?.length === 0 && (
                       <div className="card-sm">
                         <InfoBox
                           message={'Kamu tidak memiliki tugas yang aktif.'}
@@ -497,188 +497,193 @@ const TaskOwned: React.FC = () => {
                     )}
                     {completedOwnedTask.tasks?.length !== 0 && (
                       <>
-                        {completedOwnedTask.tasks?.map((item) => {
-                          return (
-                            <>
-                              <div
-                                className="card-sm mb-4 d-none d-md-block cursor-pointer"
-                                onClick={() => {
-                                  history.push({
-                                    pathname: '/task/owned/' + item.id,
-                                    state: {
-                                      transactionId: item.transactionId,
-                                    },
-                                  });
-                                }}
-                              >
-                                <Row className="align-items-center mb-3">
-                                  <div className="col-9 d-flex flex-row">
-                                    <h4 className="font-weight-semibold mb-0 mr-3">{item.name}</h4>
-                                    {item.status === TransactionStatus.Selesai && (
-                                      <div className="chip chip-success text-nowrap">Selesai</div>
-                                    )}
-                                  </div>
-                                  <div className="col-3 d-flex flex-column align-items-end">
-                                    <div className="d-flex flex-row align-items-center">
-                                      <Image
-                                        className="owned-task-freelancer-profile-image mr-2"
-                                        src={
-                                          item.chosenFreelancer?.profileImageUrl
-                                            ? item.chosenFreelancer?.profileImageUrl
-                                            : DefaultAvatar
-                                        }
-                                        alt={item.chosenFreelancer?.name}
-                                      />
-                                      <small className="text-grey text-nowrap">
-                                        {item.chosenFreelancer?.name}
-                                      </small>
+                        {!errorOwnedTask &&
+                          completedOwnedTask.tasks?.map((item) => {
+                            return (
+                              <>
+                                <div
+                                  className="card-sm mb-4 d-none d-md-block cursor-pointer"
+                                  onClick={() => {
+                                    history.push({
+                                      pathname: '/task/owned/' + item.id,
+                                      state: {
+                                        transactionId: item.transactionId,
+                                      },
+                                    });
+                                  }}
+                                >
+                                  <Row className="align-items-center mb-3">
+                                    <div className="col-9 d-flex flex-row">
+                                      <h4 className="font-weight-semibold mb-0 mr-3">
+                                        {item.name}
+                                      </h4>
+                                      {item.status === TransactionStatus.Selesai && (
+                                        <div className="chip chip-success text-nowrap">Selesai</div>
+                                      )}
                                     </div>
-                                  </div>
-                                </Row>
+                                    <div className="col-3 d-flex flex-column align-items-end">
+                                      <div className="d-flex flex-row align-items-center">
+                                        <Image
+                                          className="owned-task-freelancer-profile-image mr-2"
+                                          src={
+                                            item.chosenFreelancer?.profileImageUrl
+                                              ? item.chosenFreelancer?.profileImageUrl
+                                              : DefaultAvatar
+                                          }
+                                          alt={item.chosenFreelancer?.name}
+                                        />
+                                        <small className="text-grey text-nowrap">
+                                          {item.chosenFreelancer?.name}
+                                        </small>
+                                      </div>
+                                    </div>
+                                  </Row>
 
-                                <Row className="align-items-center mb-3">
-                                  <div className="col-12 d-flex flex-row">
-                                    <p>
-                                      Deadline Pengerjaan:{' '}
-                                      <span className="text-primary-dark font-weight-semibold">
-                                        {item.dueDate}
-                                      </span>
-                                    </p>
-                                  </div>
-                                </Row>
+                                  <Row className="align-items-center mb-3">
+                                    <div className="col-12 d-flex flex-row">
+                                      <p>
+                                        Deadline Pengerjaan:{' '}
+                                        <span className="text-primary-dark font-weight-semibold">
+                                          {item.dueDate}
+                                        </span>
+                                      </p>
+                                    </div>
+                                  </Row>
 
-                                <Row className="align-items-center mb-3">
-                                  <div className="col-12 d-flex flex-row">
-                                    <p>
-                                      Tanggal Pengiriman:{' '}
-                                      <span className="text-primary-dark font-weight-semibold">
-                                        {item.deliveryDate ? item.deliveryDate : '-'}
-                                      </span>
-                                    </p>
-                                  </div>
-                                </Row>
+                                  <Row className="align-items-center mb-3">
+                                    <div className="col-12 d-flex flex-row">
+                                      <p>
+                                        Tanggal Pengiriman:{' '}
+                                        <span className="text-primary-dark font-weight-semibold">
+                                          {item.deliveryDate ? item.deliveryDate : '-'}
+                                        </span>
+                                      </p>
+                                    </div>
+                                  </Row>
 
-                                <Row className="align-items-center">
-                                  <div className="col-9 d-flex flex-row flex-wrap">
+                                  <Row className="align-items-center">
+                                    <div className="col-9 d-flex flex-row flex-wrap">
+                                      {item.tags.map((tag) => (
+                                        <div className="chip chip-primary mr-2">{tag}</div>
+                                      ))}
+                                    </div>
+                                    <div className="col-3 d-flex flex-column align-items-end">
+                                      <h3 className="text-primary-dark text-nowrap">
+                                        Rp {formatCurrency(item.price)}
+                                      </h3>
+                                      {!item.isReviewed && (
+                                        <div
+                                          className="btn btn-outline-primary"
+                                          onClick={(e) =>
+                                            openModalReview(
+                                              e,
+                                              item.chosenFreelancer?.name,
+                                              item.transactionId,
+                                            )
+                                          }
+                                        >
+                                          Beri Ulasan
+                                        </div>
+                                      )}
+                                      {item.isReviewed && (
+                                        <div className="d-flex flex-row">
+                                          {Array(item.review?.amount)
+                                            .fill(null)
+                                            .map(() => {
+                                              return (
+                                                <div className="text-warning">
+                                                  <IconStar />
+                                                </div>
+                                              );
+                                            })}
+                                        </div>
+                                      )}
+                                    </div>
+                                  </Row>
+                                </div>
+
+                                <div
+                                  className="card-sm mb-4 d-block d-md-none cursor-pointer"
+                                  onClick={() => {
+                                    history.push({
+                                      pathname: '/task/owned/' + item.id,
+                                      state: {
+                                        transactionId: item.transactionId,
+                                      },
+                                    });
+                                  }}
+                                >
+                                  <h4 className="font-weight-semibold mb-3">{item.name}</h4>
+                                  {item.status === TransactionStatus.Selesai && (
+                                    <div className="chip chip-success text-nowrap mb-3">
+                                      Selesai
+                                    </div>
+                                  )}
+                                  <p className="mb-2">Deadline Pengerjaan:</p>
+                                  <p className="text-primary-dark font-weight-semibold mb-3">
+                                    {item.dueDate}
+                                  </p>
+                                  <p className="mb-2">Tanggal Pengiriman:</p>
+                                  <p className="text-primary-dark font-weight-semibold mb-3">
+                                    {item.deliveryDate ? item.deliveryDate : '-'}
+                                  </p>
+                                  <div className="d-flex flex-row flex-wrap mb-3">
                                     {item.tags.map((tag) => (
-                                      <div className="chip chip-primary mr-2">{tag}</div>
+                                      <div className="chip chip-primary mb-2 mr-2">{tag}</div>
                                     ))}
                                   </div>
-                                  <div className="col-3 d-flex flex-column align-items-end">
-                                    <h3 className="text-primary-dark text-nowrap">
-                                      Rp {formatCurrency(item.price)}
-                                    </h3>
-                                    {!item.isReviewed && (
-                                      <div
-                                        className="btn btn-outline-primary"
-                                        onClick={(e) =>
-                                          openModalReview(
-                                            e,
-                                            item.chosenFreelancer?.name,
-                                            item.transactionId,
-                                          )
-                                        }
-                                      >
-                                        Beri Ulasan
-                                      </div>
-                                    )}
-                                    {item.isReviewed && (
-                                      <div className="d-flex flex-row">
-                                        {Array(item.review?.amount)
-                                          .fill(null)
-                                          .map(() => {
-                                            return (
-                                              <div className="text-warning">
-                                                <IconStar />
-                                              </div>
-                                            );
-                                          })}
-                                      </div>
-                                    )}
+                                  <div className="d-flex flex-row align-items-center mb-3">
+                                    <Image
+                                      className="owned-task-freelancer-profile-image mr-2"
+                                      src={
+                                        item.chosenFreelancer?.profileImageUrl
+                                          ? item.chosenFreelancer?.profileImageUrl
+                                          : DefaultAvatar
+                                      }
+                                      alt={item.chosenFreelancer?.name}
+                                    />
+                                    <small className="text-grey text-nowrap">
+                                      {item.chosenFreelancer?.name}
+                                    </small>
                                   </div>
-                                </Row>
-                              </div>
 
-                              <div
-                                className="card-sm mb-4 d-block d-md-none cursor-pointer"
-                                onClick={() => {
-                                  history.push({
-                                    pathname: '/task/owned/' + item.id,
-                                    state: {
-                                      transactionId: item.transactionId,
-                                    },
-                                  });
-                                }}
-                              >
-                                <h4 className="font-weight-semibold mb-3">{item.name}</h4>
-                                {item.status === TransactionStatus.Selesai && (
-                                  <div className="chip chip-success text-nowrap mb-3">Selesai</div>
-                                )}
-                                <p className="mb-2">Deadline Pengerjaan:</p>
-                                <p className="text-primary-dark font-weight-semibold mb-3">
-                                  {item.dueDate}
-                                </p>
-                                <p className="mb-2">Tanggal Pengiriman:</p>
-                                <p className="text-primary-dark font-weight-semibold mb-3">
-                                  {item.deliveryDate ? item.deliveryDate : '-'}
-                                </p>
-                                <div className="d-flex flex-row flex-wrap mb-3">
-                                  {item.tags.map((tag) => (
-                                    <div className="chip chip-primary mb-2 mr-2">{tag}</div>
-                                  ))}
+                                  <h3 className="text-primary-dark text-nowrap">
+                                    Rp {formatCurrency(item.price)}
+                                  </h3>
+                                  {!item.isReviewed && (
+                                    <div
+                                      className="btn btn-outline-primary"
+                                      onClick={(e) =>
+                                        openModalReview(
+                                          e,
+                                          item.chosenFreelancer?.name,
+                                          item.transactionId,
+                                        )
+                                      }
+                                    >
+                                      Beri Ulasan
+                                    </div>
+                                  )}
+                                  {item.isReviewed && (
+                                    <div className="d-flex flex-row">
+                                      {Array(item.review?.amount)
+                                        .fill(null)
+                                        .map(() => {
+                                          return (
+                                            <div className="text-warning">
+                                              <IconStar />
+                                            </div>
+                                          );
+                                        })}
+                                    </div>
+                                  )}
                                 </div>
-                                <div className="d-flex flex-row align-items-center mb-3">
-                                  <Image
-                                    className="owned-task-freelancer-profile-image mr-2"
-                                    src={
-                                      item.chosenFreelancer?.profileImageUrl
-                                        ? item.chosenFreelancer?.profileImageUrl
-                                        : DefaultAvatar
-                                    }
-                                    alt={item.chosenFreelancer?.name}
-                                  />
-                                  <small className="text-grey text-nowrap">
-                                    {item.chosenFreelancer?.name}
-                                  </small>
-                                </div>
-
-                                <h3 className="text-primary-dark text-nowrap">
-                                  Rp {formatCurrency(item.price)}
-                                </h3>
-                                {!item.isReviewed && (
-                                  <div
-                                    className="btn btn-outline-primary"
-                                    onClick={(e) =>
-                                      openModalReview(
-                                        e,
-                                        item.chosenFreelancer?.name,
-                                        item.transactionId,
-                                      )
-                                    }
-                                  >
-                                    Beri Ulasan
-                                  </div>
-                                )}
-                                {item.isReviewed && (
-                                  <div className="d-flex flex-row">
-                                    {Array(item.review?.amount)
-                                      .fill(null)
-                                      .map(() => {
-                                        return (
-                                          <div className="text-warning">
-                                            <IconStar />
-                                          </div>
-                                        );
-                                      })}
-                                  </div>
-                                )}
-                              </div>
-                            </>
-                          );
-                        })}
+                              </>
+                            );
+                          })}
                       </>
                     )}
-                    {completedOwnedTask.tasks?.length === 0 && (
+                    {!errorOwnedTask && completedOwnedTask.tasks?.length === 0 && (
                       <div className="card-sm">
                         <InfoBox
                           message={'Kamu tidak memiliki tugas yang selesai.'}
@@ -703,7 +708,7 @@ const TaskOwned: React.FC = () => {
                         onRetry={refetchOwnedTask}
                       />
                     )}
-                    {cancelledOwnedTask.tasks?.length !== 0 && (
+                    {!errorOwnedTask && cancelledOwnedTask.tasks?.length !== 0 && (
                       <>
                         {cancelledOwnedTask.tasks?.map((item) => {
                           return (
@@ -871,7 +876,7 @@ const TaskOwned: React.FC = () => {
                         })}
                       </>
                     )}
-                    {cancelledOwnedTask.tasks?.length === 0 && (
+                    {!errorOwnedTask && cancelledOwnedTask.tasks?.length === 0 && (
                       <div className="card-sm">
                         <InfoBox
                           message={'Kamu tidak memiliki tugas yang dibatalkan.'}

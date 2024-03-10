@@ -263,7 +263,7 @@ const ServiceDetail: React.FC = ({ prevPath }: any) => {
                         <hr />
                         <div
                           className="overflow-auto"
-                          style={serviceDetail.review.reviewList ? { height: '70rem' } : {}}
+                          style={serviceDetail.review.reviewList ? { maxHeight: '40rem' } : {}}
                         >
                           {serviceDetail.review.reviewList?.map((review) => {
                             return (

@@ -278,7 +278,7 @@ const AccountOtherProfile: React.FC = ({ status, prevPath, transactionId }: any)
                                 <hr />
                                 <div
                                   className="overflow-auto"
-                                  style={clientReview.reviewList ? { maxHeight: '70rem' } : {}}
+                                  style={clientReview.reviewList ? { maxHeight: '40rem' } : {}}
                                 >
                                   {clientReview.reviewList?.map((review) => {
                                     return (

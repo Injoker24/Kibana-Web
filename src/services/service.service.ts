@@ -2,6 +2,8 @@ import {
   ServiceInquiryCategoryOutput,
   ServiceInquiryDetailSubCategoryOutput,
   ServiceInquiryNewServiceOutput,
+  ServiceInquiryOrdersOutput,
+  ServiceInquiryOwnedServiceDetailOutput,
   ServiceInquiryOwnedServiceOutput,
   ServiceInquiryServiceDetailOutput,
   ServiceInquiryServiceHistoryOutput,
@@ -10,6 +12,8 @@ import {
   transformToServiceInquiryCategoryOutput,
   transformToServiceInquiryDetailSubCategoryOutput,
   transformToServiceInquiryNewServiceOutput,
+  transformToServiceInquiryOrdersOutput,
+  transformToServiceInquiryOwnedServiceDetailOutput,
   transformToServiceInquiryOwnedServiceOutput,
   transformToServiceInquiryServiceDetailOutput,
   transformToServiceInquiryServiceHistoryOutput,
@@ -20,6 +24,8 @@ import {
   ServiceInquiryCategoryResponse,
   ServiceInquiryDetailSubCategoryResponse,
   ServiceInquiryNewServiceResponse,
+  ServiceInquiryOrdersResponse,
+  ServiceInquiryOwnedServiceDetailResponse,
   ServiceInquiryOwnedServiceResponse,
   ServiceInquiryServiceDetailResponse,
   ServiceInquiryServiceHistoryResponse,
@@ -95,6 +101,38 @@ const ServiceService = {
     );
 
     return transformToServiceInquiryOwnedServiceOutput(response.data.output_schema);
+  },
+
+  inquiryOwnedServiceDetail: async (
+    serviceId: string,
+  ): Promise<ServiceInquiryOwnedServiceDetailOutput> => {
+    const response = await axiosInstance.get<ApiResponse<ServiceInquiryOwnedServiceDetailResponse>>(
+      `/service/owned/${serviceId}`,
+    );
+
+    return transformToServiceInquiryOwnedServiceDetailOutput(response.data.output_schema);
+  },
+
+  inquiryOrders: async (serviceId: string): Promise<ServiceInquiryOrdersOutput> => {
+    const response = await axiosInstance.get<ApiResponse<ServiceInquiryOrdersResponse>>(
+      `/service/owned/${serviceId}/orders`,
+    );
+
+    return transformToServiceInquiryOrdersOutput(response.data.output_schema);
+  },
+
+  deactivate: async (serviceId: string): Promise<{}> => {
+    const response = await axiosInstance.put<ApiResponse<{}>>(
+      `/service/owned/${serviceId}/deactivate`,
+    );
+
+    return response.data.output_schema;
+  },
+
+  delete: async (serviceId: string): Promise<{}> => {
+    const response = await axiosInstance.put<ApiResponse<{}>>(`/service/owned/${serviceId}/delete`);
+
+    return response.data.output_schema;
   },
 };
 

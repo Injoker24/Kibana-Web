@@ -168,3 +168,42 @@ export interface ServiceInquiryOwnedServiceResponse {
     is_active: boolean;
   }[];
 }
+
+export interface ServiceInquiryOwnedServiceDetailResponse {
+  service_detail: {
+    id: string;
+    name: string;
+    working_time: number;
+    tags: string[];
+    price: number;
+    is_active: boolean;
+  };
+  review: {
+    average_rating: number;
+    rating_amount: number;
+    review_list?: {
+      name: string;
+      star: number;
+      description: string;
+      timestamp: string;
+    }[];
+  };
+}
+
+export interface ServiceInquiryOrdersResponse {
+  transactions?: {
+    id: string;
+    status: string;
+    due_date: string;
+    delivery_date?: string;
+    client: {
+      id: string;
+      name: string;
+      profile_image_url?: string;
+    };
+    is_reviewed?: boolean;
+    review?: {
+      amount: number;
+    };
+  }[];
+}

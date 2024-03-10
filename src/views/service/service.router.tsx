@@ -7,6 +7,7 @@ import {
   ServiceHistory,
   ServiceHistoryDetail,
   ServiceOwned,
+  ServiceOwnedDetail,
   ServiceSearch,
 } from './pages';
 import { ProtectedClientRoute, ProtectedFreelancerRoute } from 'shared/components';
@@ -55,6 +56,16 @@ const ServiceRouter = () => {
         render={() => (
           <ProtectedFreelancerRoute>
             <ServiceOwned key={Date.now()} />
+          </ProtectedFreelancerRoute>
+        )}
+      />
+
+      <Route
+        exact
+        path={'/service/owned/:serviceId'}
+        render={() => (
+          <ProtectedFreelancerRoute>
+            <ServiceOwnedDetail key={Date.now()} />
           </ProtectedFreelancerRoute>
         )}
       />
