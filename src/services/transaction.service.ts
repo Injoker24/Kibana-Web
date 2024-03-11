@@ -1,20 +1,30 @@
 import {
+  TransactionAskCancelInput,
   TransactionAskReturnInput,
   TransactionAskRevisionInput,
   TransactionCallAdminInput,
+  TransactionCancelCancelInput,
   TransactionCancelReturnInput,
   TransactionCompleteInput,
   TransactionInquiryClientActivityOutput,
   TransactionInquiryClientInvoiceOutput,
   TransactionInquiryDetailClientServiceOutput,
   TransactionInquiryDetailClientTaskOutput,
+  TransactionInquiryDetailFreelancerServiceOutput,
+  TransactionInquiryFreelancerActivityOutput,
+  TransactionInquiryFreelancerInvoiceOutput,
   TransactionManageCancellationInput,
+  TransactionManageReturnInput,
   TransactionSendAdditionalFileInput,
   TransactionSendMessageInput,
+  TransactionSendResultInput,
   transformToTransactionInquiryClientActivityOutput,
   transformToTransactionInquiryClientInvoiceOutput,
   transformToTransactionInquiryDetailClientServiceOutput,
   transformToTransactionInquiryDetailClientTaskOutput,
+  transformToTransactionInquiryDetailFreelancerServiceOutput,
+  transformToTransactionInquiryFreelancerActivityOutput,
+  transformToTransactionInquiryFreelancerInvoiceOutput,
 } from 'models';
 import { axiosInstance } from 'setup';
 import {
@@ -23,14 +33,21 @@ import {
   TransactionInquiryClientInvoiceResponse,
   TransactionInquiryDetailClientServiceResponse,
   TransactionInquiryDetailClientTaskResponse,
+  TransactionInquiryDetailFreelancerServiceResponse,
+  TransactionInquiryFreelancerActivityResponse,
+  TransactionInquiryFreelancerInvoiceResponse,
+  transformToTransactionAskCancelRequest,
   transformToTransactionAskReturnRequest,
   transformToTransactionAskRevisionRequest,
   transformToTransactionCallAdminRequest,
+  transformToTransactionCancelCancelRequest,
   transformToTransactionCancelReturnRequest,
   transformToTransactionCompleteRequest,
   transformToTransactionManageCancellationRequest,
+  transformToTransactionManageReturnRequest,
   transformToTransactionSendAdditionalFileRequest,
   transformToTransactionSendMessageRequest,
+  transformToTransactionSendResultRequest,
 } from './schemas';
 
 const TransactionService = {
@@ -161,6 +178,100 @@ const TransactionService = {
     >(`/transaction/service/client/${transactionId}`);
 
     return transformToTransactionInquiryDetailClientServiceOutput(response.data.output_schema);
+  },
+
+  inquiryFreelancerServiceTransactionDetail: async (
+    transactionId: string,
+  ): Promise<TransactionInquiryDetailFreelancerServiceOutput> => {
+    const response = await axiosInstance.get<
+      ApiResponse<TransactionInquiryDetailFreelancerServiceResponse>
+    >(`/transaction/service/freelancer/${transactionId}`);
+
+    return transformToTransactionInquiryDetailFreelancerServiceOutput(response.data.output_schema);
+  },
+
+  inquiryFreelancerInvoice: async (
+    transactionId: string,
+  ): Promise<TransactionInquiryFreelancerInvoiceOutput> => {
+    const response = await axiosInstance.get<
+      ApiResponse<TransactionInquiryFreelancerInvoiceResponse>
+    >(`/transaction/invoice/${transactionId}/completed`);
+
+    return transformToTransactionInquiryFreelancerInvoiceOutput(response.data.output_schema);
+  },
+
+  inquiryFreelancerActivity: async (
+    transactionId: string,
+  ): Promise<TransactionInquiryFreelancerActivityOutput> => {
+    const response = await axiosInstance.get<
+      ApiResponse<TransactionInquiryFreelancerActivityResponse>
+    >(`/transaction/${transactionId}/freelancer/activity`);
+
+    return transformToTransactionInquiryFreelancerActivityOutput(response.data.output_schema);
+  },
+
+  askCancel: async (data: TransactionAskCancelInput): Promise<{}> => {
+    const requestData = transformToTransactionAskCancelRequest(data);
+    const response = await axiosInstance.post<ApiResponse<{}>>(
+      `/transaction/ask-cancellation`,
+      requestData,
+    );
+
+    return response.data.output_schema;
+  },
+
+  cancelCancel: async (data: TransactionCancelCancelInput): Promise<{}> => {
+    const requestData = transformToTransactionCancelCancelRequest(data);
+    const response = await axiosInstance.put<ApiResponse<{}>>(
+      `/transaction/cancel-cancellation`,
+      requestData,
+    );
+
+    return response.data.output_schema;
+  },
+
+  manageReturn: async (data: TransactionManageReturnInput): Promise<{}> => {
+    const requestData = transformToTransactionManageReturnRequest(data);
+    const response = await axiosInstance.post<ApiResponse<{}>>(
+      `/transaction/manage-return`,
+      requestData,
+    );
+
+    return response.data.output_schema;
+  },
+
+  sendResult: async (data: TransactionSendResultInput): Promise<{}> => {
+    const requestData = transformToTransactionSendResultRequest(data);
+
+    let formData = new FormData();
+    if (requestData.result) {
+      if (requestData.result.length >= 1) {
+        formData.append('result_1', requestData.result[0]);
+      }
+      if (requestData.result.length >= 2) {
+        formData.append('result_2', requestData.result[1]);
+      }
+      if (requestData.result.length === 3) {
+        formData.append('result_3', requestData.result[2]);
+      }
+    }
+
+    const blob = new Blob([JSON.stringify(requestData)], {
+      type: 'application/json',
+    });
+    formData.append('data', blob);
+
+    const response = await axiosInstance.post<ApiResponse<{}>>(
+      `/transaction/send-result`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    );
+
+    return response.data.output_schema;
   },
 };
 

@@ -134,6 +134,14 @@ const ServiceService = {
 
     return response.data.output_schema;
   },
+
+  activate: async (serviceId: string): Promise<{}> => {
+    const response = await axiosInstance.put<ApiResponse<{}>>(
+      `/service/owned/${serviceId}/activate`,
+    );
+
+    return response.data.output_schema;
+  },
 };
 
 export default ServiceService;

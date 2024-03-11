@@ -203,6 +203,31 @@ const ServiceOwnedDetail: React.FC = () => {
     mutateDeactivateService();
   };
 
+  const {
+    data: successActivateService,
+    isLoading: isLoadingActivateService,
+    mutate: mutateActivateService,
+    error: errorActivateService,
+  } = useMutation<{}, ErrorWrapper>(
+    ['activate-service', params.serviceId],
+    async () => await ServiceService.activate(params.serviceId),
+  );
+
+  const [modalActivateService, setModalActivateService] = useState<boolean>(false);
+
+  const openModalActivateService = () => {
+    setModalActivateService(true);
+  };
+
+  const cancelActivateService = () => {
+    setModalActivateService(false);
+  };
+
+  const confirmActivateService = () => {
+    setModalActivateService(false);
+    mutateActivateService();
+  };
+
   return (
     <>
       {modalReview && (
@@ -351,6 +376,24 @@ const ServiceOwnedDetail: React.FC = () => {
       {successDeactivateService && (
         <PopUpSuccess
           message={'Berhasil menonaktifkan layanan!'}
+          onClose={() => {
+            history.push('/service/owned');
+          }}
+        />
+      )}
+      {modalActivateService && (
+        <PopUpConfirm
+          title="Aktifkan layanan"
+          message="Apakah anda yakin akan mengaktifkan layanan ini kembali?"
+          onCancel={cancelActivateService}
+          onSubmit={confirmActivateService}
+        />
+      )}
+      {isLoadingActivateService && <Loader type="fixed" />}
+      {errorActivateService && <PopUpError message={errorActivateService.message} />}
+      {successActivateService && (
+        <PopUpSuccess
+          message={'Berhasil mengaktifkan layanan!'}
           onClose={() => {
             history.push('/service/owned');
           }}
@@ -893,12 +936,20 @@ const ServiceOwnedDetail: React.FC = () => {
                           )}
 
                           {!ownedServiceDetail.serviceDetail.isActive && (
-                            <div
-                              className="btn btn-danger"
-                              onClick={openModalDeleteService}
-                            >
-                              Hapus Layanan
-                            </div>
+                            <>
+                              <div
+                                className="btn btn-primary mb-3"
+                                onClick={openModalActivateService}
+                              >
+                                Aktifkan Layanan
+                              </div>
+                              <div
+                                className="btn btn-danger"
+                                onClick={openModalDeleteService}
+                              >
+                                Hapus Layanan
+                              </div>
+                            </>
                           )}
                         </div>
                         <div className="mb-5">

@@ -199,6 +199,68 @@ const TransactionActivity: React.FC<Props> = ({
   );
   // #endregion
 
+  // #region Cancel Cancellation
+  const [modalCancelCancellation, setModalCancelCancellation] = useState<boolean>(false);
+
+  const openModalCancelCancellation = () => {
+    setModalCancelCancellation(true);
+  };
+
+  const {
+    isLoading: isLoadingCancelCancellation,
+    mutate: mutateCancelCancellation,
+    error: errorCancelCancellation,
+  } = useMutation<{}, ErrorWrapper>(
+    ['cancel-cancellation'],
+    async () =>
+      await TransactionService.cancelCancel({
+        transactionId: transactionId,
+      }),
+    {
+      onSuccess: () => {
+        setModalCancelCancellation(false);
+        refetchTransaction();
+      },
+    },
+  );
+  // #endregion
+
+  // #region Manage Return
+  const [modalAcceptReturn, setModalAcceptReturn] = useState<boolean>(false);
+  const [modalRejectReturn, setModalRejectReturn] = useState<boolean>(false);
+  const [manageReturnType, setManageReturnType] = useState<string>('');
+
+  const openModalAcceptReturn = () => {
+    setModalAcceptReturn(true);
+    setManageReturnType('ACCEPT');
+  };
+
+  const openModalRejectReturn = () => {
+    setModalRejectReturn(true);
+    setManageReturnType('REJECT');
+  };
+
+  const {
+    isLoading: isLoadingManageReturn,
+    mutate: mutateManageReturn,
+    error: errorManageReturn,
+  } = useMutation<{}, ErrorWrapper>(
+    ['manage-return'],
+    async () =>
+      await TransactionService.manageReturn({
+        transactionId: transactionId,
+        type: manageReturnType,
+      }),
+    {
+      onSuccess: () => {
+        setModalAcceptReturn(false);
+        setModalRejectReturn(false);
+        refetchTransaction();
+      },
+    },
+  );
+  // #endregion
+
   return (
     <>
       {modalRevision && (
@@ -621,6 +683,207 @@ const TransactionActivity: React.FC<Props> = ({
           )}
         </Popup>
       )}
+      {modalCancelCancellation && (
+        <Popup
+          open={true}
+          closeOnDocumentClick={false}
+          className="popup-activity"
+        >
+          {isLoadingCancelCancellation && <Loader type="inline" />}
+          {!isLoadingCancelCancellation && (
+            <>
+              <div className="flex-column">
+                <div className="flex-centered w-100 justify-content-between mb-3">
+                  <h3 className="mb-0">Batalkan ajuan pembatalan</h3>
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setModalCancelCancellation(false);
+                    }}
+                  >
+                    <IconClose />
+                  </div>
+                </div>
+
+                {errorCancelCancellation && (
+                  <div className="mb-4">
+                    <InfoBox
+                      message={errorCancelCancellation?.message}
+                      type="danger"
+                    />
+                  </div>
+                )}
+
+                <div className="mb-4">
+                  <InfoBox
+                    message={`Kamu hanya dapat mengajukan pembatalan <b>1 kali</b> saja!`}
+                    type="warning"
+                  />
+                </div>
+
+                <Row>
+                  <div className="col-12 col-md-6">
+                    <div
+                      className="btn btn-outline-primary"
+                      onClick={() => {
+                        setModalCancelCancellation(false);
+                      }}
+                    >
+                      Kembali
+                    </div>
+                  </div>
+                  <div className="col-12 col-md-6 mb-3 mb-md-0 order-first order-md-last">
+                    <div
+                      className="btn btn-primary"
+                      onClick={() => {
+                        mutateCancelCancellation();
+                      }}
+                    >
+                      Lanjut
+                    </div>
+                  </div>
+                </Row>
+              </div>
+            </>
+          )}
+        </Popup>
+      )}
+      {modalAcceptReturn && (
+        <Popup
+          open={true}
+          closeOnDocumentClick={false}
+          className="popup-activity"
+        >
+          {isLoadingManageReturn && <Loader type="inline" />}
+          {!isLoadingManageReturn && (
+            <>
+              <div className="flex-column">
+                <div className="flex-centered w-100 justify-content-between mb-3">
+                  <h3 className="mb-0">Terima permintaan pengembalian</h3>
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setModalAcceptReturn(false);
+                      setManageReturnType('');
+                    }}
+                  >
+                    <IconClose />
+                  </div>
+                </div>
+
+                {errorManageReturn && (
+                  <div className="mb-4">
+                    <InfoBox
+                      message={errorManageReturn?.message}
+                      type="danger"
+                    />
+                  </div>
+                )}
+
+                <div className="mb-4">
+                  <InfoBox
+                    message={'Pesanan akan dibatalkan dan dana akan diteruskan kepada klien!'}
+                    type="warning"
+                  />
+                </div>
+
+                <Row>
+                  <div className="col-12 col-md-6">
+                    <div
+                      className="btn btn-outline-primary"
+                      onClick={() => {
+                        setModalAcceptReturn(false);
+                        setManageReturnType('');
+                      }}
+                    >
+                      Kembali
+                    </div>
+                  </div>
+                  <div className="col-12 col-md-6 mb-3 mb-md-0 order-first order-md-last">
+                    <div
+                      className="btn btn-primary"
+                      onClick={() => {
+                        mutateManageReturn();
+                      }}
+                    >
+                      Lanjut
+                    </div>
+                  </div>
+                </Row>
+              </div>
+            </>
+          )}
+        </Popup>
+      )}
+      {modalRejectReturn && (
+        <Popup
+          open={true}
+          closeOnDocumentClick={false}
+          className="popup-activity"
+        >
+          {isLoadingManageReturn && <Loader type="inline" />}
+          {!isLoadingManageReturn && (
+            <>
+              <div className="flex-column">
+                <div className="flex-centered w-100 justify-content-between mb-3">
+                  <h3 className="mb-0">Tolak permintaan pengembalian</h3>
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setModalRejectReturn(false);
+                      setManageReturnType('');
+                    }}
+                  >
+                    <IconClose />
+                  </div>
+                </div>
+
+                {errorManageReturn && (
+                  <div className="mb-4">
+                    <InfoBox
+                      message={errorManageReturn?.message}
+                      type="danger"
+                    />
+                  </div>
+                )}
+
+                <div className="mb-4">
+                  <InfoBox
+                    message={
+                      'Klien dapat memilih untuk menghubungi admin atau membatalkan ajuan pengembalian!'
+                    }
+                    type="warning"
+                  />
+                </div>
+
+                <Row>
+                  <div className="col-12 col-md-6">
+                    <div
+                      className="btn btn-outline-primary"
+                      onClick={() => {
+                        setModalRejectReturn(false);
+                        setManageReturnType('');
+                      }}
+                    >
+                      Kembali
+                    </div>
+                  </div>
+                  <div className="col-12 col-md-6 mb-3 mb-md-0 order-first order-md-last">
+                    <div
+                      className="btn btn-primary"
+                      onClick={() => {
+                        mutateManageReturn();
+                      }}
+                    >
+                      Lanjut
+                    </div>
+                  </div>
+                </Row>
+              </div>
+            </>
+          )}
+        </Popup>
+      )}
       <div className="card-sm mb-3 pb-0">
         <p className="mb-3">{activity.timestamp}</p>
         <h4
@@ -653,7 +916,6 @@ const TransactionActivity: React.FC<Props> = ({
 
         {activity.deadlineExtension &&
           activity.code === TransactionActivityEnum.MemintaRevisi &&
-          userType === 'client' &&
           projectType === 'service' && (
             <div style={{ paddingBottom: '32px' }}>
               <InfoBox
@@ -677,6 +939,16 @@ const TransactionActivity: React.FC<Props> = ({
             <div style={{ paddingBottom: '32px' }}>
               <InfoBox
                 message={`Jika freelancer tidak mengirimkan hasil pekerjaan sebelum deadline <span class="font-weight-bold text-primary-dark">(${activity.responseDeadline})</span>, maka pesanan akan otomatis dibatalkan dan dana akan dikembalikan ke klien.`}
+              />
+            </div>
+          )}
+
+        {activity.responseDeadline &&
+          activity.code === TransactionActivityEnum.MenambahkanFilePendukungDeskripsi &&
+          userType === 'freelancer' && (
+            <div style={{ paddingBottom: '32px' }}>
+              <InfoBox
+                message={`Jika kamu tidak mengirimkan hasil pekerjaan sebelum deadline <span class="font-weight-bold text-primary-dark">(${activity.responseDeadline})</span>, maka pesanan akan otomatis dibatalkan dan dana akan dikembalikan ke klien.`}
               />
             </div>
           )}
@@ -716,11 +988,33 @@ const TransactionActivity: React.FC<Props> = ({
 
         {activity.responseDeadline &&
           activity.code === TransactionActivityEnum.MengirimHasil &&
+          userType === 'freelancer' &&
+          projectType === 'task' && (
+            <div style={{ paddingBottom: '32px' }}>
+              <InfoBox
+                message={`Jika klien tidak menyelesaikan pesanan sebelum 2x24 jam <span class="font-weight-bold text-primary-dark">(${activity.responseDeadline})</span>, maka pesanan akan otomatis dianggap selesai. Jika revisi diminta, maka deadline tetap tidak akan diperpanjang.`}
+              />
+            </div>
+          )}
+
+        {activity.responseDeadline &&
+          activity.code === TransactionActivityEnum.MengirimHasil &&
           userType === 'client' &&
           projectType === 'service' && (
             <div style={{ paddingBottom: '32px' }}>
               <InfoBox
                 message={`Selesaikan pesanan dalam waktu 2x24 jam <span class="font-weight-bold text-primary-dark">(${activity.responseDeadline})</span> atau pesanan akan otomatis dianggap selesai. Jika revisi diminta, maka deadline akan diperpanjang sesuai durasi sebelumnya.`}
+              />
+            </div>
+          )}
+
+        {activity.responseDeadline &&
+          activity.code === TransactionActivityEnum.MengirimHasil &&
+          userType === 'freelancer' &&
+          projectType === 'service' && (
+            <div style={{ paddingBottom: '32px' }}>
+              <InfoBox
+                message={`Jika klien tidak menyelesaikan pesanan sebelum 2x24 jam <span class="font-weight-bold text-primary-dark">(${activity.responseDeadline})</span>, maka pesanan akan otomatis dianggap selesai. Jika revisi diminta, maka deadline akan diperpanjang sesuai durasi sebelumnya.`}
               />
             </div>
           )}
@@ -736,11 +1030,31 @@ const TransactionActivity: React.FC<Props> = ({
           )}
 
         {activity.responseDeadline &&
+          activity.code === TransactionActivityEnum.Pengembalian &&
+          userType === 'freelancer' && (
+            <div style={{ paddingBottom: '32px' }}>
+              <InfoBox
+                message={`Jika kamu tidak merespon sebelum 2x24 jam <span class="font-weight-bold text-primary-dark">(${activity.responseDeadline})</span>, maka pesanan akan otomatis terbatalkan dan dana akan diteruskan kepada klien.`}
+              />
+            </div>
+          )}
+
+        {activity.responseDeadline &&
           activity.code === TransactionActivityEnum.MenolakPengembalian &&
           userType === 'client' && (
             <div style={{ paddingBottom: '32px' }}>
               <InfoBox
                 message={`Berikan respon dalam waktu 2x24 jam <span class="font-weight-bold text-primary-dark">(${activity.responseDeadline})</span> atau pesanan akan otomatis dianggap selesai.`}
+              />
+            </div>
+          )}
+
+        {activity.responseDeadline &&
+          activity.code === TransactionActivityEnum.MenolakPengembalian &&
+          userType === 'freelancer' && (
+            <div style={{ paddingBottom: '32px' }}>
+              <InfoBox
+                message={`Jika klien tidak merespon sebelum 2x24 jam <span class="font-weight-bold text-primary-dark">(${activity.responseDeadline})</span>, maka pesanan akan otomatis dianggap selesai.`}
               />
             </div>
           )}
@@ -756,11 +1070,31 @@ const TransactionActivity: React.FC<Props> = ({
           )}
 
         {activity.responseDeadline &&
+          activity.code === TransactionActivityEnum.Pembatalan &&
+          userType === 'freelancer' && (
+            <div style={{ paddingBottom: '32px' }}>
+              <InfoBox
+                message={`Jika klien tidak merespon sebelum 2x24 jam <span, class="font-weight-bold text-primary-dark">(${activity.responseDeadline})</span, maka pesanan akan otomatis dibatalkan dan dana akan diteruskan kepada klien.`}
+              />
+            </div>
+          )}
+
+        {activity.responseDeadline &&
           activity.code === TransactionActivityEnum.MenolakPembatalan &&
           userType === 'client' && (
             <div style={{ paddingBottom: '32px' }}>
               <InfoBox
                 message={`Jika freelancer tidak merespon sebelum 2x24 jam <span class="font-weight-bold text-primary-dark">(${activity.responseDeadline})</span>, maka pesanan akan otomatis dilanjutkan.`}
+              />
+            </div>
+          )}
+
+        {activity.responseDeadline &&
+          activity.code === TransactionActivityEnum.MenolakPembatalan &&
+          userType === 'freelancer' && (
+            <div style={{ paddingBottom: '32px' }}>
+              <InfoBox
+                message={`Jika kamu tidak merespon sebelum 2x24 jam <span class="font-weight-bold text-primary-dark">(${activity.responseDeadline})</span>, maka pesanan akan otomatis dilanjutkan.`}
               />
             </div>
           )}
@@ -817,6 +1151,30 @@ const TransactionActivity: React.FC<Props> = ({
                     <div
                       className="btn btn-primary"
                       onClick={openModalAcceptCancellation}
+                    >
+                      {button.name}
+                    </div>
+                  )}
+                  {button.code === TransactionActivityButtonsEnum.BatalkanPembatalan && (
+                    <div
+                      className="btn btn-primary"
+                      onClick={openModalCancelCancellation}
+                    >
+                      {button.name}
+                    </div>
+                  )}
+                  {button.code === TransactionActivityButtonsEnum.TolakPengembalian && (
+                    <div
+                      className="btn btn-danger"
+                      onClick={openModalRejectReturn}
+                    >
+                      {button.name}
+                    </div>
+                  )}
+                  {button.code === TransactionActivityButtonsEnum.TerimaPengembalian && (
+                    <div
+                      className="btn btn-primary"
+                      onClick={openModalAcceptReturn}
                     >
                       {button.name}
                     </div>

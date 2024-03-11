@@ -3,6 +3,9 @@ import {
   TransactionInquiryClientInvoiceResponse,
   TransactionInquiryDetailClientServiceResponse,
   TransactionInquiryDetailClientTaskResponse,
+  TransactionInquiryDetailFreelancerServiceResponse,
+  TransactionInquiryFreelancerActivityResponse,
+  TransactionInquiryFreelancerInvoiceResponse,
 } from 'services/schemas';
 
 export interface TransactionInquiryDetailClientTaskOutput {
@@ -270,4 +273,194 @@ export function transformToTransactionInquiryDetailClientServiceOutput(
   };
 
   return result;
+}
+
+export interface TransactionInquiryFreelancerActivityOutput {
+  activity: {
+    timestamp: string;
+    code: string;
+    title: string;
+    description?: string;
+    files?: {
+      id: string;
+      fileName: string;
+    }[];
+    responseDeadline?: string;
+    deadlineExtension?: string;
+    buttons?: {
+      code: string;
+      name: string;
+    }[];
+  }[];
+}
+
+export function transformToTransactionInquiryFreelancerActivityOutput(
+  response: TransactionInquiryFreelancerActivityResponse,
+): TransactionInquiryFreelancerActivityOutput {
+  const result: TransactionInquiryFreelancerActivityOutput = {
+    activity: response.activity.map((t) => {
+      return {
+        timestamp: t.timestamp,
+        code: t.code,
+        title: t.title,
+        description: t.description,
+        files: t.files?.map((file) => {
+          return {
+            id: file.id,
+            fileName: file.file_name,
+          };
+        }),
+        responseDeadline: t.response_deadline,
+        deadlineExtension: t.deadline_extension,
+        buttons: t.buttons?.map((button) => {
+          return {
+            code: button.code,
+            name: button.name,
+          };
+        }),
+      };
+    }),
+  };
+
+  return result;
+}
+
+export interface TransactionInquiryFreelancerInvoiceOutput {
+  refNo: string;
+  clientName: string;
+  freelancerName: string;
+  paymentDate: string;
+  project: {
+    name: string;
+    price: string;
+    duration?: number;
+    revisionCount?: number;
+    additionalData?: {
+      title: string;
+    }[];
+  };
+  fee: {
+    percentage: number;
+    amount: number;
+  };
+  totalPrice: number;
+  bankDetail: {
+    bankName: string;
+    beneficiaryName: string;
+    accountNumber: string;
+  };
+}
+
+export function transformToTransactionInquiryFreelancerInvoiceOutput(
+  response: TransactionInquiryFreelancerInvoiceResponse,
+): TransactionInquiryFreelancerInvoiceOutput {
+  const result: TransactionInquiryFreelancerInvoiceOutput = {
+    refNo: response.ref_no,
+    clientName: response.client_name,
+    freelancerName: response.freelancer_name,
+    paymentDate: response.payment_date,
+    project: {
+      name: response.project.name,
+      price: response.project.price,
+      duration: response.project.duration,
+      revisionCount: response.project.revision_count,
+      additionalData: response.project.additional_data?.map((t) => {
+        return {
+          title: t.title,
+        };
+      }),
+    },
+    fee: {
+      percentage: response.fee.percentage,
+      amount: response.fee.amount,
+    },
+    totalPrice: response.total_price,
+    bankDetail: {
+      bankName: response.bank_detail.bank_name,
+      beneficiaryName: response.bank_detail.beneficiary_name,
+      accountNumber: response.bank_detail.account_number,
+    },
+  };
+
+  return result;
+}
+
+export interface TransactionInquiryDetailFreelancerServiceOutput {
+  transactionDetail: {
+    id: string;
+    serviceDetail: {
+      id: string;
+      name: string;
+      tags: string[];
+      dueDate: string;
+      price: string;
+    };
+    status: string;
+    deliveryDate?: string;
+    hasCancelled: boolean;
+    client: {
+      id: string;
+      name: string;
+      profileImageUrl?: string;
+    };
+    isReviewed?: boolean;
+    review?: {
+      amount: number;
+      description?: string;
+    };
+  };
+}
+
+export function transformToTransactionInquiryDetailFreelancerServiceOutput(
+  response: TransactionInquiryDetailFreelancerServiceResponse,
+): TransactionInquiryDetailFreelancerServiceOutput {
+  const result: TransactionInquiryDetailFreelancerServiceOutput = {
+    transactionDetail: {
+      id: response.transaction_detail.id,
+      serviceDetail: {
+        id: response.transaction_detail.service_detail.id,
+        name: response.transaction_detail.service_detail.name,
+        tags: response.transaction_detail.service_detail.tags,
+        dueDate: response.transaction_detail.service_detail.due_date,
+        price: response.transaction_detail.service_detail.price,
+      },
+      status: response.transaction_detail.status,
+      deliveryDate: response.transaction_detail.delivery_date,
+      hasCancelled: response.transaction_detail.has_cancelled,
+      client: {
+        id: response.transaction_detail.client.id,
+        name: response.transaction_detail.client.name,
+        profileImageUrl: response.transaction_detail.client.profile_image_url,
+      },
+      isReviewed: response.transaction_detail.is_reviewed,
+      review: response.transaction_detail.review
+        ? {
+            amount: response.transaction_detail.review.amount,
+            description: response.transaction_detail.review.description,
+          }
+        : undefined,
+    },
+  };
+
+  return result;
+}
+
+export interface TransactionAskCancelInput {
+  transactionId: string;
+  message: string;
+}
+
+export interface TransactionCancelCancelInput {
+  transactionId: string;
+}
+
+export interface TransactionManageReturnInput {
+  transactionId: string;
+  type: string;
+}
+
+export interface TransactionSendResultInput {
+  result: File[];
+  transactionId: string;
+  description: string;
 }

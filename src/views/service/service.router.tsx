@@ -6,6 +6,7 @@ import {
   ServiceDetail,
   ServiceHistory,
   ServiceHistoryDetail,
+  ServiceOrderDetail,
   ServiceOwned,
   ServiceOwnedDetail,
   ServiceSearch,
@@ -66,6 +67,16 @@ const ServiceRouter = () => {
         render={() => (
           <ProtectedFreelancerRoute>
             <ServiceOwnedDetail key={Date.now()} />
+          </ProtectedFreelancerRoute>
+        )}
+      />
+
+      <Route
+        exact
+        path={'/service/orders/:transactionId'}
+        render={() => (
+          <ProtectedFreelancerRoute>
+            <ServiceOrderDetail key={Date.now()} />
           </ProtectedFreelancerRoute>
         )}
       />

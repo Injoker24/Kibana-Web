@@ -5,6 +5,7 @@ import ServiceHistory from './service-history';
 import ServiceHistoryDetail from './sevice-history-detail';
 import ServiceOwned from './service-owned';
 import ServiceOwnedDetail from './service-owned-detail';
+import ServiceOrderDetail from './service-order-detail';
 
 export {
   ServiceCategoryList,
@@ -14,4 +15,5 @@ export {
   ServiceHistoryDetail,
   ServiceOwned,
   ServiceOwnedDetail,
+  ServiceOrderDetail,
 };
