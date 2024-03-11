@@ -12,7 +12,7 @@ import { setLocalStorage } from 'utils';
 const AuthLogin: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState<AuthLoginInput>({
-    emailUsername: '',
+    usernameEmail: '',
     password: '',
   });
   const {
@@ -37,7 +37,7 @@ const AuthLogin: React.FC = () => {
     ['login', formData],
     async () =>
       await AuthService.login({
-        emailUsername: formData.emailUsername,
+        usernameEmail: formData.usernameEmail,
         password: formData.password,
       }),
     {
@@ -82,14 +82,14 @@ const AuthLogin: React.FC = () => {
               <div className="mb-3 mb-md-4">
                 <FormInput
                   label="E-mail atau Username"
-                  labelFor="emailUsername"
-                  errorMessage={errors?.emailUsername?.message}
+                  labelFor="usernameEmail"
+                  errorMessage={errors?.usernameEmail?.message}
                 >
                   <Form.Control
                     type="text"
-                    id="emailUsername"
-                    name="emailUsername"
-                    isInvalid={formState.touched.emailUsername === true && !!errors.emailUsername}
+                    id="usernameEmail"
+                    name="usernameEmail"
+                    isInvalid={formState.touched.usernameEmail === true && !!errors.usernameEmail}
                     ref={
                       register({
                         required: {

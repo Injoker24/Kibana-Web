@@ -170,7 +170,11 @@ const DashboardIndex: React.FC = () => {
                     <div className="d-flex flex-row flex-wrap">
                       <div className="col-6 col-md-3 p-0 pr-3 mb-3 mb-md-0">
                         <div className="dashboard-border-card flex-centered flex-column cursor-pointer h-100">
-                          <div className="text-primary-dark">
+                          <div
+                            className={
+                              status === 'client' ? 'text-primary-dark' : 'text-secondary-dark'
+                            }
+                          >
                             <IconCreateTaskService />
                           </div>
                           <p className="text-center">
@@ -193,7 +197,11 @@ const DashboardIndex: React.FC = () => {
                         }}
                       >
                         <div className="dashboard-border-card flex-centered flex-column cursor-pointer h-100">
-                          <div className="text-primary-dark">
+                          <div
+                            className={
+                              status === 'client' ? 'text-primary-dark' : 'text-secondary-dark'
+                            }
+                          >
                             <IconMyTaskService />
                           </div>
                           <p className="text-center">
@@ -216,7 +224,11 @@ const DashboardIndex: React.FC = () => {
                         }}
                       >
                         <div className="dashboard-border-card flex-centered flex-column cursor-pointer h-100">
-                          <div className="text-primary-dark">
+                          <div
+                            className={
+                              status === 'client' ? 'text-primary-dark' : 'text-secondary-dark'
+                            }
+                          >
                             <IconHistoryTaskService />
                           </div>
                           <p className="text-center">
@@ -239,7 +251,11 @@ const DashboardIndex: React.FC = () => {
                         }}
                       >
                         <div className="dashboard-border-card flex-centered flex-column cursor-pointer h-100">
-                          <div className="text-primary-dark">
+                          <div
+                            className={
+                              status === 'client' ? 'text-primary-dark' : 'text-secondary-dark'
+                            }
+                          >
                             <IconSearchTaskService />
                           </div>
                           <p className="text-center">

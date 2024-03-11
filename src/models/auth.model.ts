@@ -16,7 +16,7 @@ export interface AuthLoginOutput {
 }
 
 export interface AuthLoginInput {
-  emailUsername: string;
+  usernameEmail: string;
   password: string;
 }
 
@@ -36,7 +36,7 @@ export function transformToAuthLoginOutput(response: AuthLoginResponse): AuthLog
 
 export function transformToAuthLoginRequest(input: AuthLoginInput): AuthLoginRequest {
   const result: AuthLoginRequest = {
-    email_username: input.emailUsername,
+    username_email: input.usernameEmail,
     password: input.password,
   };
 

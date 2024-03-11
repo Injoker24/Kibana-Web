@@ -11,7 +11,7 @@ export interface AuthLoginResponse {
 }
 
 export interface AuthLoginRequest {
-  email_username: string;
+  username_email: string;
   password: string;
 }
 
