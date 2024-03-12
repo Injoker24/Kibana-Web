@@ -6,6 +6,7 @@ import {
   TaskInquiryOwnedTaskOutput,
   TaskInquiryRegisteredFreelancerListOutput,
   TaskInquiryTaskDetailOutput,
+  TaskInquiryTaskHistoryDetailOutput,
   TaskInquiryTaskHistoryOutput,
   TaskInquiryTaskListInput,
   TaskInquiryTaskListOutput,
@@ -16,6 +17,7 @@ import {
   transformToTaskInquiryOwnedTaskOutput,
   transformToTaskInquiryRegisteredFreelancerListOutput,
   transformToTaskInquiryTaskDetailOutput,
+  transformToTaskInquiryTaskHistoryDetailOutput,
   transformToTaskInquiryTaskHistoryOutput,
   transformToTaskInquiryTaskListOutput,
 } from 'models';
@@ -29,6 +31,7 @@ import {
   TaskInquiryOwnedTaskResponse,
   TaskInquiryRegisteredFreelancerListResponse,
   TaskInquiryTaskDetailResponse,
+  TaskInquiryTaskHistoryDetailResponse,
   TaskInquiryTaskHistoryResponse,
   TaskInquiryTaskListResponse,
   transformToTaskInquiryTaskListRequest,
@@ -123,6 +126,14 @@ const TaskService = {
     const response = await axiosInstance.put<ApiResponse<{}>>(`/task/${taskId}/delete`);
 
     return response.data.output_schema;
+  },
+
+  inquiryTaskHistoryDetail: async (taskId: string): Promise<TaskInquiryTaskHistoryDetailOutput> => {
+    const response = await axiosInstance.get<ApiResponse<TaskInquiryTaskHistoryDetailResponse>>(
+      `/task/history/${taskId}`,
+    );
+
+    return transformToTaskInquiryTaskHistoryDetailOutput(response.data.output_schema);
   },
 };
 

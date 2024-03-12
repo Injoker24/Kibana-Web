@@ -4,5 +4,14 @@ import TaskDetail from './task-detail';
 import TaskOwned from './task-owned';
 import TaskHistory from './task-history';
 import TaskOwnedDetail from './task-owned-detail';
+import TaskHistoryDetail from './task-history-detail';
 
-export { TaskCategoryList, TaskSearch, TaskDetail, TaskOwned, TaskHistory, TaskOwnedDetail };
+export {
+  TaskCategoryList,
+  TaskSearch,
+  TaskDetail,
+  TaskOwned,
+  TaskHistory,
+  TaskOwnedDetail,
+  TaskHistoryDetail,
+};

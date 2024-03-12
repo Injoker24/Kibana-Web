@@ -366,3 +366,30 @@ export function transformToTransactionSendResultRequest(
 
   return result;
 }
+
+export interface TransactionInquiryDetailFreelancerTaskResponse {
+  transaction_detail: {
+    id: string;
+    task_detail: {
+      id: string;
+      name: string;
+      tags: string[];
+      due_date: string;
+      difficulty: string;
+      price: string;
+    };
+    status: string;
+    delivery_date?: string;
+    has_cancelled: boolean;
+    client: {
+      id: string;
+      name: string;
+      profile_image_url?: string;
+    };
+    is_reviewed?: boolean;
+    review?: {
+      amount: number;
+      description?: string;
+    };
+  };
+}

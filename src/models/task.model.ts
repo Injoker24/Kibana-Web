@@ -6,6 +6,7 @@ import {
   TaskInquiryOwnedTaskResponse,
   TaskInquiryRegisteredFreelancerListResponse,
   TaskInquiryTaskDetailResponse,
+  TaskInquiryTaskHistoryDetailResponse,
   TaskInquiryTaskHistoryResponse,
   TaskInquiryTaskListResponse,
 } from 'services/schemas';
@@ -401,6 +402,36 @@ export function transformToTaskInquiryRegisteredFreelancerListOutput(
         cvUrl: t.cv_url,
       };
     }),
+  };
+
+  return result;
+}
+
+export interface TaskInquiryTaskHistoryDetailOutput {
+  taskDetail: {
+    id: string;
+    name: string;
+    tags: string[];
+    dueDate: string;
+    difficulty: string;
+    price: number;
+    status: string;
+  };
+}
+
+export function transformToTaskInquiryTaskHistoryDetailOutput(
+  response: TaskInquiryTaskHistoryDetailResponse,
+): TaskInquiryTaskHistoryDetailOutput {
+  const result: TaskInquiryTaskHistoryDetailOutput = {
+    taskDetail: {
+      id: response.task_detail.id,
+      name: response.task_detail.name,
+      tags: response.task_detail.tags,
+      dueDate: response.task_detail.due_date,
+      difficulty: response.task_detail.difficulty,
+      price: response.task_detail.price,
+      status: response.task_detail.status,
+    },
   };
 
   return result;

@@ -11,6 +11,7 @@ import {
   TransactionInquiryDetailClientServiceOutput,
   TransactionInquiryDetailClientTaskOutput,
   TransactionInquiryDetailFreelancerServiceOutput,
+  TransactionInquiryDetailFreelancerTaskOutput,
   TransactionInquiryFreelancerActivityOutput,
   TransactionInquiryFreelancerInvoiceOutput,
   TransactionManageCancellationInput,
@@ -23,6 +24,7 @@ import {
   transformToTransactionInquiryDetailClientServiceOutput,
   transformToTransactionInquiryDetailClientTaskOutput,
   transformToTransactionInquiryDetailFreelancerServiceOutput,
+  transformToTransactionInquiryDetailFreelancerTaskOutput,
   transformToTransactionInquiryFreelancerActivityOutput,
   transformToTransactionInquiryFreelancerInvoiceOutput,
 } from 'models';
@@ -34,6 +36,7 @@ import {
   TransactionInquiryDetailClientServiceResponse,
   TransactionInquiryDetailClientTaskResponse,
   TransactionInquiryDetailFreelancerServiceResponse,
+  TransactionInquiryDetailFreelancerTaskResponse,
   TransactionInquiryFreelancerActivityResponse,
   TransactionInquiryFreelancerInvoiceResponse,
   transformToTransactionAskCancelRequest,
@@ -272,6 +275,16 @@ const TransactionService = {
     );
 
     return response.data.output_schema;
+  },
+
+  inquiryFreelancerTaskTransactionDetail: async (
+    transactionId: string,
+  ): Promise<TransactionInquiryDetailFreelancerTaskOutput> => {
+    const response = await axiosInstance.get<
+      ApiResponse<TransactionInquiryDetailFreelancerTaskResponse>
+    >(`/transaction/task/freelancer/${transactionId}`);
+
+    return transformToTransactionInquiryDetailFreelancerTaskOutput(response.data.output_schema);
   },
 };
 

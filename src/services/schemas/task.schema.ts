@@ -180,3 +180,15 @@ export interface TaskInquiryRegisteredFreelancerListResponse {
     cv_url?: string;
   }[];
 }
+
+export interface TaskInquiryTaskHistoryDetailResponse {
+  task_detail: {
+    id: string;
+    name: string;
+    tags: string[];
+    due_date: string;
+    difficulty: string;
+    price: number;
+    status: string;
+  };
+}

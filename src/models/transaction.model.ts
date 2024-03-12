@@ -4,6 +4,7 @@ import {
   TransactionInquiryDetailClientServiceResponse,
   TransactionInquiryDetailClientTaskResponse,
   TransactionInquiryDetailFreelancerServiceResponse,
+  TransactionInquiryDetailFreelancerTaskResponse,
   TransactionInquiryFreelancerActivityResponse,
   TransactionInquiryFreelancerInvoiceResponse,
 } from 'services/schemas';
@@ -463,4 +464,66 @@ export interface TransactionSendResultInput {
   result: File[];
   transactionId: string;
   description: string;
+}
+
+export interface TransactionInquiryDetailFreelancerTaskOutput {
+  transactionDetail: {
+    id: string;
+    taskDetail: {
+      id: string;
+      name: string;
+      tags: string[];
+      dueDate: string;
+      difficulty: string;
+      price: string;
+    };
+    status: string;
+    deliveryDate?: string;
+    hasCancelled: boolean;
+    client: {
+      id: string;
+      name: string;
+      profileImageUrl?: string;
+    };
+    isReviewed?: boolean;
+    review?: {
+      amount: number;
+      description?: string;
+    };
+  };
+}
+
+export function transformToTransactionInquiryDetailFreelancerTaskOutput(
+  response: TransactionInquiryDetailFreelancerTaskResponse,
+): TransactionInquiryDetailFreelancerTaskOutput {
+  const result: TransactionInquiryDetailFreelancerTaskOutput = {
+    transactionDetail: {
+      id: response.transaction_detail.id,
+      taskDetail: {
+        id: response.transaction_detail.task_detail.id,
+        name: response.transaction_detail.task_detail.name,
+        tags: response.transaction_detail.task_detail.tags,
+        dueDate: response.transaction_detail.task_detail.due_date,
+        difficulty: response.transaction_detail.task_detail.difficulty,
+        price: response.transaction_detail.task_detail.price,
+      },
+      status: response.transaction_detail.status,
+      deliveryDate: response.transaction_detail.delivery_date,
+      hasCancelled: response.transaction_detail.has_cancelled,
+      client: {
+        id: response.transaction_detail.client.id,
+        name: response.transaction_detail.client.name,
+        profileImageUrl: response.transaction_detail.client.profile_image_url,
+      },
+      isReviewed: response.transaction_detail.is_reviewed,
+      review: response.transaction_detail.review
+        ? {
+            amount: response.transaction_detail.review.amount,
+            description: response.transaction_detail.review.description,
+          }
+        : undefined,
+    },
+  };
+
+  return result;
 }

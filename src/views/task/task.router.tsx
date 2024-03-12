@@ -8,6 +8,7 @@ import {
   TaskOwned,
   TaskHistory,
   TaskOwnedDetail,
+  TaskHistoryDetail,
 } from './pages';
 import { ProtectedClientRoute, ProtectedFreelancerRoute } from 'shared/components';
 
@@ -25,6 +26,10 @@ interface detailStateWrapper {
 }
 
 interface ownedTaskDetailStateWrapper {
+  transactionId?: string;
+}
+
+interface taskHistoryDetailStateWrapper {
   transactionId?: string;
 }
 
@@ -82,6 +87,19 @@ const TaskRouter = () => {
         render={() => (
           <ProtectedFreelancerRoute>
             <TaskHistory key={Date.now()} />
+          </ProtectedFreelancerRoute>
+        )}
+      />
+
+      <Route
+        exact
+        path={'/task/history/:taskId'}
+        render={({ location: { state } }) => (
+          <ProtectedFreelancerRoute>
+            <TaskHistoryDetail
+              {...(state as taskHistoryDetailStateWrapper)}
+              key={Date.now()}
+            />
           </ProtectedFreelancerRoute>
         )}
       />
