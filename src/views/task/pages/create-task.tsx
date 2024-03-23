@@ -17,6 +17,7 @@ import { useForm } from 'react-hook-form';
 import { ErrorWrapper, TaskCreateTaskOutput, TaskInquiryCategoryOutput } from 'models';
 import { TaskService } from 'services';
 import { useMutation, useQuery } from 'react-query';
+import DatePicker from 'react-datepicker';
 
 const CreateTask: React.FC = () => {
   const history = useHistory();
@@ -25,7 +26,9 @@ const CreateTask: React.FC = () => {
     document.body.scrollTo(0, 0);
   }, []);
 
-  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [startDate, setStartDate] = useState<any>(null);
+
+  const [formattedDate, setFormattedDate] = useState<string>('');
 
   const {
     data: taskCategory,
@@ -96,6 +99,12 @@ const CreateTask: React.FC = () => {
     };
 
     setStep1Data(object);
+    const year = startDate.toLocaleString('default', { year: 'numeric' });
+    const month = startDate.toLocaleString('default', { month: '2-digit' });
+    const day = startDate.toLocaleString('default', { day: '2-digit' });
+
+    const formattedDate = year + '-' + month + '-' + day;
+    setFormattedDate(formattedDate);
     mutateCreateTask();
   };
 
@@ -110,7 +119,7 @@ const CreateTask: React.FC = () => {
       await TaskService.create({
         name: step1Data?.name || '',
         subCategory: step1Data?.subCategory || '',
-        deadline: step1Data?.deadline || '',
+        deadline: formattedDate || '',
         difficulty: step1Data?.difficulty || '',
         description: step1Data?.description || '',
         price: step1Data?.price || 0,
@@ -206,6 +215,13 @@ const CreateTask: React.FC = () => {
                     </div>
                     <div className="mb-4">
                       <h6 className="font-weight-semibold mb-3">Batas waktu pengerjaan tugas</h6>
+                      <div>
+                        <DatePicker
+                          selected={startDate}
+                          onChange={(date) => setStartDate(date)}
+                          placeholderText="Pilih Batas Waktu"
+                        />
+                      </div>
                     </div>
                     <div className="mb-4">
                       <h6 className="font-weight-semibold mb-3">Tingkat kesulitan tugas</h6>

@@ -194,3 +194,11 @@ input:checked + .slider:before {
   background-repeat: no-repeat;
   background-position: 6.5px 8px;
 }
+
+.react-datepicker-wrapper {
+  width: 100% !important;
+}
+
+input[type='text']::placeholder {
+  color: $primary-dark;
+}
