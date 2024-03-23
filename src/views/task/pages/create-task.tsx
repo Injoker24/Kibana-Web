@@ -217,6 +217,7 @@ const CreateTask: React.FC = () => {
                       <h6 className="font-weight-semibold mb-3">Batas waktu pengerjaan tugas</h6>
                       <div>
                         <DatePicker
+                          dateFormat="dd-MM-yyyy"
                           selected={startDate}
                           onChange={(date) => setStartDate(date)}
                           placeholderText="Pilih Batas Waktu"
