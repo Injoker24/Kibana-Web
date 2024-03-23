@@ -1,4 +1,6 @@
 import {
+  TaskCreateTaskInput,
+  TaskCreateTaskOutput,
   TaskInquiryCategoryOutput,
   TaskInquiryDetailSubCategoryOutput,
   TaskInquiryNewTaskOutput,
@@ -10,6 +12,7 @@ import {
   TaskInquiryTaskHistoryOutput,
   TaskInquiryTaskListInput,
   TaskInquiryTaskListOutput,
+  transformToTaskCreateTaskOutput,
   transformToTaskInquiryCategoryOutput,
   transformToTaskInquiryDetailSubCategoryOutput,
   transformToTaskInquiryNewTaskOutput,
@@ -24,6 +27,7 @@ import {
 
 import {
   ApiResponse,
+  TaskCreateTaskResponse,
   TaskInquiryCategoryResponse,
   TaskInquiryDetailSubCategoryResponse,
   TaskInquiryNewTaskResponse,
@@ -34,6 +38,7 @@ import {
   TaskInquiryTaskHistoryDetailResponse,
   TaskInquiryTaskHistoryResponse,
   TaskInquiryTaskListResponse,
+  transformToTaskCreateTaskRequest,
   transformToTaskInquiryTaskListRequest,
 } from 'services/schemas';
 
@@ -134,6 +139,17 @@ const TaskService = {
     );
 
     return transformToTaskInquiryTaskHistoryDetailOutput(response.data.output_schema);
+  },
+
+  create: async (data: TaskCreateTaskInput): Promise<TaskCreateTaskOutput> => {
+    const requestData = transformToTaskCreateTaskRequest(data);
+
+    const response = await axiosInstance.post<ApiResponse<TaskCreateTaskResponse>>(
+      `/task/create`,
+      requestData,
+    );
+
+    return transformToTaskCreateTaskOutput(response.data.output_schema);
   },
 };
 

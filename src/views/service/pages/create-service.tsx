@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Tab, Tabs, Image, Form } from 'react-bootstrap';
+import { Row, Image, Form } from 'react-bootstrap';
 
 import {
   Footer,
   FormInput,
   Header,
-  InfoBox,
   InlineRetryError,
   Loader,
   PopUpError,
@@ -13,8 +12,7 @@ import {
   TitleBanner,
 } from 'shared/components';
 import { useHistory } from 'react-router-dom';
-import { formatCurrency } from 'utils';
-import { IconChevronRight, IconClose, IconGallery, IconStar } from 'images';
+import { IconChevronRight, IconClose, IconGallery } from 'images';
 import { useForm } from 'react-hook-form';
 import {
   ErrorWrapper,
@@ -75,23 +73,23 @@ const CreateService: React.FC = () => {
     mode: 'onChange',
   });
 
-  const [editSkillData, setEditSkillData] = useState<string[]>([]);
+  const [editTagData, setEditTagData] = useState<string[]>([]);
 
   const {
-    register: registerSkill,
-    errors: errorsSkill,
-    formState: formStateSkill,
-    handleSubmit: handleSubmitSkill,
+    register: registerTag,
+    errors: errorsTag,
+    formState: formStateTag,
+    handleSubmit: handleSubmitTag,
   } = useForm({
     mode: 'onChange',
   });
 
-  const addSkill = (formData: any) => {
-    setEditSkillData((current) => [...current, formData.skill]);
+  const addTag = (formData: any) => {
+    setEditTagData((current) => [...current, formData.tag]);
   };
 
-  const removeSkill = (index: number) => {
-    setEditSkillData(editSkillData.filter((item, i) => i !== index));
+  const removeTag = (index: number) => {
+    setEditTagData(editTagData.filter((item, i) => i !== index));
   };
 
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -112,7 +110,7 @@ const CreateService: React.FC = () => {
       revisionCount: formData.revisionCount,
       description: formData.description,
       price: formData.price,
-      tags: editSkillData,
+      tags: editTagData,
     };
 
     setStep1Data(object);
@@ -126,12 +124,7 @@ const CreateService: React.FC = () => {
     }[]
   >();
 
-  const {
-    register: registerStep2,
-    errors: errorsStep2,
-    formState: formStateStep2,
-    handleSubmit: handleSubmitStep2,
-  } = useForm({
+  const { register: registerStep2, handleSubmit: handleSubmitStep2 } = useForm({
     mode: 'onChange',
   });
 
@@ -332,7 +325,7 @@ const CreateService: React.FC = () => {
                               hidden
                               value={-1}
                             >
-                              Pilih kategori / sub-kategori
+                              Pilih Kategori / Sub-Kategori
                             </option>
                             {serviceCategory.categories.map((cat) => {
                               return (
@@ -399,7 +392,7 @@ const CreateService: React.FC = () => {
                               hidden
                               value={-1}
                             >
-                              Pilih jumlah revisi
+                              Pilih Jumlah Revisi
                             </option>
                             <option value="0">0</option>
                             <option value="1">1</option>
@@ -465,13 +458,13 @@ const CreateService: React.FC = () => {
                     <div className="mb-5">
                       <h6 className="font-weight-semibold mb-3">Tag (Maksimal 5)</h6>
                       <div className="d-flex flex-row flex-wrap">
-                        {editSkillData.map((item, i) => {
+                        {editTagData.map((item, i) => {
                           return (
                             <div className="chip chip-primary mr-2 mb-3">
                               <span className="mr-2"> {item} </span>
                               <div
                                 className="cursor-pointer"
-                                onClick={() => removeSkill(i)}
+                                onClick={() => removeTag(i)}
                               >
                                 <IconClose />
                               </div>
@@ -479,22 +472,20 @@ const CreateService: React.FC = () => {
                           );
                         })}
                       </div>
-                      <form onSubmit={handleSubmitSkill(addSkill)}>
+                      <form onSubmit={handleSubmitTag(addTag)}>
                         <div className="d-flex flex-row mb-4">
                           <div className="w-100 mr-3">
-                            <FormInput errorMessage={errorsSkill?.skill?.message}>
+                            <FormInput errorMessage={errorsTag?.tag?.message}>
                               <Form.Control
                                 type="text"
-                                id="skill"
-                                name="skill"
-                                isInvalid={
-                                  formStateSkill.touched.skill === true && !!errorsSkill.skill
-                                }
+                                id="tag"
+                                name="tag"
+                                isInvalid={formStateTag.touched.tag === true && !!errorsTag.tag}
                                 ref={
-                                  registerSkill({
+                                  registerTag({
                                     required: {
                                       value: true,
-                                      message: 'Keahlian tidak boleh kosong.',
+                                      message: 'Tag tidak boleh kosong.',
                                     },
                                   }) as string & ((ref: Element | null) => void)
                                 }
@@ -505,7 +496,7 @@ const CreateService: React.FC = () => {
                             <button
                               type="submit"
                               className="btn btn-primary"
-                              disabled={editSkillData.length >= 5}
+                              disabled={editTagData.length >= 5}
                               style={{ borderRadius: '0.5rem' }}
                             >
                               +
@@ -520,7 +511,7 @@ const CreateService: React.FC = () => {
                         form="step1Form"
                         type="submit"
                         className="btn btn-primary w-100 col-6 mb-3"
-                        disabled={!isValidStep1 || editSkillData.length === 0}
+                        disabled={!isValidStep1 || editTagData.length === 0}
                       >
                         Lanjut
                       </button>

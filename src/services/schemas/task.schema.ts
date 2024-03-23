@@ -1,4 +1,4 @@
-import { TaskInquiryTaskListInput } from 'models';
+import { TaskCreateTaskInput, TaskInquiryTaskListInput } from 'models';
 
 export interface TaskInquiryCategoryResponse {
   categories: {
@@ -191,4 +191,34 @@ export interface TaskInquiryTaskHistoryDetailResponse {
     price: number;
     status: string;
   };
+}
+
+export interface TaskCreateTaskRequest {
+  name: string;
+  sub_category: string;
+  deadline: string;
+  difficulty: string;
+  description: string;
+  price: number;
+  tags: string[];
+}
+
+export function transformToTaskCreateTaskRequest(
+  input: TaskCreateTaskInput,
+): TaskCreateTaskRequest {
+  const result: TaskCreateTaskRequest = {
+    name: input.name,
+    sub_category: input.subCategory,
+    deadline: input.deadline,
+    difficulty: input.difficulty,
+    description: input.description,
+    price: input.price,
+    tags: input.tags,
+  };
+
+  return result;
+}
+
+export interface TaskCreateTaskResponse {
+  id: string;
 }

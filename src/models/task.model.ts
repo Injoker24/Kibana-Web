@@ -1,4 +1,5 @@
 import {
+  TaskCreateTaskResponse,
   TaskInquiryCategoryResponse,
   TaskInquiryDetailSubCategoryResponse,
   TaskInquiryNewTaskResponse,
@@ -432,6 +433,30 @@ export function transformToTaskInquiryTaskHistoryDetailOutput(
       price: response.task_detail.price,
       status: response.task_detail.status,
     },
+  };
+
+  return result;
+}
+
+export interface TaskCreateTaskInput {
+  name: string;
+  subCategory: string;
+  deadline: string;
+  difficulty: string;
+  description: string;
+  price: number;
+  tags: string[];
+}
+
+export interface TaskCreateTaskOutput {
+  id: string;
+}
+
+export function transformToTaskCreateTaskOutput(
+  response: TaskCreateTaskResponse,
+): TaskCreateTaskOutput {
+  const result: TaskCreateTaskOutput = {
+    id: response.id,
   };
 
   return result;

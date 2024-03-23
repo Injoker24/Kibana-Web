@@ -9,6 +9,7 @@ import {
   TaskHistory,
   TaskOwnedDetail,
   TaskHistoryDetail,
+  CreateTask,
 } from './pages';
 import { ProtectedClientRoute, ProtectedFreelancerRoute } from 'shared/components';
 
@@ -101,6 +102,16 @@ const TaskRouter = () => {
               key={Date.now()}
             />
           </ProtectedFreelancerRoute>
+        )}
+      />
+
+      <Route
+        exact
+        path={'/task/create'}
+        render={() => (
+          <ProtectedClientRoute>
+            <CreateTask key={Date.now()} />
+          </ProtectedClientRoute>
         )}
       />
 
