@@ -1,4 +1,4 @@
-import { ServiceInquiryServiceListInput } from 'models';
+import { ServiceCreateServiceInput, ServiceInquiryServiceListInput } from 'models';
 
 export interface ServiceInquiryCategoryResponse {
   categories: {
@@ -205,5 +205,54 @@ export interface ServiceInquiryOrdersResponse {
     review?: {
       amount: number;
     };
+  }[];
+}
+
+export interface ServiceCreateServiceRequest {
+  image: File[];
+  name: string;
+  sub_category: string;
+  working_time: number;
+  revision_count: number;
+  description: string;
+  price: number;
+  tags: string[];
+  additional_info: {
+    id: string;
+    is_supported: boolean;
+  }[];
+}
+
+export function transformToServiceCreateServiceRequest(
+  input: ServiceCreateServiceInput,
+): ServiceCreateServiceRequest {
+  const result: ServiceCreateServiceRequest = {
+    image: input.image,
+    name: input.name,
+    sub_category: input.subCategory,
+    working_time: input.workingTime,
+    revision_count: input.revisionCount,
+    description: input.description,
+    price: input.price,
+    tags: input.tags,
+    additional_info: input.additionalInfo.map((t) => {
+      return {
+        id: t.id,
+        is_supported: t.isSupported,
+      };
+    }),
+  };
+
+  return result;
+}
+
+export interface ServiceCreateServiceResponse {
+  id: string;
+}
+
+export interface ServiceInquiryAdditionalInfoResponse {
+  additional_info: {
+    id: string;
+    title: string;
   }[];
 }

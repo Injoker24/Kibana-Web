@@ -1,4 +1,7 @@
 import {
+  ServiceCreateServiceInput,
+  ServiceCreateServiceOutput,
+  ServiceInquiryAdditionalInfoOutput,
   ServiceInquiryCategoryOutput,
   ServiceInquiryDetailSubCategoryOutput,
   ServiceInquiryNewServiceOutput,
@@ -9,6 +12,8 @@ import {
   ServiceInquiryServiceHistoryOutput,
   ServiceInquiryServiceListInput,
   ServiceInquiryServiceListOutput,
+  transformToServiceCreateServiceOutput,
+  transformToServiceInquiryAdditionalInfoOutput,
   transformToServiceInquiryCategoryOutput,
   transformToServiceInquiryDetailSubCategoryOutput,
   transformToServiceInquiryNewServiceOutput,
@@ -21,6 +26,8 @@ import {
 } from 'models';
 import {
   ApiResponse,
+  ServiceCreateServiceResponse,
+  ServiceInquiryAdditionalInfoResponse,
   ServiceInquiryCategoryResponse,
   ServiceInquiryDetailSubCategoryResponse,
   ServiceInquiryNewServiceResponse,
@@ -30,6 +37,7 @@ import {
   ServiceInquiryServiceDetailResponse,
   ServiceInquiryServiceHistoryResponse,
   ServiceInquiryServiceListResponse,
+  transformToServiceCreateServiceRequest,
   transformToServiceInquiryServiceListRequest,
 } from 'services/schemas';
 
@@ -141,6 +149,56 @@ const ServiceService = {
     );
 
     return response.data.output_schema;
+  },
+
+  create: async (data: ServiceCreateServiceInput): Promise<ServiceCreateServiceOutput> => {
+    const requestData = transformToServiceCreateServiceRequest(data);
+
+    let formData = new FormData();
+    if (requestData.image) {
+      if (requestData.image.length >= 1) {
+        formData.append('image_1', requestData.image[0]);
+      }
+      if (requestData.image.length >= 2) {
+        formData.append('image_2', requestData.image[1]);
+      }
+      if (requestData.image.length >= 3) {
+        formData.append('image_3', requestData.image[2]);
+      }
+      if (requestData.image.length >= 4) {
+        formData.append('image_4', requestData.image[3]);
+      }
+      if (requestData.image.length === 5) {
+        formData.append('image_5', requestData.image[4]);
+      }
+    }
+
+    const blob = new Blob([JSON.stringify(requestData)], {
+      type: 'application/json',
+    });
+    formData.append('data', blob);
+
+    const response = await axiosInstance.post<ApiResponse<ServiceCreateServiceResponse>>(
+      `/service/create`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    );
+
+    return transformToServiceCreateServiceOutput(response.data.output_schema);
+  },
+
+  inquiryAdditionalInfo: async (
+    subCategoryId: string,
+  ): Promise<ServiceInquiryAdditionalInfoOutput> => {
+    const response = await axiosInstance.get<ApiResponse<ServiceInquiryAdditionalInfoResponse>>(
+      `/service/${subCategoryId}/additional-info`,
+    );
+
+    return transformToServiceInquiryAdditionalInfoOutput(response.data.output_schema);
   },
 };
 

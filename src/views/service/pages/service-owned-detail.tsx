@@ -348,7 +348,7 @@ const ServiceOwnedDetail: React.FC = () => {
       {modalDeleteService && (
         <PopUpConfirm
           title="Hapus layanan"
-          message="Apakah anda yakin akan menghapus layanan ini?"
+          message="Apakah kamu yakin akan menghapus layanan ini?"
           onCancel={cancelDeleteService}
           onSubmit={confirmDeleteService}
         />
@@ -366,7 +366,7 @@ const ServiceOwnedDetail: React.FC = () => {
       {modalDeactivateService && (
         <PopUpConfirm
           title="Non-Aktifkan layanan"
-          message="Apakah anda yakin akan menonaktifkan layanan ini?"
+          message="Apakah kamu yakin akan menonaktifkan layanan ini?"
           onCancel={cancelDeactivateService}
           onSubmit={confirmDeactivateService}
         />
@@ -384,7 +384,7 @@ const ServiceOwnedDetail: React.FC = () => {
       {modalActivateService && (
         <PopUpConfirm
           title="Aktifkan layanan"
-          message="Apakah anda yakin akan mengaktifkan layanan ini kembali?"
+          message="Apakah kamu yakin akan mengaktifkan layanan ini kembali?"
           onCancel={cancelActivateService}
           onSubmit={confirmActivateService}
         />

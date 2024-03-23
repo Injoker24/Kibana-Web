@@ -500,7 +500,7 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
       {modalDeleteTask && (
         <PopUpConfirm
           title="Hapus tugas"
-          message="Apakah anda yakin akan menghapus tugas ini?"
+          message="Apakah kamu yakin akan menghapus tugas ini?"
           onCancel={cancelDeleteTask}
           onSubmit={confirmDeleteTask}
         />
@@ -522,7 +522,7 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
       {modalChooseFreelancer && (
         <PopUpConfirm
           title="Pilih freelancer"
-          message={`Apakah anda yakin akan memilih <b>${activeFreelancerName}</b> untuk mengerjakan tugas anda?`}
+          message={`Apakah kamu yakin akan memilih <b>${activeFreelancerName}</b> untuk mengerjakan tugas kamu?`}
           onCancel={cancelChooseFreelancer}
           onSubmit={confirmChooseFreelancer}
         />
@@ -561,7 +561,7 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
 
                 <div className="mb-4">
                   <InfoBox
-                    message={`Anda hanya dapat mengajukan pengembalian <b>1 kali</b> saja!`}
+                    message={`Kamu hanya dapat mengajukan pengembalian <b>1 kali</b> saja!`}
                     type="warning"
                   />
                 </div>
@@ -1178,7 +1178,7 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
                                 {transactionStatus === TransactionStatus.Selesai &&
                                   transactionDetail.transactionDetail.isReviewed && (
                                     <div className="mb-5">
-                                      <h4 className="font-weight-semibold mb-3">Ulasan anda </h4>
+                                      <h4 className="font-weight-semibold mb-3">Ulasan kamu </h4>
                                       <div className="card-sm">
                                         <div className="d-flex flex-row mb-4">
                                           {Array(transactionDetail.transactionDetail.review?.amount)

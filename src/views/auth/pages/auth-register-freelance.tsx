@@ -164,7 +164,7 @@ const AuthRegisterFreelancer: React.FC = () => {
       {confirmRegisterAsFreelancer && (
         <PopUpConfirm
           title="Daftar freelancer"
-          message="Apakah anda yakin akan mendaftar menjadi freelancer?"
+          message="Apakah kamu yakin akan mendaftar menjadi freelancer?"
           onCancel={cancelRegisterAsFreelancer}
           onSubmit={submitRegisterAsFreelancer}
         />
@@ -178,7 +178,7 @@ const AuthRegisterFreelancer: React.FC = () => {
           <div className="col-10">
             <div className="card-sm mb-5">
               <div className="mb-5">
-                <h4 className="font-weight-semibold mb-4">Tambahkan riwayat edukasi anda!</h4>
+                <h4 className="font-weight-semibold mb-4">Tambahkan riwayat edukasi kamu!</h4>
                 {editEducationData.map((item: any, i: any) => {
                   return (
                     <div className="mb-3 card-sm">
@@ -353,7 +353,7 @@ const AuthRegisterFreelancer: React.FC = () => {
               </div>
 
               <div className="mb-5">
-                <h4 className="font-weight-semibold mb-4">Tambahkan keahlian anda!</h4>
+                <h4 className="font-weight-semibold mb-4">Tambahkan keahlian kamu!</h4>
                 <div className="d-flex flex-row flex-wrap">
                   {editSkillData.map((item, i) => {
                     return (
@@ -403,7 +403,7 @@ const AuthRegisterFreelancer: React.FC = () => {
               </div>
 
               <div className="mb-5">
-                <h4 className="font-weight-semibold mb-4">Tambahkan CV anda!</h4>
+                <h4 className="font-weight-semibold mb-4">Tambahkan CV kamu!</h4>
                 {editCVData && (
                   <div className="card-sm d-flex flex-row align-items-center justify-content-between mb-4">
                     <h4 className="text-primary-dark font-weight-bold">{editCVData.data.name}</h4>
@@ -431,7 +431,7 @@ const AuthRegisterFreelancer: React.FC = () => {
               </div>
 
               <div className="mb-5">
-                <h4 className="font-weight-semibold mb-4">Tambahkan Portfolio anda!</h4>
+                <h4 className="font-weight-semibold mb-4">Tambahkan Portfolio kamu!</h4>
                 {editPortfolioData && (
                   <div className="card-sm d-flex flex-row align-items-center justify-content-between mb-4">
                     <h4 className="text-primary-dark font-weight-bold">
@@ -460,7 +460,7 @@ const AuthRegisterFreelancer: React.FC = () => {
 
               <div>
                 <h4 className="font-weight-semibold mb-4">
-                  Deskripsikan diri anda secara singkat!
+                  Deskripsikan diri kamu secara singkat!
                 </h4>
                 <form onSubmit={handleSubmitDesc(confirmationRegisterAsFreelancer)}>
                   <div className="d-flex flex-column">

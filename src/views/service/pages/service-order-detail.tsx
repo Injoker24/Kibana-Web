@@ -454,7 +454,7 @@ const ServiceOrderDetail: React.FC = () => {
 
                 <div className="mb-4">
                   <InfoBox
-                    message={`Anda hanya dapat mengajukan pembatalan <b>1 kali</b> saja!`}
+                    message={`Kamu hanya dapat mengajukan pembatalan <b>1 kali</b> saja!`}
                     type="warning"
                   />
                 </div>
@@ -821,7 +821,7 @@ const ServiceOrderDetail: React.FC = () => {
                           {transactionStatus === TransactionStatus.Selesai &&
                             transactionDetail.transactionDetail.isReviewed && (
                               <div className="mb-5">
-                                <h4 className="font-weight-semibold mb-3">Ulasan anda </h4>
+                                <h4 className="font-weight-semibold mb-3">Ulasan kamu </h4>
                                 <div className="card-sm">
                                   <div className="d-flex flex-row mb-4">
                                     {Array(transactionDetail.transactionDetail.review?.amount)

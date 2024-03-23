@@ -168,7 +168,20 @@ const DashboardIndex: React.FC = () => {
                   </div>
                   <div className="col-12 col-lg-7 p-0">
                     <div className="d-flex flex-row flex-wrap">
-                      <div className="col-6 col-md-3 p-0 pr-3 mb-3 mb-md-0">
+                      <div
+                        className="col-6 col-md-3 p-0 pr-3 mb-3 mb-md-0"
+                        onClick={() => {
+                          if (status === 'client') {
+                            history.push({
+                              pathname: '/task/create',
+                            });
+                          } else if (status === 'freelancer') {
+                            history.push({
+                              pathname: '/service/create',
+                            });
+                          }
+                        }}
+                      >
                         <div className="dashboard-border-card flex-centered flex-column cursor-pointer h-100">
                           <div
                             className={
@@ -367,7 +380,7 @@ const DashboardIndex: React.FC = () => {
             <div className="form-row my-5 col-10">
               <div className="align-self-center col-12 col-lg-4 mb-5 mb-lg-0 pr-3">
                 <h3 className="mb-3">Tidak ada waktu untuk mencari freelancer yang cocok?</h3>
-                <p className="mb-4">Tunggu mereka yang menghubungi anda terlebih dahulu.</p>
+                <p className="mb-4">Tunggu mereka yang menghubungi kamu terlebih dahulu.</p>
                 <button className="btn btn-primary">Mulai Sekarang</button>
               </div>
               <div className="d-flex flex-row col-12 col-lg-8 justify-content-lg-end flex-wrap">
@@ -381,7 +394,7 @@ const DashboardIndex: React.FC = () => {
                   >
                     <h1 className="text-primary-dark m-0">1</h1>
                   </div>
-                  <p className="text-center">Posting pekerjaan anda.</p>
+                  <p className="text-center">Posting pekerjaan kamu.</p>
                 </div>
                 <div
                   className="d-flex align-items-center flex-column col-6 col-md-3 mb-3 mb-md-0"
@@ -417,7 +430,7 @@ const DashboardIndex: React.FC = () => {
                   >
                     <h1 className="text-primary-dark m-0">4</h1>
                   </div>
-                  <p className="text-center">Tunggu pekerjaan anda selesai.</p>
+                  <p className="text-center">Tunggu pekerjaan kamu selesai.</p>
                 </div>
               </div>
             </div>

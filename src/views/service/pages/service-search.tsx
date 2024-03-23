@@ -258,7 +258,7 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
                       id="searchText"
                       name="searchText"
                       autoComplete="off"
-                      placeholder="Layanan apa yang anda butuhkan?"
+                      placeholder="Layanan apa yang kamu butuhkan?"
                       className="pr-5"
                       ref={registerSearch() as string & ((ref: Element | null) => void)}
                     />
@@ -857,7 +857,7 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
                   {serviceList.pages[0].totalAmount} layanan tersedia
                 </p>
 
-                <Row className="d-flex flex-row flex-wrap mb-4 justify-content-center">
+                <Row>
                   {serviceList.pages.map((data) => {
                     return (
                       <>
@@ -891,6 +891,9 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
                       </>
                     );
                   })}
+                </Row>
+
+                <Row className="justify-content-center mb-4">
                   {isErrorRefetch && errorServiceList && !isFetchingNextPage && (
                     <div className="flex-centered my-4">
                       <InlineRetryError

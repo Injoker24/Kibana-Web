@@ -205,7 +205,7 @@ const TaskSearch: React.FC = ({ stateCategories }: any) => {
                       id="searchText"
                       name="searchText"
                       autoComplete="off"
-                      placeholder="Tugas apa yang anda butuhkan?"
+                      placeholder="Tugas apa yang kamu butuhkan?"
                       className="pr-5"
                       ref={registerSearch() as string & ((ref: Element | null) => void)}
                     />
@@ -779,7 +779,7 @@ const TaskSearch: React.FC = ({ stateCategories }: any) => {
                   {taskList.pages[0].totalAmount} tugas tersedia
                 </p>
 
-                <Row className="d-flex flex-row flex-wrap mb-4 justify-content-center">
+                <Row>
                   {taskList.pages.map((data) => {
                     return (
                       <>
@@ -811,6 +811,8 @@ const TaskSearch: React.FC = ({ stateCategories }: any) => {
                       </>
                     );
                   })}
+                </Row>
+                <Row className="mb-4 justify-content-center">
                   {isErrorRefetch && errorTaskList && !isFetchingNextPage && (
                     <div className="flex-centered my-4">
                       <InlineRetryError

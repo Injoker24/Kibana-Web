@@ -567,7 +567,7 @@ const AccountMyProfile: React.FC = () => {
       {confirmEditProfile && (
         <PopUpConfirm
           title="Ubah profil"
-          message="Apakah anda yakin akan mengubah profil anda?"
+          message="Apakah kamu yakin akan mengubah profil kamu?"
           onCancel={cancelSubmitProfile}
           onSubmit={submitProfile}
         />
@@ -575,7 +575,7 @@ const AccountMyProfile: React.FC = () => {
       {confirmEditBank && (
         <PopUpConfirm
           title="Ubah detail bank"
-          message="Apakah anda yakin akan mengubah detail bank anda?"
+          message="Apakah kamu yakin akan mengubah detail bank kamu?"
           onCancel={cancelSubmitBank}
           onSubmit={submitBank}
         />

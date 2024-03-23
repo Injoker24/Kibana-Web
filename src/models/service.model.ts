@@ -1,4 +1,6 @@
 import {
+  ServiceCreateServiceResponse,
+  ServiceInquiryAdditionalInfoResponse,
   ServiceInquiryCategoryResponse,
   ServiceInquiryDetailSubCategoryResponse,
   ServiceInquiryNewServiceResponse,
@@ -438,6 +440,57 @@ export function transformToServiceInquiryOrdersOutput(
               amount: t.review?.amount,
             }
           : undefined,
+      };
+    }),
+  };
+
+  return result;
+}
+
+export interface ServiceCreateServiceInput {
+  image: File[];
+  name: string;
+  subCategory: string;
+  workingTime: number;
+  revisionCount: number;
+  description: string;
+  price: number;
+  tags: string[];
+  additionalInfo: {
+    id: string;
+    isSupported: boolean;
+  }[];
+}
+
+export interface ServiceCreateServiceOutput {
+  id: string;
+}
+
+export function transformToServiceCreateServiceOutput(
+  response: ServiceCreateServiceResponse,
+): ServiceCreateServiceOutput {
+  const result: ServiceCreateServiceOutput = {
+    id: response.id,
+  };
+
+  return result;
+}
+
+export interface ServiceInquiryAdditionalInfoOutput {
+  additionalInfo: {
+    id: string;
+    title: string;
+  }[];
+}
+
+export function transformToServiceInquiryAdditionalInfoOutput(
+  response: ServiceInquiryAdditionalInfoResponse,
+): ServiceInquiryAdditionalInfoOutput {
+  const result: ServiceInquiryAdditionalInfoOutput = {
+    additionalInfo: response.additional_info.map((t) => {
+      return {
+        id: t.id,
+        title: t.title,
       };
     }),
   };

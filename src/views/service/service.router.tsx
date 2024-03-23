@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Switch, Route, Redirect } from 'react-router-dom';
 import {
+  CreateService,
   ServiceCategoryList,
   ServiceDetail,
   ServiceHistory,
@@ -98,6 +99,16 @@ const ServiceRouter = () => {
           <ProtectedClientRoute>
             <ServiceHistoryDetail key={Date.now()} />
           </ProtectedClientRoute>
+        )}
+      />
+
+      <Route
+        exact
+        path={'/service/create'}
+        render={() => (
+          <ProtectedFreelancerRoute>
+            <CreateService key={Date.now()} />
+          </ProtectedFreelancerRoute>
         )}
       />
 
