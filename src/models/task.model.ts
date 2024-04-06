@@ -1,5 +1,6 @@
 import {
   TaskCreateTaskResponse,
+  TaskGenerateTokenResponse,
   TaskInquiryCategoryResponse,
   TaskInquiryDetailSubCategoryResponse,
   TaskInquiryNewTaskResponse,
@@ -457,6 +458,26 @@ export function transformToTaskCreateTaskOutput(
 ): TaskCreateTaskOutput {
   const result: TaskCreateTaskOutput = {
     id: response.id,
+  };
+
+  return result;
+}
+
+export interface TaskGenerateTokenInput {
+  freelancerId: string;
+}
+
+export interface TaskGenerateTokenOutput {
+  token: string;
+  paymentId: string;
+}
+
+export function transformToTaskGenerateTokenOutput(
+  response: TaskGenerateTokenResponse,
+): TaskGenerateTokenOutput {
+  const result: TaskGenerateTokenOutput = {
+    token: response.token,
+    paymentId: response.payment_id,
   };
 
   return result;

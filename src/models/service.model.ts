@@ -1,5 +1,6 @@
 import {
   ServiceCreateServiceResponse,
+  ServiceGenerateTokenResponse,
   ServiceInquiryAdditionalInfoResponse,
   ServiceInquiryCategoryResponse,
   ServiceInquiryDetailSubCategoryResponse,
@@ -493,6 +494,22 @@ export function transformToServiceInquiryAdditionalInfoOutput(
         title: t.title,
       };
     }),
+  };
+
+  return result;
+}
+
+export interface ServiceGenerateTokenOutput {
+  token: string;
+  paymentId: string;
+}
+
+export function transformToServiceGenerateTokenOutput(
+  response: ServiceGenerateTokenResponse,
+): ServiceGenerateTokenOutput {
+  const result: ServiceGenerateTokenOutput = {
+    token: response.token,
+    paymentId: response.payment_id,
   };
 
   return result;

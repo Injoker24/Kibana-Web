@@ -1,6 +1,8 @@
 import {
   TaskCreateTaskInput,
   TaskCreateTaskOutput,
+  TaskGenerateTokenInput,
+  TaskGenerateTokenOutput,
   TaskInquiryCategoryOutput,
   TaskInquiryDetailSubCategoryOutput,
   TaskInquiryNewTaskOutput,
@@ -13,6 +15,7 @@ import {
   TaskInquiryTaskListInput,
   TaskInquiryTaskListOutput,
   transformToTaskCreateTaskOutput,
+  transformToTaskGenerateTokenOutput,
   transformToTaskInquiryCategoryOutput,
   transformToTaskInquiryDetailSubCategoryOutput,
   transformToTaskInquiryNewTaskOutput,
@@ -28,6 +31,7 @@ import {
 import {
   ApiResponse,
   TaskCreateTaskResponse,
+  TaskGenerateTokenResponse,
   TaskInquiryCategoryResponse,
   TaskInquiryDetailSubCategoryResponse,
   TaskInquiryNewTaskResponse,
@@ -39,6 +43,7 @@ import {
   TaskInquiryTaskHistoryResponse,
   TaskInquiryTaskListResponse,
   transformToTaskCreateTaskRequest,
+  transformToTaskGenerateTokenRequest,
   transformToTaskInquiryTaskListRequest,
 } from 'services/schemas';
 
@@ -150,6 +155,26 @@ const TaskService = {
     );
 
     return transformToTaskCreateTaskOutput(response.data.output_schema);
+  },
+
+  generateToken: async (
+    taskId: string,
+    data: TaskGenerateTokenInput,
+  ): Promise<TaskGenerateTokenOutput> => {
+    const requestData = transformToTaskGenerateTokenRequest(data);
+
+    const response = await axiosInstance.post<ApiResponse<TaskGenerateTokenResponse>>(
+      `/task/${taskId}/request-token`,
+      requestData,
+    );
+
+    return transformToTaskGenerateTokenOutput(response.data.output_schema);
+  },
+
+  registerToWork: async (taskId: string): Promise<{}> => {
+    const response = await axiosInstance.put<ApiResponse<{}>>(`/task/${taskId}/register`);
+
+    return response.data.output_schema;
   },
 };
 

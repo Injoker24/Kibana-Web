@@ -1,10 +1,23 @@
-import { ErrorWrapper, ServiceInquiryServiceDetailOutput } from 'models';
-import React, { useEffect } from 'react';
-import { useQuery } from 'react-query';
+import {
+  ErrorWrapper,
+  ServiceGenerateTokenOutput,
+  ServiceInquiryServiceDetailOutput,
+  TransactionSendFeedbackOutput,
+} from 'models';
+import React, { useEffect, useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
 import { ServiceService } from 'services';
 import { Image, Row } from 'react-bootstrap';
 
-import { Footer, Header, InfoBox, InlineRetryError, Loader, TitleBanner } from 'shared/components';
+import {
+  Footer,
+  Header,
+  InfoBox,
+  InlineRetryError,
+  Loader,
+  PopUpError,
+  TitleBanner,
+} from 'shared/components';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import {
   DefaultAvatar,
@@ -14,11 +27,20 @@ import {
   IconStar,
 } from 'images';
 import { getLocalStorage } from 'utils';
+import TransactionService from 'services/transaction.service';
+import { Midtrans } from 'enums';
+
+declare global {
+  interface Window {
+    snap: any;
+  }
+}
 
 const ServiceDetail: React.FC = ({ prevPath }: any) => {
   const params = useParams<{ serviceId: string }>();
   const history = useHistory();
   const location = useLocation();
+  const [paymentId, setPaymentId] = useState('');
   const {
     data: serviceDetail,
     isLoading: isLoadingServiceDetail,
@@ -31,6 +53,19 @@ const ServiceDetail: React.FC = ({ prevPath }: any) => {
 
   useEffect(() => {
     document.body.scrollTo(0, 0);
+    const midtransUrl = Midtrans.URL;
+
+    let scriptTag = document.createElement('script');
+    scriptTag.src = midtransUrl;
+
+    const midtransClientkey = Midtrans.ClientKey;
+    scriptTag.setAttribute('data-client-key', midtransClientkey);
+
+    document.body.appendChild(scriptTag);
+
+    return () => {
+      document.body.removeChild(scriptTag);
+    };
   }, []);
 
   const openProfile = (id: string) => {
@@ -43,8 +78,65 @@ const ServiceDetail: React.FC = ({ prevPath }: any) => {
     });
   };
 
+  const buyService = () => {
+    if (!getLocalStorage('token')) {
+      history.push({
+        pathname: '/auth/login',
+      });
+    } else {
+      mutateToken();
+    }
+  };
+
+  const {
+    data: token,
+    isLoading: isLoadingToken,
+    mutate: mutateToken,
+    error: errorToken,
+  } = useMutation<ServiceGenerateTokenOutput, ErrorWrapper>(
+    ['inquiry-service-token', params.serviceId],
+    async () => await ServiceService.generateToken(params.serviceId),
+    {
+      onSuccess: (result) => {
+        window.snap.pay(result.token, {
+          onSuccess: () => {
+            setPaymentId(result.paymentId);
+            mutateSendFeedback();
+          },
+          onError: (error: any) => {
+            console.log(error);
+          },
+          onClose: () => {
+            console.log('Kamu belum menyelesaikan pembayaran!');
+          },
+        });
+      },
+    },
+  );
+
+  const {
+    data: feedbackData,
+    isLoading: isLoadingFeedbackData,
+    mutate: mutateSendFeedback,
+    error: errorSendFeedback,
+  } = useMutation<TransactionSendFeedbackOutput, ErrorWrapper>(
+    ['send-feedback', paymentId],
+    async () => await TransactionService.sendFeedback(paymentId),
+    {
+      onSuccess: (result) => {
+        history.push({
+          pathname: '/service/requirement/' + result.transactionId,
+        });
+      },
+    },
+  );
+
   return (
     <>
+      {errorToken && <PopUpError message={errorToken.message} />}
+      {isLoadingToken && <Loader type="fixed" />}
+      {errorSendFeedback && <PopUpError message={errorSendFeedback.message} />}
+      {isLoadingFeedbackData && <Loader type="fixed" />}
       <Header />
       <div className="min-layout-height">
         <TitleBanner message={'Detail Layanan'} />
@@ -140,7 +232,12 @@ const ServiceDetail: React.FC = ({ prevPath }: any) => {
                           </h3>
                         </div>
                         {serviceDetail.freelancer.id !== getLocalStorage('id') && (
-                          <div className="btn btn-primary w-100">Beli Layanan</div>
+                          <div
+                            className="btn btn-primary w-100"
+                            onClick={buyService}
+                          >
+                            Beli Layanan
+                          </div>
                         )}
                         {serviceDetail.freelancer.id === getLocalStorage('id') && (
                           <button
@@ -236,7 +333,12 @@ const ServiceDetail: React.FC = ({ prevPath }: any) => {
                         </h3>
                       </div>
                       {serviceDetail.freelancer.id !== getLocalStorage('id') && (
-                        <div className="btn btn-primary w-100">Beli Layanan</div>
+                        <div
+                          className="btn btn-primary w-100"
+                          onClick={buyService}
+                        >
+                          Beli Layanan
+                        </div>
                       )}
                       {serviceDetail.freelancer.id === getLocalStorage('id') && (
                         <button

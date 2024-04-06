@@ -18,11 +18,13 @@ import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-query';
 import {
   ErrorWrapper,
+  TaskGenerateTokenOutput,
   TaskInquiryOwnedTaskDetailOutput,
   TaskInquiryRegisteredFreelancerListOutput,
   TransactionInquiryClientActivityOutput,
   TransactionInquiryClientInvoiceOutput,
   TransactionInquiryDetailClientTaskOutput,
+  TransactionSendFeedbackOutput,
 } from 'models';
 import { ReviewService, TaskService } from 'services';
 import {
@@ -34,11 +36,17 @@ import {
   logoDark,
   logoDarkLg,
 } from 'images';
-import { TransactionStatus } from 'enums';
+import { Midtrans, TransactionStatus } from 'enums';
 import { formatCurrency } from 'utils';
 import TransactionService from 'services/transaction.service';
 import { useForm } from 'react-hook-form';
 import Popup from 'reactjs-popup';
+
+declare global {
+  interface Window {
+    snap: any;
+  }
+}
 
 const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
   const params = useParams<{ taskId: string }>();
@@ -48,6 +56,19 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
 
   useEffect(() => {
     document.body.scrollTo(0, 0);
+    const midtransUrl = Midtrans.URL;
+
+    let scriptTag = document.createElement('script');
+    scriptTag.src = midtransUrl;
+
+    const midtransClientkey = Midtrans.ClientKey;
+    scriptTag.setAttribute('data-client-key', midtransClientkey);
+
+    document.body.appendChild(scriptTag);
+
+    return () => {
+      document.body.removeChild(scriptTag);
+    };
   }, []);
 
   // #region status = 1 / 6
@@ -109,6 +130,8 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
   const [openPortfolio, setOpenPortfolio] = useState<boolean>(false);
   const [activePortfolioUrl, setActivePortfolioUrl] = useState<string | undefined>();
   const [activeFreelancerName, setActiveFreelancerName] = useState<string>('');
+  const [activeFreelancerId, setActiveFreelancerId] = useState<string>('');
+  const [paymentId, setPaymentId] = useState('');
 
   const openFreelancerCV = (name: string, cvUrl?: string) => {
     document.body.scrollTo(0, 0);
@@ -138,20 +161,68 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
 
   const [modalChooseFreelancer, setModalChooseFreelancer] = useState<boolean>(false);
 
-  const openModalChooseFreelancer = (name: string) => {
+  const openModalChooseFreelancer = (name: string, id: string) => {
     setModalChooseFreelancer(true);
     setActiveFreelancerName(name);
+    setActiveFreelancerId(id);
   };
 
   const cancelChooseFreelancer = () => {
     setModalChooseFreelancer(false);
     setActiveFreelancerName('');
+    setActiveFreelancerId('');
   };
 
   const confirmChooseFreelancer = () => {
     setModalChooseFreelancer(false);
-    setActiveFreelancerName('');
+    mutateToken();
   };
+
+  const {
+    data: token,
+    isLoading: isLoadingToken,
+    mutate: mutateToken,
+    error: errorToken,
+  } = useMutation<TaskGenerateTokenOutput, ErrorWrapper>(
+    ['inquiry-task-token', params.taskId, activeFreelancerId],
+    async () =>
+      await TaskService.generateToken(params.taskId, { freelancerId: activeFreelancerId }),
+    {
+      onSuccess: (result) => {
+        setActiveFreelancerName('');
+        setActiveFreelancerId('');
+        window.snap.pay(result.token, {
+          onSuccess: () => {
+            setPaymentId(result.paymentId);
+            mutateSendFeedback();
+          },
+          onError: (error: any) => {
+            console.log(error);
+          },
+          onClose: () => {
+            console.log('Kamu belum menyelesaikan pembayaran!');
+          },
+        });
+      },
+    },
+  );
+
+  const {
+    data: feedbackData,
+    isLoading: isLoadingFeedbackData,
+    mutate: mutateSendFeedback,
+    error: errorSendFeedback,
+  } = useMutation<TransactionSendFeedbackOutput, ErrorWrapper>(
+    ['send-feedback', paymentId],
+    async () => await TransactionService.sendFeedback(paymentId),
+    {
+      onSuccess: (result) => {
+        history.push({
+          pathname: '/task/requirement/' + result.transactionId,
+        });
+      },
+    },
+  );
   // #endregion
 
   // #region status = 2, 3, 4, 5, 7, 8, 9
@@ -619,6 +690,10 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
           )}
         </Popup>
       )}
+      {errorToken && <PopUpError message={errorToken.message} />}
+      {isLoadingToken && <Loader type="fixed" />}
+      {errorSendFeedback && <PopUpError message={errorSendFeedback.message} />}
+      {isLoadingFeedbackData && <Loader type="fixed" />}
       <Header />
       <div className="min-layout-height">
         <TitleBanner message={'Detail Tugas Saya'} />
@@ -762,6 +837,7 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
                                                           onClick={() =>
                                                             openModalChooseFreelancer(
                                                               freelancer.name,
+                                                              freelancer.id,
                                                             )
                                                           }
                                                         >

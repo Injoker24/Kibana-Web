@@ -393,3 +393,7 @@ export interface TransactionInquiryDetailFreelancerTaskResponse {
     };
   };
 }
+
+export interface TransactionSendFeedbackResponse {
+  transaction_id: string;
+}

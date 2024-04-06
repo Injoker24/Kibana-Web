@@ -7,6 +7,7 @@ import {
   TransactionInquiryDetailFreelancerTaskResponse,
   TransactionInquiryFreelancerActivityResponse,
   TransactionInquiryFreelancerInvoiceResponse,
+  TransactionSendFeedbackResponse,
 } from 'services/schemas';
 
 export interface TransactionInquiryDetailClientTaskOutput {
@@ -523,6 +524,20 @@ export function transformToTransactionInquiryDetailFreelancerTaskOutput(
           }
         : undefined,
     },
+  };
+
+  return result;
+}
+
+export interface TransactionSendFeedbackOutput {
+  transactionId: string;
+}
+
+export function transformToTransactionSendFeedbackOutput(
+  response: TransactionSendFeedbackResponse,
+): TransactionSendFeedbackOutput {
+  const result: TransactionSendFeedbackOutput = {
+    transactionId: response.transaction_id,
   };
 
   return result;

@@ -256,3 +256,8 @@ export interface ServiceInquiryAdditionalInfoResponse {
     title: string;
   }[];
 }
+
+export interface ServiceGenerateTokenResponse {
+  token: string;
+  payment_id: string;
+}

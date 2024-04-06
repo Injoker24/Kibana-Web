@@ -1,6 +1,7 @@
 import {
   ServiceCreateServiceInput,
   ServiceCreateServiceOutput,
+  ServiceGenerateTokenOutput,
   ServiceInquiryAdditionalInfoOutput,
   ServiceInquiryCategoryOutput,
   ServiceInquiryDetailSubCategoryOutput,
@@ -13,6 +14,7 @@ import {
   ServiceInquiryServiceListInput,
   ServiceInquiryServiceListOutput,
   transformToServiceCreateServiceOutput,
+  transformToServiceGenerateTokenOutput,
   transformToServiceInquiryAdditionalInfoOutput,
   transformToServiceInquiryCategoryOutput,
   transformToServiceInquiryDetailSubCategoryOutput,
@@ -27,6 +29,7 @@ import {
 import {
   ApiResponse,
   ServiceCreateServiceResponse,
+  ServiceGenerateTokenResponse,
   ServiceInquiryAdditionalInfoResponse,
   ServiceInquiryCategoryResponse,
   ServiceInquiryDetailSubCategoryResponse,
@@ -199,6 +202,15 @@ const ServiceService = {
     );
 
     return transformToServiceInquiryAdditionalInfoOutput(response.data.output_schema);
+  },
+
+  generateToken: async (serviceId: string): Promise<ServiceGenerateTokenOutput> => {
+    const response = await axiosInstance.post<ApiResponse<ServiceGenerateTokenResponse>>(
+      `/service/${serviceId}/request-token`,
+      {},
+    );
+
+    return transformToServiceGenerateTokenOutput(response.data.output_schema);
   },
 };
 

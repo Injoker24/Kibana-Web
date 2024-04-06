@@ -1,21 +1,35 @@
 import { ErrorWrapper, TaskInquiryTaskDetailOutput } from 'models';
-import React, { useEffect } from 'react';
-import { useQuery } from 'react-query';
+import React, { useEffect, useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
 import { TaskService } from 'services';
 import { Image, Row } from 'react-bootstrap';
 
-import { Footer, Header, InfoBox, InlineRetryError, Loader, TitleBanner } from 'shared/components';
+import {
+  Footer,
+  Header,
+  InfoBox,
+  InlineRetryError,
+  Loader,
+  PopUpConfirm,
+  PopUpError,
+  PopUpSuccess,
+  TitleBanner,
+} from 'shared/components';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { DefaultAvatar, IconChevronLeft, IconClock, IconStar } from 'images';
-import { getLocalStorage } from 'utils';
+import { getLocalStorage, setLocalStorage } from 'utils';
 
 const TaskDetail: React.FC = ({ prevPath }: any) => {
   const params = useParams<{ taskId: string }>();
   const history = useHistory();
   const location = useLocation();
+  const [modalRegister, setModalRegister] = useState<boolean>(false);
+  const [modalSuccessRegister, setModalSuccessRegister] = useState<boolean>(false);
+
   const {
     data: taskDetail,
     isLoading: isLoadingTaskDetail,
+    isRefetching: isRefetchingTaskDetail,
     refetch: refetchTaskDetail,
     error: errorTaskDetail,
   } = useQuery<TaskInquiryTaskDetailOutput, ErrorWrapper>(
@@ -37,8 +51,71 @@ const TaskDetail: React.FC = ({ prevPath }: any) => {
     });
   };
 
+  const registerToWork = () => {
+    if (getLocalStorage('isFreelancer') === 'false') {
+      history.push({
+        pathname: '/auth/register/freelancer',
+      });
+    } else if (
+      getLocalStorage('isFreelancer') === 'true' &&
+      getLocalStorage('status') === 'client'
+    ) {
+      setLocalStorage('status', 'freelancer');
+      setModalRegister(true);
+    } else {
+      setModalRegister(true);
+    }
+  };
+
+  const cancelRegister = () => {
+    setModalRegister(false);
+  };
+
+  const confirmRegister = () => {
+    setModalRegister(false);
+    mutateRegister();
+  };
+
+  const {
+    isLoading: isLoadingRegister,
+    mutate: mutateRegister,
+    error: errorRegister,
+  } = useMutation<{}, ErrorWrapper>(
+    ['register-to-work', params.taskId],
+    async () => await TaskService.registerToWork(params.taskId),
+    {
+      onSuccess: () => {
+        setModalSuccessRegister(true);
+      },
+    },
+  );
+
   return (
     <>
+      {modalRegister && (
+        <PopUpConfirm
+          title="Daftar untuk Mengerjakan"
+          message="Apakah kamu yakin akan mendaftar untuk mengerjakan layanan ini?"
+          onCancel={cancelRegister}
+          onSubmit={confirmRegister}
+        />
+      )}
+      {modalSuccessRegister && (
+        <PopUpSuccess
+          message={'Berhasil mendaftar! Tunggu pemilihan oleh klien!'}
+          onClose={() => {
+            setModalSuccessRegister(false);
+            history.push({
+              pathname: '/task/' + params.taskId,
+              state: {
+                prevPath: prevPath,
+              },
+            });
+          }}
+        />
+      )}
+      {errorRegister && <PopUpError message={errorRegister.message} />}
+      {isLoadingRegister && <Loader type="fixed" />}
       <Header />
       <div className="min-layout-height">
         <TitleBanner message={'Detail Tugas'} />
@@ -55,7 +132,7 @@ const TaskDetail: React.FC = ({ prevPath }: any) => {
               </div>
               <p className="cursor-pointer">Kembali</p>
             </div>
-            {isLoadingTaskDetail && <Loader type="inline" />}
+            {(isLoadingTaskDetail || isRefetchingTaskDetail) && <Loader type="inline" />}
             {errorTaskDetail && (
               <div className="flex-centered">
                 <InlineRetryError
@@ -64,7 +141,7 @@ const TaskDetail: React.FC = ({ prevPath }: any) => {
                 />
               </div>
             )}
-            {taskDetail && (
+            {!isRefetchingTaskDetail && taskDetail && (
               <>
                 <Row className="mb-5">
                   <div className="col-12 col-lg-8">
@@ -98,7 +175,12 @@ const TaskDetail: React.FC = ({ prevPath }: any) => {
                           </h3>
                         </div>
                         {taskDetail.client.id !== getLocalStorage('id') && (
-                          <div className="btn btn-primary w-100">Daftar untuk Mengerjakan</div>
+                          <div
+                            className="btn btn-primary w-100"
+                            onClick={registerToWork}
+                          >
+                            Daftar untuk Mengerjakan
+                          </div>
                         )}
                         {taskDetail.client.id === getLocalStorage('id') && (
                           <button
@@ -106,6 +188,14 @@ const TaskDetail: React.FC = ({ prevPath }: any) => {
                             className="btn btn-primary w-100"
                           >
                             Tugas Kamu
+                          </button>
+                        )}
+                        {taskDetail.registeredFreelancer === getLocalStorage('id') && (
+                          <button
+                            disabled
+                            className="btn btn-primary w-100"
+                          >
+                            Sudah Terdaftar
                           </button>
                         )}
                       </div>
@@ -185,7 +275,12 @@ const TaskDetail: React.FC = ({ prevPath }: any) => {
                         <h3 className="text-primary-dark mb-3">Rp {taskDetail.taskDetail.price}</h3>
                       </div>
                       {taskDetail.client.id !== getLocalStorage('id') && (
-                        <div className="btn btn-primary w-100">Daftar untuk Mengerjakan</div>
+                        <div
+                          className="btn btn-primary w-100"
+                          onClick={registerToWork}
+                        >
+                          Daftar untuk Mengerjakan
+                        </div>
                       )}
                       {taskDetail.client.id === getLocalStorage('id') && (
                         <button

@@ -1,4 +1,4 @@
-import { TaskCreateTaskInput, TaskInquiryTaskListInput } from 'models';
+import { TaskCreateTaskInput, TaskGenerateTokenInput, TaskInquiryTaskListInput } from 'models';
 
 export interface TaskInquiryCategoryResponse {
   categories: {
@@ -221,4 +221,23 @@ export function transformToTaskCreateTaskRequest(
 
 export interface TaskCreateTaskResponse {
   id: string;
+}
+
+export interface TaskGenerateTokenRequest {
+  freelancer_id: string;
+}
+
+export function transformToTaskGenerateTokenRequest(
+  input: TaskGenerateTokenInput,
+): TaskGenerateTokenRequest {
+  const result: TaskGenerateTokenRequest = {
+    freelancer_id: input.freelancerId,
+  };
+
+  return result;
+}
+
+export interface TaskGenerateTokenResponse {
+  token: string;
+  payment_id: string;
 }

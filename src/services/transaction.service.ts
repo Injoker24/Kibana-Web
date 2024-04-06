@@ -17,6 +17,7 @@ import {
   TransactionManageCancellationInput,
   TransactionManageReturnInput,
   TransactionSendAdditionalFileInput,
+  TransactionSendFeedbackOutput,
   TransactionSendMessageInput,
   TransactionSendResultInput,
   transformToTransactionInquiryClientActivityOutput,
@@ -27,6 +28,7 @@ import {
   transformToTransactionInquiryDetailFreelancerTaskOutput,
   transformToTransactionInquiryFreelancerActivityOutput,
   transformToTransactionInquiryFreelancerInvoiceOutput,
+  transformToTransactionSendFeedbackOutput,
 } from 'models';
 import { axiosInstance } from 'setup';
 import {
@@ -39,6 +41,7 @@ import {
   TransactionInquiryDetailFreelancerTaskResponse,
   TransactionInquiryFreelancerActivityResponse,
   TransactionInquiryFreelancerInvoiceResponse,
+  TransactionSendFeedbackResponse,
   transformToTransactionAskCancelRequest,
   transformToTransactionAskReturnRequest,
   transformToTransactionAskRevisionRequest,
@@ -285,6 +288,14 @@ const TransactionService = {
     >(`/transaction/task/freelancer/${transactionId}`);
 
     return transformToTransactionInquiryDetailFreelancerTaskOutput(response.data.output_schema);
+  },
+
+  sendFeedback: async (paymentId: string): Promise<TransactionSendFeedbackOutput> => {
+    const response = await axiosInstance.put<ApiResponse<TransactionSendFeedbackResponse>>(
+      `/transaction/${paymentId}/send-feedback`,
+    );
+
+    return transformToTransactionSendFeedbackOutput(response.data.output_schema);
   },
 };
 
