@@ -7,6 +7,7 @@ import ServiceOwned from './service-owned';
 import ServiceOwnedDetail from './service-owned-detail';
 import ServiceOrderDetail from './service-order-detail';
 import CreateService from './create-service';
+import ServiceRequirement from './service-requirement';
 
 export {
   ServiceCategoryList,
@@ -18,4 +19,5 @@ export {
   ServiceOwnedDetail,
   ServiceOrderDetail,
   CreateService,
+  ServiceRequirement,
 };

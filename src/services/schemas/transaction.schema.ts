@@ -10,6 +10,7 @@ import {
   TransactionManageReturnInput,
   TransactionSendAdditionalFileInput,
   TransactionSendMessageInput,
+  TransactionSendRequirementInput,
   TransactionSendResultInput,
 } from 'models';
 
@@ -396,4 +397,22 @@ export interface TransactionInquiryDetailFreelancerTaskResponse {
 
 export interface TransactionSendFeedbackResponse {
   transaction_id: string;
+}
+
+export interface TransactionSendRequirementRequest {
+  supporting_file: File;
+  transaction_id: string;
+  description: string;
+}
+
+export function transformToTransactionSendRequirementRequest(
+  input: TransactionSendRequirementInput,
+): TransactionSendRequirementRequest {
+  const result: TransactionSendRequirementRequest = {
+    supporting_file: input.supportingFile,
+    transaction_id: input.transactionId,
+    description: input.description,
+  };
+
+  return result;
 }

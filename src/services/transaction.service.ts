@@ -19,6 +19,7 @@ import {
   TransactionSendAdditionalFileInput,
   TransactionSendFeedbackOutput,
   TransactionSendMessageInput,
+  TransactionSendRequirementInput,
   TransactionSendResultInput,
   transformToTransactionInquiryClientActivityOutput,
   transformToTransactionInquiryClientInvoiceOutput,
@@ -53,6 +54,7 @@ import {
   transformToTransactionManageReturnRequest,
   transformToTransactionSendAdditionalFileRequest,
   transformToTransactionSendMessageRequest,
+  transformToTransactionSendRequirementRequest,
   transformToTransactionSendResultRequest,
 } from './schemas';
 
@@ -296,6 +298,32 @@ const TransactionService = {
     );
 
     return transformToTransactionSendFeedbackOutput(response.data.output_schema);
+  },
+
+  sendRequirement: async (data: TransactionSendRequirementInput): Promise<{}> => {
+    const requestData = transformToTransactionSendRequirementRequest(data);
+
+    let formData = new FormData();
+    if (requestData.supporting_file) {
+      formData.append('supporting_file', requestData.supporting_file);
+    }
+
+    const blob = new Blob([JSON.stringify(requestData)], {
+      type: 'application/json',
+    });
+    formData.append('data', blob);
+
+    const response = await axiosInstance.post<ApiResponse<{}>>(
+      `/transaction/send-requirement`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    );
+
+    return response.data.output_schema;
   },
 };
 

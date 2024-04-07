@@ -542,3 +542,9 @@ export function transformToTransactionSendFeedbackOutput(
 
   return result;
 }
+
+export interface TransactionSendRequirementInput {
+  supportingFile: File;
+  transactionId: string;
+  description: string;
+}

@@ -10,6 +10,7 @@ import {
   ServiceOrderDetail,
   ServiceOwned,
   ServiceOwnedDetail,
+  ServiceRequirement,
   ServiceSearch,
 } from './pages';
 import { ProtectedClientRoute, ProtectedFreelancerRoute } from 'shared/components';
@@ -25,6 +26,10 @@ interface searchStateWrapper {
 
 interface detailStateWrapper {
   prevPath: string;
+}
+
+interface historyDetailStateWrapper {
+  status: string;
 }
 
 const ServiceRouter = () => {
@@ -95,9 +100,12 @@ const ServiceRouter = () => {
       <Route
         exact
         path={'/service/history/:transactionId'}
-        render={() => (
+        render={({ location: { state } }) => (
           <ProtectedClientRoute>
-            <ServiceHistoryDetail key={Date.now()} />
+            <ServiceHistoryDetail
+              {...(state as historyDetailStateWrapper)}
+              key={Date.now()}
+            />
           </ProtectedClientRoute>
         )}
       />
@@ -109,6 +117,16 @@ const ServiceRouter = () => {
           <ProtectedFreelancerRoute>
             <CreateService key={Date.now()} />
           </ProtectedFreelancerRoute>
+        )}
+      />
+
+      <Route
+        exact
+        path={'/service/requirement/:transactionId'}
+        render={() => (
+          <ProtectedClientRoute>
+            <ServiceRequirement key={Date.now()} />
+          </ProtectedClientRoute>
         )}
       />
 

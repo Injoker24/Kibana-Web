@@ -36,7 +36,7 @@ import TransactionService from 'services/transaction.service';
 import { useForm } from 'react-hook-form';
 import Popup from 'reactjs-popup';
 
-const ServiceHistoryDetail: React.FC = () => {
+const ServiceHistoryDetail: React.FC = ({ status }: any) => {
   const params = useParams<{ transactionId: string }>();
   const history = useHistory();
   const location = useLocation();
@@ -499,6 +499,7 @@ const ServiceHistoryDetail: React.FC = () => {
               <p className="cursor-pointer">Kembali</p>
             </div>
             <Tabs
+              defaultActiveKey={status ? status : 'activity'}
               id="tabset"
               className="mb-5"
               justify

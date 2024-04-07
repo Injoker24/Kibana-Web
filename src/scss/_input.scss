@@ -202,3 +202,7 @@ input:checked + .slider:before {
 input[type='text']::placeholder {
   color: $primary-dark;
 }
+
+.requirement-text-area {
+  height: 25rem !important;
+}

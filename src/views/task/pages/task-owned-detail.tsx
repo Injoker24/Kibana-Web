@@ -48,7 +48,7 @@ declare global {
   }
 }
 
-const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
+const TaskOwnedDetail: React.FC = ({ transactionId, status }: any) => {
   const params = useParams<{ taskId: string }>();
   const history = useHistory();
   const location = useLocation();
@@ -711,6 +711,7 @@ const TaskOwnedDetail: React.FC = ({ transactionId }: any) => {
               <p className="cursor-pointer">Kembali</p>
             </div>
             <Tabs
+              defaultActiveKey={status ? status : 'activity'}
               id="tabset"
               className="mb-5"
               justify
