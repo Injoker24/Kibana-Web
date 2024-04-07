@@ -152,7 +152,7 @@ const DashboardIndex: React.FC = () => {
                           />
                           <div>
                             <h4 className="font-weight-bold mb-0">{userData.name}</h4>
-                            <p className="text-muted">{userData.username}</p>
+                            <p className="text-muted">@{userData.username}</p>
                           </div>
                         </div>
                       </div>

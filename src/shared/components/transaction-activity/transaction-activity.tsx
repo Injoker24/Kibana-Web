@@ -20,7 +20,7 @@ interface Props {
     title: string;
     description?: string;
     files?: {
-      id: string;
+      downloadUrl: string;
       fileName: string;
     }[];
     responseDeadline?: string;
@@ -902,12 +902,18 @@ const TransactionActivity: React.FC<Props> = ({
                     className="cursor-pointer"
                     style={{ paddingBottom: '32px' }}
                   >
-                    <div className="card-sm d-flex flex-row align-items-center justify-content-between">
-                      <h4 className="text-primary-dark font-weight-bold">{file.fileName}</h4>
-                      <div className="text-primary-dark">
-                        <IconDownloadCloud />
+                    <a
+                      href={file.downloadUrl}
+                      title={file.fileName}
+                      download={file.fileName}
+                    >
+                      <div className="card-sm d-flex flex-row align-items-center justify-content-between">
+                        <h4 className="text-primary-dark font-weight-bold">{file.fileName}</h4>
+                        <div className="text-primary-dark">
+                          <IconDownloadCloud />
+                        </div>
                       </div>
-                    </div>
+                    </a>
                   </div>
                 );
               })}
@@ -963,12 +969,18 @@ const TransactionActivity: React.FC<Props> = ({
                     className="cursor-pointer"
                     style={{ paddingBottom: '32px' }}
                   >
-                    <div className="card-sm d-flex flex-row align-items-center justify-content-between">
-                      <h4 className="text-primary-dark font-weight-bold">{file.fileName}</h4>
-                      <div className="text-primary-dark">
-                        <IconDownloadCloud />
+                    <a
+                      href={file.downloadUrl}
+                      title={file.fileName}
+                      download={file.fileName}
+                    >
+                      <div className="card-sm d-flex flex-row align-items-center justify-content-between">
+                        <h4 className="text-primary-dark font-weight-bold">{file.fileName}</h4>
+                        <div className="text-primary-dark">
+                          <IconDownloadCloud />
+                        </div>
                       </div>
-                    </div>
+                    </a>
                   </div>
                 );
               })}

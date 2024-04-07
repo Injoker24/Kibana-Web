@@ -49,7 +49,7 @@ const AuthRegister: React.FC = () => {
     async () =>
       await AuthService.register({
         email: formData.email,
-        username: '@' + formData.username,
+        username: formData.username,
         name: formData.name,
         phoneNumber: '+62' + formData.phoneNumber,
         password: formData.password,

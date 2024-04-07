@@ -26,7 +26,7 @@ import {
   IconCrossCircle,
   IconStar,
 } from 'images';
-import { getLocalStorage } from 'utils';
+import { getLocalStorage, setLocalStorage } from 'utils';
 import TransactionService from 'services/transaction.service';
 import { Midtrans } from 'enums';
 
@@ -83,6 +83,9 @@ const ServiceDetail: React.FC = ({ prevPath }: any) => {
       history.push({
         pathname: '/auth/login',
       });
+    } else if (getLocalStorage('status') === 'freelancer') {
+      setLocalStorage('status', 'client');
+      mutateToken();
     } else {
       mutateToken();
     }

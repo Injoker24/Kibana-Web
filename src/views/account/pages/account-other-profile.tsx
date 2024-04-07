@@ -188,7 +188,7 @@ const AccountOtherProfile: React.FC = ({ status, prevPath, transactionId }: any)
                     />
                     <div>
                       <h4 className="font-weight-bold mb-0">{otherProfile.name}</h4>
-                      <p className="text-muted">{otherProfile.username}</p>
+                      <p className="text-muted">@{otherProfile.username}</p>
                     </div>
                   </div>
                 </div>

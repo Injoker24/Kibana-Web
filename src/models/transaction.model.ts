@@ -131,7 +131,7 @@ export interface TransactionInquiryClientActivityOutput {
     title: string;
     description?: string;
     files?: {
-      id: string;
+      downloadUrl: string;
       fileName: string;
     }[];
     responseDeadline?: string;
@@ -155,7 +155,7 @@ export function transformToTransactionInquiryClientActivityOutput(
         description: t.description,
         files: t.files?.map((file) => {
           return {
-            id: file.id,
+            downloadUrl: file.download_url,
             fileName: file.file_name,
           };
         }),
@@ -284,7 +284,7 @@ export interface TransactionInquiryFreelancerActivityOutput {
     title: string;
     description?: string;
     files?: {
-      id: string;
+      downloadUrl: string;
       fileName: string;
     }[];
     responseDeadline?: string;
@@ -308,7 +308,7 @@ export function transformToTransactionInquiryFreelancerActivityOutput(
         description: t.description,
         files: t.files?.map((file) => {
           return {
-            id: file.id,
+            downloadUrl: file.download_url,
             fileName: file.file_name,
           };
         }),

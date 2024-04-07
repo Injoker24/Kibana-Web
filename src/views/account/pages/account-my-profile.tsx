@@ -138,7 +138,7 @@ const AccountMyProfile: React.FC = () => {
       await AccountService.editProfile({
         profileImage: profileImage?.data,
         email: editProfileData.email,
-        username: '@' + editProfileData.username,
+        username: editProfileData.username,
         name: editProfileData.name,
         phoneNumber: '+62' + editProfileData.phoneNumber,
       }),
@@ -623,7 +623,7 @@ const AccountMyProfile: React.FC = () => {
                                 <h4 className="font-weight-semibold mb-2 mb-md-0 col-12 col-md-3">
                                   Username
                                 </h4>
-                                <p className="col-12 col-md-9">{myProfile.username}</p>
+                                <p className="col-12 col-md-9">@{myProfile.username}</p>
                               </Row>
                               <Row className="mb-5 align-items-center">
                                 <h4 className="font-weight-semibold mb-2 mb-md-0 col-12 col-md-3">
@@ -727,7 +727,7 @@ const AccountMyProfile: React.FC = () => {
                                             type="text"
                                             id="username"
                                             name="username"
-                                            defaultValue={myProfile.username.slice(1)}
+                                            defaultValue={myProfile.username}
                                             className="w-100"
                                             isInvalid={
                                               formStateProfile.touched.username === true &&
@@ -1140,7 +1140,7 @@ const AccountMyProfile: React.FC = () => {
                                 <h4 className="font-weight-semibold mb-2 mb-md-0 col-12 col-md-3">
                                   Username
                                 </h4>
-                                <p className="col-12 col-md-9">{myProfile.username}</p>
+                                <p className="col-12 col-md-9">@{myProfile.username}</p>
                               </Row>
                               <Row className="mb-5 align-items-center">
                                 <h4 className="font-weight-semibold mb-2 mb-md-0 col-12 col-md-3">
@@ -1244,7 +1244,7 @@ const AccountMyProfile: React.FC = () => {
                                             type="text"
                                             id="username"
                                             name="username"
-                                            defaultValue={myProfile.username.slice(1)}
+                                            defaultValue={myProfile.username}
                                             className="w-100"
                                             isInvalid={
                                               formStateProfile.touched.username === true &&

@@ -70,7 +70,7 @@ export interface TransactionInquiryClientActivityResponse {
     title: string;
     description?: string;
     files?: {
-      id: string;
+      download_url: string;
       file_name: string;
     }[];
     response_deadline?: string;
@@ -240,7 +240,7 @@ export interface TransactionInquiryFreelancerActivityResponse {
     title: string;
     description?: string;
     files?: {
-      id: string;
+      download_url: string;
       file_name: string;
     }[];
     response_deadline?: string;
