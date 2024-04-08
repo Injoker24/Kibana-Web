@@ -19,7 +19,15 @@ import { Image, Row } from 'react-bootstrap';
 import { useQuery } from 'react-query';
 import { useHistory, useLocation } from 'react-router-dom';
 import { ServiceService, TaskService } from 'services';
-import { Service, Task, Loader, Header, Footer, InlineRetryError } from 'shared/components';
+import {
+  Service,
+  Task,
+  Loader,
+  Header,
+  Footer,
+  InlineRetryError,
+  InfoBox,
+} from 'shared/components';
 import { getLocalStorage } from 'utils';
 
 const DashboardIndex: React.FC = () => {
@@ -123,7 +131,12 @@ const DashboardIndex: React.FC = () => {
                 <h4 className="mb-4">
                   Dapatkan bantuan terbaik disini. Tidak perlu mencari kesana kemari.
                 </h4>
-                <button className="btn btn-secondary">Pelajari Lebih Lanjut</button>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => history.push('auth/register')}
+                >
+                  Mulai Sekarang
+                </button>
               </div>
               <Image
                 className="d-none d-md-block"
@@ -381,7 +394,6 @@ const DashboardIndex: React.FC = () => {
               <div className="align-self-center col-12 col-lg-4 mb-5 mb-lg-0 pr-3">
                 <h3 className="mb-3">Tidak ada waktu untuk mencari freelancer yang cocok?</h3>
                 <p className="mb-4">Tunggu mereka yang menghubungi kamu terlebih dahulu.</p>
-                <button className="btn btn-primary">Mulai Sekarang</button>
               </div>
               <div className="d-flex flex-row col-12 col-lg-8 justify-content-lg-end flex-wrap">
                 <div
@@ -485,6 +497,11 @@ const DashboardIndex: React.FC = () => {
                     </div>
                   );
                 })}
+              {newTask?.tasks.length === 0 && (
+                <div className="col-12">
+                  <InfoBox message="Belum ada tugas baru!" />
+                </div>
+              )}
             </Row>
           </div>
         </Row>
@@ -539,6 +556,11 @@ const DashboardIndex: React.FC = () => {
                     </div>
                   );
                 })}
+              {newService?.services.length === 0 && (
+                <div className="col-12">
+                  <InfoBox message="Belum ada layanan baru!" />
+                </div>
+              )}
             </Row>
           </div>
         </Row>

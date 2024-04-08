@@ -303,7 +303,7 @@ const AccountOtherProfile: React.FC = ({ status, prevPath, transactionId }: any)
                                     );
                                   })}
                                   {!clientReview.reviewList && (
-                                    <InfoBox message={'Belum ada review'} />
+                                    <InfoBox message={'Belum ada ulasan'} />
                                   )}
                                 </div>
                               </div>
@@ -453,7 +453,7 @@ const AccountOtherProfile: React.FC = ({ status, prevPath, transactionId }: any)
                                       );
                                     })}
                                     {!reviewHistory.projectList && (
-                                      <InfoBox message={'Belum ada review'} />
+                                      <InfoBox message={'Belum ada ulasan'} />
                                     )}
                                   </div>
                                 </div>

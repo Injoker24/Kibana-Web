@@ -994,7 +994,7 @@ const ServiceOwnedDetail: React.FC = () => {
                                 );
                               })}
                               {!ownedServiceDetail.review.reviewList && (
-                                <InfoBox message={'Belum ada review'} />
+                                <InfoBox message={'Belum ada ulasan'} />
                               )}
                             </div>
                           </div>

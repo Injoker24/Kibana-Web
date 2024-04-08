@@ -4,7 +4,15 @@ import { useQuery } from 'react-query';
 import { TaskService } from 'services';
 import { Image, Row } from 'react-bootstrap';
 
-import { Footer, Header, InlineRetryError, Loader, Task, TitleBanner } from 'shared/components';
+import {
+  Footer,
+  Header,
+  InfoBox,
+  InlineRetryError,
+  Loader,
+  Task,
+  TitleBanner,
+} from 'shared/components';
 import { IconChevronLeft, IconNextCircle } from 'images';
 import { useHistory, useLocation } from 'react-router-dom';
 
@@ -128,6 +136,11 @@ const TaskCategoryDetail = ({ title, id, onBack }: any) => {
                     </div>
                   );
                 })}
+              {newTask?.tasks.length === 0 && (
+                <div className="col-12">
+                  <InfoBox message="Belum ada tugas di kategori ini!" />
+                </div>
+              )}
             </Row>
           </div>
         </Row>

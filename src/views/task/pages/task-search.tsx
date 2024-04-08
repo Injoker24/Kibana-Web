@@ -4,7 +4,15 @@ import { useInfiniteQuery, useQuery } from 'react-query';
 import { TaskService } from 'services';
 import { Form, Image, Row } from 'react-bootstrap';
 
-import { Footer, FormInput, Header, InlineRetryError, Loader, Task } from 'shared/components';
+import {
+  Footer,
+  FormInput,
+  Header,
+  InlineRetryError,
+  Loader,
+  Task,
+  InfoBox,
+} from 'shared/components';
 import { useForm } from 'react-hook-form';
 import { IconChevronRight, IconClose, IconSearch, searchIllustration } from 'images';
 import Popup from 'reactjs-popup';
@@ -808,6 +816,11 @@ const TaskSearch: React.FC = ({ stateCategories }: any) => {
                             </div>
                           );
                         })}
+                        {data.tasks.length === 0 && (
+                          <div className="col-12 py-3">
+                            <InfoBox message="Belum ada tugas yang tersedia!" />
+                          </div>
+                        )}
                       </>
                     );
                   })}

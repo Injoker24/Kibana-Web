@@ -362,7 +362,7 @@ const TaskDetail: React.FC = ({ prevPath }: any) => {
                             );
                           })}
                           {!taskDetail.review.reviewList && (
-                            <InfoBox message={'Belum ada review'} />
+                            <InfoBox message={'Belum ada ulasan'} />
                           )}
                         </div>
                       </div>

@@ -391,7 +391,7 @@ const ServiceDetail: React.FC = ({ prevPath }: any) => {
                             );
                           })}
                           {!serviceDetail.review.reviewList && (
-                            <InfoBox message={'Belum ada review'} />
+                            <InfoBox message={'Belum ada ulasan'} />
                           )}
                         </div>
                       </div>

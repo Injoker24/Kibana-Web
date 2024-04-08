@@ -75,7 +75,7 @@ const ServiceCategoryList: React.FC = ({ stateId, stateName }: any) => {
         <Row className="justify-content-center">
           <div className="col-10">
             {errorCategory && (
-              <div className="flex-centered">
+              <div className="flex-centered mb-5">
                 <InlineRetryError
                   message={errorCategory.message}
                   onRetry={refetchCategory}

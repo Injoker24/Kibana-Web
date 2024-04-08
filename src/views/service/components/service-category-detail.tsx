@@ -8,7 +8,15 @@ import { useQuery } from 'react-query';
 import { ServiceService } from 'services';
 import { Image, Row } from 'react-bootstrap';
 
-import { Footer, Header, InlineRetryError, Loader, Service, TitleBanner } from 'shared/components';
+import {
+  Footer,
+  Header,
+  InfoBox,
+  InlineRetryError,
+  Loader,
+  Service,
+  TitleBanner,
+} from 'shared/components';
 import { IconChevronLeft, IconNextCircle } from 'images';
 import { useHistory, useLocation } from 'react-router-dom';
 
@@ -135,6 +143,11 @@ const ServiceCategoryDetail = ({ title, id, onBack }: any) => {
                     </div>
                   );
                 })}
+              {newService?.services.length === 0 && (
+                <div className="col-12">
+                  <InfoBox message="Belum ada layanan di kategori ini!" />
+                </div>
+              )}
             </Row>
           </div>
         </Row>

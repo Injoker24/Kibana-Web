@@ -1102,7 +1102,7 @@ const AccountMyProfile: React.FC = () => {
                                   );
                                 })}
                                 {!clientReview.reviewList && (
-                                  <InfoBox message={'Belum ada review'} />
+                                  <InfoBox message={'Belum ada ulasan'} />
                                 )}
                               </div>
                             </div>
@@ -1716,7 +1716,7 @@ const AccountMyProfile: React.FC = () => {
                                   );
                                 })}
                                 {!reviewHistory.projectList && (
-                                  <InfoBox message={'Belum ada review'} />
+                                  <InfoBox message={'Belum ada ulasan'} />
                                 )}
                               </div>
                             </div>
