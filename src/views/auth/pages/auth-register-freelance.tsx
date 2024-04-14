@@ -431,7 +431,7 @@ const AuthRegisterFreelancer: React.FC = () => {
               </div>
 
               <div className="mb-5">
-                <h4 className="font-weight-semibold mb-4">Tambahkan Portfolio kamu!</h4>
+                <h4 className="font-weight-semibold mb-4">Tambahkan Portofolio kamu!</h4>
                 {editPortfolioData && (
                   <div className="card-sm d-flex flex-row align-items-center justify-content-between mb-4">
                     <h4 className="text-primary-dark font-weight-bold">
@@ -444,7 +444,7 @@ const AuthRegisterFreelancer: React.FC = () => {
                   onClick={uploadPortfolio}
                 >
                   <div className="card-sm d-flex flex-row align-items-center justify-content-between">
-                    <h4 className="text-primary-dark font-weight-bold">Tambahkan Portfolio</h4>
+                    <h4 className="text-primary-dark font-weight-bold">Tambahkan Portofolio</h4>
                     <div className="text-primary-dark">
                       <IconAddCircle />
                     </div>

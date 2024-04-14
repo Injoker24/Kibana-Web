@@ -2209,7 +2209,7 @@ const AccountMyProfile: React.FC = () => {
                       </div>
 
                       <div className="mb-5">
-                        <h4 className="font-weight-semibold mb-3">Portfolio</h4>
+                        <h4 className="font-weight-semibold mb-3">Portofolio</h4>
                         {isLoadingPortfolioUrl && <Loader type="inline" />}
                         {errorPortfolioUrl && (
                           <div className="card-sm mb-5 mb-lg-0">
@@ -2235,7 +2235,7 @@ const AccountMyProfile: React.FC = () => {
                                     setEditPortfolio(true);
                                   }}
                                 >
-                                  Ubah Portfolio
+                                  Ubah Portofolio
                                 </div>
                               </>
                             )}
@@ -2243,7 +2243,7 @@ const AccountMyProfile: React.FC = () => {
                               <div className="card-sm mb-5 mb-lg-0">
                                 <div className="mb-4">
                                   <InfoBox
-                                    message={myProfile.name + ' belum mengupload portfolio.'}
+                                    message={myProfile.name + ' belum mengupload portofolio.'}
                                   />
                                 </div>
                                 <div
@@ -2252,7 +2252,7 @@ const AccountMyProfile: React.FC = () => {
                                     setEditPortfolio(true);
                                   }}
                                 >
-                                  Ubah Portfolio
+                                  Ubah Portofolio
                                 </div>
                               </div>
                             )}
@@ -2284,7 +2284,7 @@ const AccountMyProfile: React.FC = () => {
                                 >
                                   <div className="card-sm d-flex flex-row align-items-center justify-content-between">
                                     <h4 className="text-primary-dark font-weight-bold mb-0 mr-2">
-                                      Ubah Portfolio
+                                      Ubah Portofolio
                                     </h4>
                                     <div className="text-primary-dark">
                                       <IconAddCircle />

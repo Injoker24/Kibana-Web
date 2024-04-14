@@ -804,7 +804,7 @@ const TaskOwnedDetail: React.FC = ({ transactionId, status }: any) => {
                                                               );
                                                             }}
                                                           >
-                                                            Lihat Portfolio
+                                                            Lihat Portofolio
                                                           </div>
                                                         </div>
                                                         <div className="col-12 col-md-4 mb-3">
@@ -917,7 +917,7 @@ const TaskOwnedDetail: React.FC = ({ transactionId, status }: any) => {
                                 {!activePortfolioUrl && (
                                   <div className="px-4 pb-3">
                                     <InfoBox
-                                      message={`${activeFreelancerName} belum menambahkan Portfolio.`}
+                                      message={`${activeFreelancerName} belum menambahkan Portofolio.`}
                                     />
                                   </div>
                                 )}

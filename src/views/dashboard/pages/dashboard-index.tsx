@@ -430,7 +430,7 @@ const DashboardIndex: React.FC = () => {
                   >
                     <h1 className="text-primary-dark m-0">3</h1>
                   </div>
-                  <p className="text-center">Pilih berdasarkan CV & Portfolio.</p>
+                  <p className="text-center">Pilih berdasarkan CV & Portofolio.</p>
                 </div>
                 <div
                   className="d-flex align-items-center flex-column col-6 col-md-3"

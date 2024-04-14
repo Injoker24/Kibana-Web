@@ -553,7 +553,7 @@ const AccountOtherProfile: React.FC = ({ status, prevPath, transactionId }: any)
                           </div>
 
                           <div className="mb-5">
-                            <h4 className="font-weight-semibold mb-3">Portfolio</h4>
+                            <h4 className="font-weight-semibold mb-3">Portofolio</h4>
                             {isLoadingPortfolioUrl && <Loader type="inline" />}
                             {errorPortfolioUrl && (
                               <div className="card-sm mb-5 mb-lg-0">
@@ -574,7 +574,7 @@ const AccountOtherProfile: React.FC = ({ status, prevPath, transactionId }: any)
                             {portfolioUrl && !portfolioUrl.portfolioUrl && (
                               <div className="card-sm mb-5 mb-lg-0">
                                 <InfoBox
-                                  message={otherProfile.name + ' belum mengupload portfolio.'}
+                                  message={otherProfile.name + ' belum mengupload portofolio.'}
                                 />
                               </div>
                             )}
