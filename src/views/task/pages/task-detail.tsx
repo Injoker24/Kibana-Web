@@ -52,6 +52,12 @@ const TaskDetail: React.FC = ({ prevPath }: any) => {
   };
 
   const registerToWork = () => {
+    if (!getLocalStorage('token')) {
+      history.push({
+        pathname: '/auth/login',
+      });
+      return;
+    }
     if (getLocalStorage('isFreelancer') === 'false') {
       history.push({
         pathname: '/auth/register/freelancer',
