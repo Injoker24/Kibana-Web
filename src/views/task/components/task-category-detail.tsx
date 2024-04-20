@@ -160,9 +160,9 @@ const TaskCategoryDetail = ({ title, id, onBack }: any) => {
               {subCategoryDetail &&
                 subCategoryDetail.subCategories.map((item) => {
                   return (
-                    <Row
+                    <div
                       key={item.id}
-                      className="col-12"
+                      className="w-100"
                     >
                       <div
                         className="cursor-pointer card-sm d-flex flex-row flex-wrap align-items-center p-2 mb-3"
@@ -180,7 +180,7 @@ const TaskCategoryDetail = ({ title, id, onBack }: any) => {
                           <IconNextCircle />
                         </div>
                       </div>
-                    </Row>
+                    </div>
                   );
                 })}
             </Row>
