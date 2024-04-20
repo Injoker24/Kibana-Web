@@ -323,7 +323,7 @@ const ServiceOwned: React.FC = () => {
                     {inactiveOwnedService.services?.length === 0 && (
                       <div className="card-sm">
                         <InfoBox
-                          message={'Kamu tidak memiliki tugas yang nonaktif.'}
+                          message={'Kamu tidak memiliki layanan yang nonaktif.'}
                           type="warning"
                         />
                       </div>
