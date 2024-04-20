@@ -752,10 +752,12 @@ const TaskOwnedDetail: React.FC = ({ transactionId, status }: any) => {
                                   {!isLoadingFreelancerList && (
                                     <>
                                       {errorFreelancerList && (
-                                        <InlineRetryError
-                                          message={errorFreelancerList.message}
-                                          onRetry={mutateFreelancerList}
-                                        />
+                                        <div className="mb-5">
+                                          <InlineRetryError
+                                            message={errorFreelancerList.message}
+                                            onRetry={mutateFreelancerList}
+                                          />
+                                        </div>
                                       )}
                                       {freelancerList && (
                                         <>
@@ -1005,10 +1007,12 @@ const TaskOwnedDetail: React.FC = ({ transactionId, status }: any) => {
                                 {!isLoadingClientActivity && (
                                   <>
                                     {errorClientActivity && (
-                                      <InlineRetryError
-                                        message={errorClientActivity.message}
-                                        onRetry={mutateClientActivity}
-                                      />
+                                      <div className="mb-5">
+                                        <InlineRetryError
+                                          message={errorClientActivity.message}
+                                          onRetry={mutateClientActivity}
+                                        />
+                                      </div>
                                     )}
                                     {clientActivity && (
                                       <>

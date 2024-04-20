@@ -897,10 +897,12 @@ const ServiceOwnedDetail: React.FC = () => {
                 {!isLoadingOwnedServiceDetail && (
                   <>
                     {errorOwnedServiceDetail && (
-                      <InlineRetryError
-                        message={errorOwnedServiceDetail.message}
-                        onRetry={refetchOwnedServiceDetail}
-                      />
+                      <div className="mb-5">
+                        <InlineRetryError
+                          message={errorOwnedServiceDetail.message}
+                          onRetry={refetchOwnedServiceDetail}
+                        />
+                      </div>
                     )}
                     {ownedServiceDetail && (
                       <>

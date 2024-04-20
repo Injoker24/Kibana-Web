@@ -514,10 +514,12 @@ const ServiceHistoryDetail: React.FC = ({ status }: any) => {
                 {!(isLoadingTransactionDetail || isFetchingTransactionDetail) && (
                   <>
                     {errorTransactionDetail && (
-                      <InlineRetryError
-                        message={errorTransactionDetail.message}
-                        onRetry={refetchTransactionDetail}
-                      />
+                      <div className="mb-5">
+                        <InlineRetryError
+                          message={errorTransactionDetail.message}
+                          onRetry={refetchTransactionDetail}
+                        />
+                      </div>
                     )}
                     {transactionDetail && (
                       <Row>
@@ -526,10 +528,12 @@ const ServiceHistoryDetail: React.FC = ({ status }: any) => {
                           {!isLoadingClientActivity && (
                             <>
                               {errorClientActivity && (
-                                <InlineRetryError
-                                  message={errorClientActivity.message}
-                                  onRetry={mutateClientActivity}
-                                />
+                                <div className="mb-5">
+                                  <InlineRetryError
+                                    message={errorClientActivity.message}
+                                    onRetry={mutateClientActivity}
+                                  />
+                                </div>
                               )}
                               {clientActivity && (
                                 <>
@@ -801,10 +805,12 @@ const ServiceHistoryDetail: React.FC = ({ status }: any) => {
                 {!(isLoadingClientInvoice || isFetchingClientInvoice) && (
                   <>
                     {errorClientInvoice && (
-                      <InlineRetryError
-                        message={errorClientInvoice.message}
-                        onRetry={refetchClientInvoice}
-                      />
+                      <div className="mb-5">
+                        <InlineRetryError
+                          message={errorClientInvoice.message}
+                          onRetry={refetchClientInvoice}
+                        />
+                      </div>
                     )}
                     {clientInvoice && (
                       <div className="card-sm mb-5 invoice-container">

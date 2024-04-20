@@ -561,10 +561,12 @@ const TaskHistoryDetail: React.FC = ({ transactionId }: any) => {
                 {!(isLoadingTaskDetail || isFetchingTaskDetail) && (
                   <>
                     {errorTaskDetail && (
-                      <InlineRetryError
-                        message={errorTaskDetail.message}
-                        onRetry={refetchTaskDetail}
-                      />
+                      <div className="mb-5">
+                        <InlineRetryError
+                          message={errorTaskDetail.message}
+                          onRetry={refetchTaskDetail}
+                        />
+                      </div>
                     )}
                     {taskDetail && (
                       <Row>
@@ -637,10 +639,12 @@ const TaskHistoryDetail: React.FC = ({ transactionId }: any) => {
                 {!(isLoadingTransactionDetail || isFetchingTransactionDetail) && (
                   <>
                     {errorTransactionDetail && (
-                      <InlineRetryError
-                        message={errorTransactionDetail.message}
-                        onRetry={refetchTransactionDetail}
-                      />
+                      <div className="mb-5">
+                        <InlineRetryError
+                          message={errorTransactionDetail.message}
+                          onRetry={refetchTransactionDetail}
+                        />
+                      </div>
                     )}
                     {transactionDetail && (
                       <Row>
@@ -652,10 +656,12 @@ const TaskHistoryDetail: React.FC = ({ transactionId }: any) => {
                                 {!isLoadingFreelancerActivity && (
                                   <>
                                     {errorFreelancerActivity && (
-                                      <InlineRetryError
-                                        message={errorFreelancerActivity.message}
-                                        onRetry={mutateFreelancerActivity}
-                                      />
+                                      <div className="mb-5">
+                                        <InlineRetryError
+                                          message={errorFreelancerActivity.message}
+                                          onRetry={mutateFreelancerActivity}
+                                        />
+                                      </div>
                                     )}
                                     {freelancerActivity && (
                                       <>
@@ -1008,10 +1014,12 @@ const TaskHistoryDetail: React.FC = ({ transactionId }: any) => {
                     {!(isLoadingFreelancerInvoice || isFetchingFreelancerInvoice) && (
                       <>
                         {errorFreelancerInvoice && (
-                          <InlineRetryError
-                            message={errorFreelancerInvoice.message}
-                            onRetry={refetchFreelancerInvoice}
-                          />
+                          <div className="mb-5">
+                            <InlineRetryError
+                              message={errorFreelancerInvoice.message}
+                              onRetry={refetchFreelancerInvoice}
+                            />
+                          </div>
                         )}
                         {freelancerInvoice && (
                           <div className="card-sm mb-5 freelancer-invoice-container">
