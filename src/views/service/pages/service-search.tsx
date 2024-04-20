@@ -67,7 +67,7 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
     data: serviceList,
     isLoading: isLoadingServiceList,
     isFetchingNextPage,
-    isFetching,
+    isRefetching,
     error: errorServiceList,
     isRefetchError: isErrorRefetch,
     refetch: refetchServiceList,
@@ -135,6 +135,7 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
       };
     });
     setSubCategory(subCategoryArray);
+    refetchServiceList();
   };
 
   const submitBudgetFilter = (formData: any) => {
@@ -181,6 +182,7 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
       return undefined;
     });
     setBudget(budgetArray);
+    refetchServiceList();
   };
 
   const submitWorkingTimeFilter = (formData: any) => {
@@ -227,6 +229,7 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
       return undefined;
     });
     setWorkingTime(workingTimeArray);
+    refetchServiceList();
   };
 
   const submitFloatingButton = (formData: any) => {
@@ -290,7 +293,9 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
               {searchText ? 'Hasil pencarian untuk "' + searchText + '"' : 'Semua layanan'}
             </h3>
 
-            {(isLoadingServiceList || isFetching) && <Loader type="inline" />}
+            {(isLoadingServiceList || isRefetching) && !isFetchingNextPage && (
+              <Loader type="inline" />
+            )}
 
             {errorServiceList && (
               <div className="flex-centered">
@@ -301,7 +306,7 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
               </div>
             )}
 
-            {serviceList && !isFetching && (
+            {serviceList && (isFetchingNextPage || (!isRefetching && !isFetchingNextPage)) && (
               <>
                 <div className="d-none d-lg-flex flex-row mb-4">
                   <Popup

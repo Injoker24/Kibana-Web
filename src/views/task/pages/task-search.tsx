@@ -56,6 +56,7 @@ const TaskSearch: React.FC = ({ stateCategories }: any) => {
     data: taskList,
     isLoading: isLoadingTaskList,
     isFetchingNextPage,
+    isRefetching,
     error: errorTaskList,
     isRefetchError: isErrorRefetch,
     refetch: refetchTaskList,
@@ -123,6 +124,7 @@ const TaskSearch: React.FC = ({ stateCategories }: any) => {
       };
     });
     setSubCategory(subCategoryArray);
+    refetchTaskList();
   };
 
   const submitBudgetFilter = (formData: any) => {
@@ -169,10 +171,12 @@ const TaskSearch: React.FC = ({ stateCategories }: any) => {
       return undefined;
     });
     setBudget(budgetArray);
+    refetchTaskList();
   };
 
   const submitDifficultyFilter = (formData: any) => {
     setDifficulty(formData.difficulty);
+    refetchTaskList();
   };
 
   const submitFloatingButton = (formData: any) => {
@@ -236,9 +240,9 @@ const TaskSearch: React.FC = ({ stateCategories }: any) => {
               {searchText ? 'Hasil pencarian untuk "' + searchText + '"' : 'Semua tugas'}
             </h3>
 
-            {isLoadingTaskList && <Loader type="inline" />}
+            {(isLoadingTaskList || isRefetching) && !isFetchingNextPage && <Loader type="inline" />}
 
-            {!taskList && errorTaskList && (
+            {errorTaskList && (
               <div className="flex-centered">
                 <InlineRetryError
                   message={errorTaskList.message}
@@ -247,7 +251,7 @@ const TaskSearch: React.FC = ({ stateCategories }: any) => {
               </div>
             )}
 
-            {taskList && (
+            {taskList && (isFetchingNextPage || (!isRefetching && !isFetchingNextPage)) && (
               <>
                 <div className="d-none d-lg-flex flex-row mb-4">
                   <Popup
