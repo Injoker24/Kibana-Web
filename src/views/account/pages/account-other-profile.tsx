@@ -168,7 +168,7 @@ const AccountOtherProfile: React.FC = ({ status, prevPath, transactionId }: any)
 
             {isLoadingOtherProfile && <Loader type="inline" />}
             {errorOtherProfile && (
-              <div className="flex-centered">
+              <div className="flex-centered mb-5">
                 <InlineRetryError
                   message={errorOtherProfile.message}
                   onRetry={refetchOtherProfile}
