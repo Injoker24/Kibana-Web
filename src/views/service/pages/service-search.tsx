@@ -67,6 +67,7 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
     data: serviceList,
     isLoading: isLoadingServiceList,
     isFetchingNextPage,
+    isFetching,
     error: errorServiceList,
     isRefetchError: isErrorRefetch,
     refetch: refetchServiceList,
@@ -289,9 +290,9 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
               {searchText ? 'Hasil pencarian untuk "' + searchText + '"' : 'Semua layanan'}
             </h3>
 
-            {isLoadingServiceList && <Loader type="inline" />}
+            {(isLoadingServiceList || isFetching) && <Loader type="inline" />}
 
-            {!serviceList && errorServiceList && (
+            {errorServiceList && (
               <div className="flex-centered">
                 <InlineRetryError
                   message={errorServiceList.message}
@@ -300,7 +301,7 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
               </div>
             )}
 
-            {serviceList && (
+            {serviceList && !isFetching && (
               <>
                 <div className="d-none d-lg-flex flex-row mb-4">
                   <Popup
