@@ -225,7 +225,12 @@ const TaskDetail: React.FC = ({ prevPath }: any) => {
                                   }
                                   alt={freelancer.name}
                                 />
-                                <h4 className="font-weight-semibold mb-0 text-primary-dark">
+                                <h4
+                                  className="font-weight-semibold mb-0 text-primary-dark cursor-pointer"
+                                  onClick={() => {
+                                    openProfile(freelancer.id, 'freelancer');
+                                  }}
+                                >
                                   {freelancer.name}
                                 </h4>
                               </div>
