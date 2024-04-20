@@ -851,6 +851,11 @@ const TaskOwnedDetail: React.FC = ({ transactionId, status }: any) => {
                                               )}
                                             </>
                                           )}
+                                          {!freelancerList.registeredFreelancer && (
+                                            <InfoBox
+                                              message={`Belum ada freelancer yang mendaftar.`}
+                                            />
+                                          )}
                                         </>
                                       )}
                                     </>
