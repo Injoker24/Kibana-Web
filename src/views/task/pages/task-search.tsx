@@ -124,7 +124,6 @@ const TaskSearch: React.FC = ({ stateCategories }: any) => {
       };
     });
     setSubCategory(subCategoryArray);
-    refetchTaskList();
   };
 
   const submitBudgetFilter = (formData: any) => {
@@ -171,12 +170,10 @@ const TaskSearch: React.FC = ({ stateCategories }: any) => {
       return undefined;
     });
     setBudget(budgetArray);
-    refetchTaskList();
   };
 
   const submitDifficultyFilter = (formData: any) => {
     setDifficulty(formData.difficulty);
-    refetchTaskList();
   };
 
   const submitFloatingButton = (formData: any) => {
@@ -189,6 +186,7 @@ const TaskSearch: React.FC = ({ stateCategories }: any) => {
     if (formData.difficulty) {
       submitDifficultyFilter(formData);
     }
+    refetchTaskList();
     setOpenFilter(false);
   };
 
@@ -279,7 +277,12 @@ const TaskSearch: React.FC = ({ stateCategories }: any) => {
                       )}
                       {isLoadingTaskCategory && <Loader type="inline" />}
                       {taskCategory && (
-                        <form onSubmit={handleSubmitSubCategory(submitSubCategoryFilter)}>
+                        <form
+                          onSubmit={handleSubmitSubCategory((data) => {
+                            submitSubCategoryFilter(data);
+                            refetchTaskList();
+                          })}
+                        >
                           <FormInput>
                             <div className="d-flex flex-row flex-wrap">
                               {taskCategory.categories.map((item) => {
@@ -341,7 +344,12 @@ const TaskSearch: React.FC = ({ stateCategories }: any) => {
                     className="filter-tooltip"
                   >
                     <div className="filter-tooltip d-flex flex-column">
-                      <form onSubmit={handleSubmitBudget(submitBudgetFilter)}>
+                      <form
+                        onSubmit={handleSubmitBudget((data) => {
+                          submitBudgetFilter(data);
+                          refetchTaskList();
+                        })}
+                      >
                         <FormInput>
                           <Form.Check
                             type="checkbox"
@@ -424,7 +432,12 @@ const TaskSearch: React.FC = ({ stateCategories }: any) => {
                     className="filter-tooltip"
                   >
                     <div className="filter-tooltip d-flex flex-column">
-                      <form onSubmit={handleSubmitDifficulty(submitDifficultyFilter)}>
+                      <form
+                        onSubmit={handleSubmitDifficulty((data) => {
+                          submitDifficultyFilter(data);
+                          refetchTaskList();
+                        })}
+                      >
                         <FormInput>
                           <Form.Check
                             type="checkbox"

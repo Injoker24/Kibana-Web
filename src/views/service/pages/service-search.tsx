@@ -135,7 +135,6 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
       };
     });
     setSubCategory(subCategoryArray);
-    refetchServiceList();
   };
 
   const submitBudgetFilter = (formData: any) => {
@@ -182,7 +181,6 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
       return undefined;
     });
     setBudget(budgetArray);
-    refetchServiceList();
   };
 
   const submitWorkingTimeFilter = (formData: any) => {
@@ -229,7 +227,6 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
       return undefined;
     });
     setWorkingTime(workingTimeArray);
-    refetchServiceList();
   };
 
   const submitFloatingButton = (formData: any) => {
@@ -242,6 +239,7 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
     if (formData.workingTime) {
       submitWorkingTimeFilter(formData);
     }
+    refetchServiceList();
     setOpenFilter(false);
   };
 
@@ -334,7 +332,12 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
                       )}
                       {isLoadingServiceCategory && <Loader type="inline" />}
                       {serviceCategory && (
-                        <form onSubmit={handleSubmitSubCategory(submitSubCategoryFilter)}>
+                        <form
+                          onSubmit={handleSubmitSubCategory((data) => {
+                            submitSubCategoryFilter(data);
+                            refetchServiceList();
+                          })}
+                        >
                           <FormInput>
                             <div className="d-flex flex-row flex-wrap">
                               {serviceCategory.categories.map((item) => {
@@ -396,7 +399,12 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
                     className="filter-tooltip"
                   >
                     <div className="filter-tooltip d-flex flex-column">
-                      <form onSubmit={handleSubmitBudget(submitBudgetFilter)}>
+                      <form
+                        onSubmit={handleSubmitBudget((data) => {
+                          submitBudgetFilter(data);
+                          refetchServiceList();
+                        })}
+                      >
                         <FormInput>
                           <Form.Check
                             type="checkbox"
@@ -479,7 +487,12 @@ const ServiceSearch: React.FC = ({ stateCategories }: any) => {
                     className="filter-tooltip"
                   >
                     <div className="filter-tooltip d-flex flex-column">
-                      <form onSubmit={handleSubmitWorkingTime(submitWorkingTimeFilter)}>
+                      <form
+                        onSubmit={handleSubmitWorkingTime((data) => {
+                          submitWorkingTimeFilter(data);
+                          refetchServiceList();
+                        })}
+                      >
                         <FormInput>
                           <Form.Check
                             type="checkbox"
