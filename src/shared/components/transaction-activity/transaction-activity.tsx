@@ -1086,7 +1086,7 @@ const TransactionActivity: React.FC<Props> = ({
           userType === 'freelancer' && (
             <div style={{ paddingBottom: '32px' }}>
               <InfoBox
-                message={`Jika klien tidak merespon sebelum 2x24 jam <span, class="font-weight-bold text-primary-dark">(${activity.responseDeadline})</span, maka pesanan akan otomatis dibatalkan dan dana akan diteruskan kepada klien.`}
+                message={`Jika klien tidak merespon sebelum 2x24 jam <span class="font-weight-bold text-primary-dark">(${activity.responseDeadline})</span>, maka pesanan akan otomatis dibatalkan dan dana akan diteruskan kepada klien.`}
               />
             </div>
           )}
