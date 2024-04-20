@@ -724,10 +724,12 @@ const TaskOwnedDetail: React.FC = ({ transactionId, status }: any) => {
                 {!(isLoadingTaskDetail || isFetchingTaskDetail) && (
                   <>
                     {errorTaskDetail && (
-                      <InlineRetryError
-                        message={errorTaskDetail.message}
-                        onRetry={refetchTaskDetail}
-                      />
+                      <div className="mb-5">
+                        <InlineRetryError
+                          message={errorTaskDetail.message}
+                          onRetry={refetchTaskDetail}
+                        />
+                      </div>
                     )}
                     {taskDetail && (
                       <Row>
@@ -800,7 +802,7 @@ const TaskOwnedDetail: React.FC = ({ transactionId, status }: any) => {
                                                             onClick={() => {
                                                               openFreelancerPortfolio(
                                                                 freelancer.name,
-                                                                freelancer.cvUrl,
+                                                                freelancer.portfolioUrl,
                                                               );
                                                             }}
                                                           >
@@ -986,10 +988,12 @@ const TaskOwnedDetail: React.FC = ({ transactionId, status }: any) => {
                 {!(isLoadingTransactionDetail || isFetchingTransactionDetail) && (
                   <>
                     {errorTransactionDetail && (
-                      <InlineRetryError
-                        message={errorTransactionDetail.message}
-                        onRetry={refetchTransactionDetail}
-                      />
+                      <div className="mb-5">
+                        <InlineRetryError
+                          message={errorTransactionDetail.message}
+                          onRetry={refetchTransactionDetail}
+                        />
+                      </div>
                     )}
                     {transactionDetail && (
                       <Row>
@@ -1304,10 +1308,12 @@ const TaskOwnedDetail: React.FC = ({ transactionId, status }: any) => {
                 {!(isLoadingTaskDetail || isFetchingTaskDetail) && (
                   <>
                     {errorTaskDetail && (
-                      <InlineRetryError
-                        message={errorTaskDetail.message}
-                        onRetry={refetchTaskDetail}
-                      />
+                      <div className="mb-5">
+                        <InlineRetryError
+                          message={errorTaskDetail.message}
+                          onRetry={refetchTaskDetail}
+                        />
+                      </div>
                     )}
                     {(transactionStatus === TransactionStatus.DalamProsesPencarian ||
                       transactionStatus === TransactionStatus.TidakMenemukan) && (
@@ -1331,10 +1337,12 @@ const TaskOwnedDetail: React.FC = ({ transactionId, status }: any) => {
                 {!(isLoadingClientInvoice || isFetchingClientInvoice) && (
                   <>
                     {errorClientInvoice && (
-                      <InlineRetryError
-                        message={errorClientInvoice.message}
-                        onRetry={refetchClientInvoice}
-                      />
+                      <div className="mb-5">
+                        <InlineRetryError
+                          message={errorClientInvoice.message}
+                          onRetry={refetchClientInvoice}
+                        />
+                      </div>
                     )}
                     {clientInvoice && (
                       <div className="card-sm mb-5 invoice-container">

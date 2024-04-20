@@ -74,6 +74,7 @@ const TaskRequirement: React.FC = () => {
         history.push({
           pathname: '/task/owned/' + params.transactionId,
           state: {
+            transactionId: params.transactionId,
             status: 'payment',
           },
         });
