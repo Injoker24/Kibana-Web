@@ -196,7 +196,9 @@ const TaskDetail: React.FC = ({ prevPath }: any) => {
                             Tugas Kamu
                           </button>
                         )}
-                        {taskDetail.registeredFreelancer === getLocalStorage('id') && (
+                        {taskDetail.registeredFreelancer
+                          ?.map((item) => item.id)
+                          .includes(getLocalStorage('id')) && (
                           <button
                             disabled
                             className="btn btn-primary w-100"
