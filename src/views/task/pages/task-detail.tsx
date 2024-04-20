@@ -180,14 +180,17 @@ const TaskDetail: React.FC = ({ prevPath }: any) => {
                             Rp {taskDetail.taskDetail.price}
                           </h3>
                         </div>
-                        {taskDetail.client.id !== getLocalStorage('id') && (
-                          <div
-                            className="btn btn-primary w-100"
-                            onClick={registerToWork}
-                          >
-                            Daftar untuk Mengerjakan
-                          </div>
-                        )}
+                        {taskDetail.client.id !== getLocalStorage('id') &&
+                          taskDetail.registeredFreelancer
+                            ?.map((item) => item.id)
+                            .includes(getLocalStorage('id')) && (
+                            <div
+                              className="btn btn-primary w-100"
+                              onClick={registerToWork}
+                            >
+                              Daftar untuk Mengerjakan
+                            </div>
+                          )}
                         {taskDetail.client.id === getLocalStorage('id') && (
                           <button
                             disabled
@@ -295,12 +298,25 @@ const TaskDetail: React.FC = ({ prevPath }: any) => {
                           Daftar untuk Mengerjakan
                         </div>
                       )}
-                      {taskDetail.client.id === getLocalStorage('id') && (
+                      {taskDetail.client.id === getLocalStorage('id') &&
+                        taskDetail.registeredFreelancer
+                          ?.map((item) => item.id)
+                          .includes(getLocalStorage('id')) && (
+                          <button
+                            disabled
+                            className="btn btn-primary w-100"
+                          >
+                            Tugas Kamu
+                          </button>
+                        )}
+                      {taskDetail.registeredFreelancer
+                        ?.map((item) => item.id)
+                        .includes(getLocalStorage('id')) && (
                         <button
                           disabled
                           className="btn btn-primary w-100"
                         >
-                          Tugas Kamu
+                          Sudah Terdaftar
                         </button>
                       )}
                     </div>
