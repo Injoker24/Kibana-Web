@@ -1,4 +1,4 @@
-import { IconStar } from 'images';
+import { DefaultAvatar, IconStar } from 'images';
 import React from 'react';
 
 import { Image } from 'react-bootstrap';
@@ -45,7 +45,7 @@ const Service: React.FC<Props> = ({
           <div className="d-flex flex-row align-items-center">
             <Image
               className="freelancer-profile-image mr-2"
-              src={freelancer.profileImageUrl}
+              src={freelancer.profileImageUrl ? freelancer.profileImageUrl : DefaultAvatar}
               alt={freelancer.name}
             />
             <p className="text-grey">

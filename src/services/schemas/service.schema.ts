@@ -19,7 +19,7 @@ export interface ServiceInquiryNewServiceResponse {
     image_url: string;
     name: string;
     freelancer: {
-      profile_image_url: string;
+      profile_image_url?: string;
       name: string;
     };
     average_rating: number;
