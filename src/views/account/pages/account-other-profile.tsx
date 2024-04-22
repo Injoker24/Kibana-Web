@@ -481,7 +481,7 @@ const AccountOtherProfile: React.FC = ({ status, prevPath, transactionId }: any)
                                     );
                                   })}
                               </div>
-                              {skills && !skills.skills && (
+                              {skills && (!skills.skills || skills.skills.length === 0) && (
                                 <InfoBox
                                   message={otherProfile.name + ' belum menambahkan keahlian.'}
                                 />

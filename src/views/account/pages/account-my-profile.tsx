@@ -1743,7 +1743,7 @@ const AccountMyProfile: React.FC = () => {
                                   return <div className="chip chip-primary mr-2 mb-3">{item}</div>;
                                 })}
                               </div>
-                              {!skillsData.skills && (
+                              {(!skillsData.skills || skillsData.skills.length === 0) && (
                                 <div className="mb-4">
                                   <InfoBox
                                     message={myProfile.name + ' belum menambahkan keahlian.'}
